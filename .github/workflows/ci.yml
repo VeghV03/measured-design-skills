@@ -51,6 +51,33 @@ jobs:
           print(f"rationale.json identical across both adapters ({len(a)} screens)")
           PY
 
+      - name: Build with the React adapter, prove all three agree
+        run: |
+          mkdir -p /tmp/react-boards /tmp/react-model /tmp/react-components
+          cp examples/demo/model/*.json /tmp/react-model/
+          rm -f /tmp/react-model/rationale.json /tmp/react-model/index.json
+          node scaffold/adapters/react/build.mjs \
+            --boards /tmp/react-boards --model /tmp/react-model --components /tmp/react-components
+          python3 scaffold/gate.py --model /tmp/react-model --boards /tmp/react-boards
+          python3 - <<'PY'
+          import json, sys
+          ref = json.load(open("examples/demo/model/rationale.json"))
+          rea = json.load(open("/tmp/react-model/rationale.json"))
+          if ref != rea:
+              print("rationale.json differs between the Python and React adapters:")
+              for k in sorted(set(ref) | set(rea)):
+                  if ref.get(k) != rea.get(k):
+                      print(f"  {k}:\n    python: {ref.get(k)!r}\n    react:  {rea.get(k)!r}")
+              sys.exit(1)
+          print(f"rationale.json identical across all three adapters ({len(ref)} screens)")
+          PY
+
+      - name: Typecheck the emitted components (dev-only toolchain)
+        working-directory: scaffold/adapters/react
+        run: |
+          npm install
+          npm run typecheck
+
       - name: Install harness dependencies
         working-directory: scaffold/harnesses
         run: |

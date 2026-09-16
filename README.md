@@ -149,8 +149,9 @@ screens and needs `model/`; without one, `run-all` substitutes `links`, which on
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |
+| `scaffold/adapters/react/` | a third generator that also emits `.tsx` components from the same tree — the boards stay measurable, the components are what you keep |
 | `examples/demo/` | ten screens across four journeys that build, gate and ship end to end |
-| `.github/workflows/ci.yml` | checks library reachability, builds the demo with both adapters, gates it, runs all twelve harnesses, on every push |
+| `.github/workflows/ci.yml` | checks library reachability, builds the demo with all three adapters, gates it, typechecks the emitted components, runs all twelve harnesses, on every push |
 
 ## The three things that make this different from a process document
 

@@ -1,0 +1,112 @@
+// The design system, as element trees rather than strings. Mirrors
+// ../node/system.mjs and ../python/system.py token for token — the tokens below are
+// copied from the node adapter verbatim, so a change there that is not made here
+// shows up as a diff, not as a slow visual drift.
+//
+// Every builder returns a tree. render.mjs turns one tree into the board the gate
+// measures and into the component an engineer opens, which is why those two can
+// never disagree about what a screen contains.
+import { h } from './render.mjs';
+
+export const TOKENS = `
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+:root[data-theme=dark]{
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+`;
+
+const ICON_PATHS = {
+  folder: 'M3 6h5l2 2h11v10H3z',
+  file: 'M6 3h8l4 4v14H6z',
+  share: 'M12 3v12M8 7l4-4 4 4M5 15v6h14v-6',
+  warn: 'M12 4l9 16H3zM12 10v4M12 17h.01',
+};
+
+export function icon(name) {
+  const d = ICON_PATHS[name] || ICON_PATHS.file;
+  return h('svg', { width: '16', height: '16', viewBox: '0 0 24 24', fill: 'none',
+    'aria-hidden': 'true', stroke: 'currentColor', 'stroke-width': '1.5' }, h('path', { d }));
+}
+
+// --- components: the moment two screens do the same thing -------------------
+
+export function emptyState(glyph, heading, line, action, foot = '') {
+  return h('div', { className: 'empty', 'data-component': 'empty_state' },
+    icon(glyph),
+    h('h1', {}, heading),
+    h('p', {}, line),
+    h('button', { className: 'btn primary' }, action),
+    foot ? h('p', {}, foot) : null);
+}
+
+export function door(consequence, willNot, precondition, action) {
+  return h('div', { 'data-component': 'door' },
+    h('h1', {}, consequence),
+    h('p', {}, 'What this will not do:'),
+    h('ul', {}, willNot.map(w => h('li', {}, w))),
+    h('p', {}, precondition),
+    h('button', { className: 'btn danger' }, action));
+}
+
+export function whoCell(who) {
+  return h('span', { className: 'who', 'data-component': 'who_cell' }, who);
+}
+
+export function row(name, who, meta) {
+  return h('div', { className: 'grid', 'data-component': 'row' },
+    h('span', {}, icon('file'), ' ' + name),
+    whoCell(who),
+    h('span', { className: 'chip' }, meta));
+}
+
+// The window chrome every board shares. Only the HTML output uses this; the
+// emitted components are the screens, with Shell.tsx emitted once beside them.
+export function chrome(navCurrent, nav = ['Files', 'Shared', 'Removed']) {
+  return h('div', { className: 'chrome' }, icon('folder'),
+    h('nav', { className: 'nav' },
+      nav.map(n => h('span', n === navCurrent ? { 'aria-current': 'page' } : {}, n))));
+}
+
+export function document_(title, navCurrent, body) {
+  return h('html', { lang: 'en' },
+    h('meta', { charset: 'utf-8' }),
+    h('title', {}, title),
+    h('meta', { name: 'viewport', content: 'width=device-width,initial-scale=1' }),
+    h('style', {}, h('#raw', { html: TOKENS })),
+    h('body', {}, h('div', { className: 'win' }, chrome(navCurrent), h('div', { className: 'body' }, body))));
+}

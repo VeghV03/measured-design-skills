@@ -1,0 +1,10 @@
+{
+  "name": "measured-design-react-adapter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "node build.mjs --boards /tmp/md-rb --model /tmp/md-rm --components ./.typecheck/src && tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": { "typescript": "^5.6.0", "@types/react": "^18.3.0" }
+}

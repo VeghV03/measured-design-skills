@@ -21,6 +21,7 @@ scaffold/harnesses/              thirteen checks, twelve in any one run, each pr
 scaffold/viewer/                 the handover artifact, no dependencies
 scaffold/adapters/python/        the reference generator; one adapter, not the requirement
 scaffold/adapters/node/          a second generator, no dependencies, proving the contract holds
+scaffold/adapters/react/         a third generator; emits boards and .tsx components from one tree
 examples/demo/                   ten screens across four journeys that build, gate, and ship end to end
 ```
 
