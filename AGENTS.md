@@ -12,6 +12,7 @@ adding any field to the data model.
 ```
 skills/measured-design*          ten skills — the procedure itself
 skills/library/                  88 vendored designer and thinking skills, collection-qualified
+cli/                             npx measured-design init|check — runs the checks on any project
 commands/                        slash commands for agents that have them
 scaffold/gate.py                 the build gate — refuses on a route that does not bind
 scaffold/drift.py                scope document versus model

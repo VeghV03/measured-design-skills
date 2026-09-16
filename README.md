@@ -65,7 +65,26 @@ A route the contract declares but nothing binds stops the build at stage 3. Ever
 missing headings, empty states, contrast — prints a number at stage 5 and lets a person decide what to
 do with it.
 
-## Install
+## Start on a project you already have
+
+```sh
+npx measured-design init
+```
+
+It reads your `package.json`, finds the dev server if one is running (or the build output if not),
+writes `measured-design.config.json`, and runs the checks. No scope document, no data model, no
+adoption — a number about screens you have already built, in about a minute. Afterwards:
+
+```sh
+npx measured-design check
+```
+
+Two of the thirteen checks need more than a DOM and will say so rather than guessing: route binding
+wants a declared route map, the vocabulary check wants a word list. The other eleven just run.
+
+That is the shallow end. The rest of this README is the part that makes the numbers stay fixed.
+
+## Install the skills
 
 ```sh
 sh scripts/install.sh claude          # ~/.claude/skills
@@ -122,6 +141,7 @@ screens and needs `model/`; without one, `run-all` substitutes `links`, which on
 | `skills/measured-design-decide` | an open question forced into multiple choice with trade-offs |
 | `skills/measured-design-drift` | scope document versus prototype |
 | `skills/library/` | 88 vendored designer and thinking skills |
+| `cli/` | `npx measured-design init` and `check` — the no-adoption entry point |
 | `commands/` | `/prove` and nine others, for agents with slash commands |
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
 | `scaffold/check_library.py` | refuses if a vendored skill is unreachable, or a stage names one that does not exist |

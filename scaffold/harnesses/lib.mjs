@@ -47,7 +47,9 @@ async function crawl(t) {
   const origin = new URL(t.start).origin, limit = t.limit || 50;
   const b = await chromium.launch(cfg.executablePath ? { executablePath: cfg.executablePath } : {});
   const p = await b.newPage();
-  const seen = new Set(), out = [], queue = [t.start];
+  // Dedupe on the reported name, not the URL: "/" and "/index.html" are one page,
+  // and two targets sharing a name would double every count taken from them.
+  const seen = new Set(), named = new Set(), out = [], queue = [t.start];
   while (queue.length && out.length < limit) {
     const u = queue.shift().split('#')[0];
     if (seen.has(u)) continue;
@@ -55,7 +57,8 @@ async function crawl(t) {
     let res = null;
     try { res = await p.goto(u, { waitUntil: 'domcontentloaded' }); } catch { continue; }
     if (!res || res.status() >= 400) continue;
-    out.push({ id: idFromUrl(u), url: u });
+    const name = idFromUrl(u);
+    if (!named.has(name)) { named.add(name); out.push({ id: name, url: u }); }
     for (const l of await p.evaluate(() => [...document.querySelectorAll('a[href]')].map(a => a.href)))
       if (l.startsWith(origin)) queue.push(l);
   }
@@ -66,6 +69,15 @@ async function crawl(t) {
 // What is being checked: a folder of built boards, an explicit route list, or a
 // crawl. Ten of the thirteen checks never need to know which — they take a url and
 // a name. The two that read model/ are the two that cannot run without it.
+function fail(why) {
+  console.error(`\n  ${why}.`);
+  console.error(`  Point "target" in ${found || 'harness.config.json'} at what you want checked:`);
+  console.error('    { "target": { "mode": "dir",   "dir": "./dist" } }');
+  console.error('    { "target": { "mode": "crawl", "start": "http://localhost:3000" } }');
+  console.error('  Or run `npx measured-design init` to write one.\n');
+  process.exit(2);
+}
+
 let cached = null;
 export async function targets() {
   if (cached) return cached;
@@ -76,9 +88,11 @@ export async function targets() {
     cached = await crawl(t);
   else {
     const d = resolve(cfgDir, t.dir || cfg.boards);
+    if (!existsSync(d)) fail(`no boards at ${d}`);
     cached = readdirSync(d).filter(f => f.endsWith('.html')).sort()
       .map(f => ({ id: f.replace(/\.html$/, ''), url: 'file://' + join(d, f) }));
   }
+  if (!cached.length) fail('the target resolved to nothing to check');
   return cached;
 }
 

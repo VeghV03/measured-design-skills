@@ -1,0 +1,46 @@
+{
+  "name": "measured-design",
+  "version": "1.0.0",
+  "description": "Checks that print a number about screens you already have \u2014 contrast, overflow, target size, reduced motion, language, structure, density, dead links \u2014 against a folder of built pages or a running app.",
+  "type": "module",
+  "bin": {
+    "measured-design": "./cli/measured-design.mjs"
+  },
+  "files": [
+    "cli/",
+    "scaffold/",
+    "skills/",
+    "commands/",
+    "AGENTS.md",
+    "PAIRING.md",
+    "LICENSE",
+    "licenses/",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/.DS_Store"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "contrast",
+    "design-system",
+    "ux",
+    "audit",
+    "design-engineering",
+    "playwright"
+  ],
+  "license": "MIT",
+  "author": "VeghV03",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VeghV03/measured-design-skills.git"
+  },
+  "homepage": "https://github.com/VeghV03/measured-design-skills#readme"
+}
