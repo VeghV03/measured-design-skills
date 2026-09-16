@@ -100,3 +100,41 @@ jobs:
           }
           EOF
           node run-all.mjs
+
+
+      - name: CLI — init and check against a throwaway project
+        run: |
+          set -e
+          rm -rf /tmp/fixture && mkdir -p /tmp/fixture/dist
+          cat > /tmp/fixture/package.json <<'JSON'
+          { "name": "fixture", "private": true, "devDependencies": { "vite": "^5.0.0" } }
+          JSON
+          cat > /tmp/fixture/dist/index.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8"><title>Home</title></head>
+          <body style="font-family:system-ui"><h1>Home</h1>
+          <p style="color:#ccc">Pale text nobody can read.</p>
+          <a href="/index.html">Home again</a> <a href="/gone.html">Archive</a>
+          </body></html>
+          HTML
+
+          cd /tmp/fixture
+          node "$GITHUB_WORKSPACE/cli/measured-design.mjs" init > /tmp/cli.txt 2>&1 || { cat /tmp/cli.txt; exit 1; }
+          test -f measured-design.config.json
+          grep -q "no <html lang>"              /tmp/cli.txt
+          grep -q "under threshold"             /tmp/cli.txt
+          grep -q "links needs a served origin" /tmp/cli.txt
+          grep -q "12 checks · 0 errored"       /tmp/cli.txt
+          echo "  dir mode ok"
+
+          # "/" and "/index.html" are one page; a dead link must be reported once
+          ( cd dist && python3 -m http.server 8099 >/dev/null 2>&1 & echo $! > /tmp/f.pid )
+          for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:8099/ && break; sleep 1; done
+          cat > measured-design.config.json <<'JSON'
+          { "target": { "mode": "crawl", "start": "http://localhost:8099/", "limit": 25 },
+            "widths": [1440], "height": 900, "densityBudget": 400, "targetSize": 24 }
+          JSON
+          node "$GITHUB_WORKSPACE/cli/measured-design.mjs" check > /tmp/crawl.txt 2>&1 || true
+          kill "$(cat /tmp/f.pid)" 2>/dev/null || true
+          grep -q "1 links that do not resolve" /tmp/crawl.txt || {
+            echo "expected exactly one unresolved link"; grep -A3 "links" /tmp/crawl.txt; exit 1; }
+          echo "  crawl mode ok"
