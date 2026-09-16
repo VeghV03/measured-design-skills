@@ -1,0 +1,12 @@
+[
+ {"from":null,"to":"first-run-welcome","via":"system"},
+ {"from":"first-run-welcome","label":"Add your first file","to":"files-empty","via":"click"},
+ {"from":"files-empty","label":"Add a file","to":"files-list","via":"click"},
+ {"from":"files-list","label":"Move to folder…","to":"files-move","via":"click"},
+ {"from":"files-list","label":"Remove","to":"files-removed","via":"click"},
+ {"from":"files-list","gesture":"drag a row onto a folder","to":"files-move","via":"gesture"},
+ {"from":"files-list","to":"share-failed","via":"system"},
+ {"from":"files-move","label":"Move the file","to":"files-list","via":"click"},
+ {"from":"files-removed","label":"Back to files","to":"files-list","via":"click"},
+ {"from":"share-failed","label":"Try again","to":"files-list","via":"click"}
+]

@@ -1,0 +1,172 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>__TITLE__</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--bg:#fbfbf9;--fg:#1d1d1b;--mut:#6b6b66;--line:#e2e1db;--card:#fff;--acc:#1d6e56;--warn:#8a4b0b}
+@media(prefers-color-scheme:dark){:root{--bg:#141413;--fg:#eceae2;--mut:#97958d;--line:#2c2c2a;--card:#1c1c1a;--acc:#5dcaa5;--warn:#efa727}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.6 ui-sans-serif,system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+header{display:flex;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
+h1{font-size:15px;font-weight:500;margin:0 12px 0 0}
+nav button{font:inherit;background:none;border:1px solid var(--line);color:var(--mut);padding:4px 10px;border-radius:6px;cursor:pointer}
+nav button[aria-current=true]{color:var(--fg);border-color:var(--fg)}
+input[type=search]{font:inherit;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);min-width:200px}
+label.sw{color:var(--mut);display:flex;gap:6px;align-items:center;cursor:pointer}
+main{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);gap:0;min-height:calc(100vh - 53px)}
+#list{border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 53px);padding:8px 0}
+#detail{padding:16px 20px;overflow:auto;max-height:calc(100vh - 53px)}
+.grp{padding:10px 16px 4px;color:var(--mut);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.row{display:block;width:100%;text-align:left;font:inherit;background:none;border:0;color:inherit;padding:6px 16px;cursor:pointer;border-left:2px solid transparent}
+.row:hover{background:var(--card)}
+.row[aria-current=true]{border-left-color:var(--acc);background:var(--card)}
+.row .k{color:var(--mut);font-size:12px;margin-left:6px}
+.row.fail .k{color:var(--warn)}
+iframe{width:100%;height:620px;border:1px solid var(--line);border-radius:10px;background:#fff}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:16px 0}
+dt{color:var(--mut)}
+dd{margin:0}
+.gate{border:1px solid var(--warn);color:var(--warn);border-radius:8px;padding:8px 12px;margin:12px 0;font-size:14px}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:12px;color:var(--mut);margin-right:6px}
+.counts{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+code{font:12px/1.5 ui-monospace,monospace;background:var(--card);padding:1px 4px;border-radius:4px}
+h2{font-size:14px;font-weight:500;margin:20px 0 6px}
+ul{margin:6px 0;padding-left:18px}
+</style>
+<header>
+  <h1>__TITLE__</h1>
+  <nav>
+    <button data-view="journey" aria-current="true">Journeys</button>
+    <button data-view="group">Groups</button>
+    <button data-view="ia">IA</button>
+    <button data-view="failures">Failures</button>
+    <button data-view="decisions">Decisions</button>
+  </nav>
+  <input type="search" id="q" placeholder="Search screens  /">
+  <label class="sw"><input type="checkbox" id="happy"> Happy path only</label>
+  <span id="count" class="pill"></span>
+</header>
+<main>
+  <div id="list"></div>
+  <div id="detail"></div>
+</main>
+<script type="application/json" id="model">__DATA__</script>
+__BOARDS__
+<script>
+const D = JSON.parse(document.getElementById('model').textContent);
+const BOARDS = {};
+document.querySelectorAll('script[data-board]').forEach(s => BOARDS[s.dataset.board] = s.textContent);
+const byId = Object.fromEntries(D.screens.map(s => [s.id, s]));
+const inbound = id => D.routes.filter(r => r.to === id);
+const outbound = id => D.routes.filter(r => r.from === id);
+const isFail = id => !!D.failures[id];
+let view = 'journey', current = null, happy = false, query = '';
+
+const happySet = new Set();
+D.journeys.forEach(j => j.steps.forEach(st => (st.screens || []).forEach(s => {
+  if (!isFail(s)) happySet.add(s);
+})));
+
+function visible(id) {
+  if (happy && !happySet.has(id)) return false;
+  if (!query) return true;
+  const s = byId[id] || {};
+  return (id + ' ' + (s.title || '') + ' ' + (D.rationale[id] || '')).toLowerCase().includes(query);
+}
+
+function row(id) {
+  const s = byId[id]; if (!s) return '';
+  return `<button class="row${isFail(id) ? ' fail' : ''}" data-id="${id}" aria-current="${current === id}">
+    ${s.title || id}<span class="k">${s.kind}${isFail(id) ? ' · failure' : ''}</span></button>`;
+}
+
+function renderList() {
+  const L = document.getElementById('list');
+  let h = '';
+  if (view === 'journey') {
+    for (const j of D.journeys) {
+      const steps = j.steps.map(st => {
+        const ids = (st.screens || []).filter(visible);
+        const gap = D.gaps[`${j.id}/${st.id}`];
+        if (!ids.length && !gap) return '';
+        return `<div class="grp">${st.name || st.id}</div>` + ids.map(row).join('') +
+          (gap ? `<div class="row" style="color:var(--warn)">nothing serves this — ${gap}</div>` : '');
+      }).join('');
+      if (steps) h += `<div class="grp" style="color:var(--fg)">${j.name || j.id}</div>` + steps;
+    }
+  } else if (view === 'group') {
+    const g = {};
+    D.screens.filter(s => visible(s.id)).forEach(s => (g[s.group || 'ungrouped'] ||= []).push(s.id));
+    for (const k of Object.keys(g).sort()) h += `<div class="grp">${k}</div>` + g[k].map(row).join('');
+  } else if (view === 'ia') {
+    for (const p of D.screens.filter(s => s.kind === 'place' && visible(s.id))) {
+      h += row(p.id);
+      h += D.screens.filter(s => s.parent === p.id && visible(s.id))
+        .map(s => `<div style="padding-left:14px">${row(s.id)}</div>`).join('');
+    }
+    const loose = D.screens.filter(s => ['detour', 'entrance'].includes(s.kind) && visible(s.id));
+    if (loose.length) h += `<div class="grp">detours and entrances</div>` + loose.map(s => row(s.id)).join('');
+  } else if (view === 'failures') {
+    h += `<div class="grp">failure register</div>`;
+    h += Object.keys(D.failures).filter(visible).map(row).join('');
+  } else {
+    h += `<div class="grp">decisions</div>`;
+    h += D.decisions.map(d => `<button class="row" data-dec="${d.id}">${d.question}
+      <span class="k">${d.status}</span></button>`).join('');
+  }
+  L.innerHTML = h || '<div class="grp">nothing matches</div>';
+  document.getElementById('count').textContent =
+    `${D.counts.screens} screens · ${D.counts.routes} routes bind`;
+}
+
+function renderDetail() {
+  const el = document.getElementById('detail');
+  if (view === 'decisions' && current && current.startsWith('d-')) {
+    const d = D.decisions.find(x => x.id === current);
+    el.innerHTML = `<h2>${d.question}</h2><p>${d.context || ''}</p>` +
+      d.options.map(o => `<p><strong>${o.label}</strong><br>buys ${o.buys}<br>costs ${o.costs}` +
+        (o.kills ? `<br>kills ${o.kills}` : '') + `</p>`).join('') +
+      `<dl><dt>Chosen</dt><dd>${d.chosen || '—'}</dd><dt>Right if</dt><dd>${d.right_if || '—'}</dd>
+       <dt>Status</dt><dd>${d.status}</dd></dl>`;
+    return;
+  }
+  const id = current; const s = byId[id];
+  if (!s) { el.innerHTML = '<p style="color:var(--mut)">Pick a screen.</p>'; return; }
+  const step = (() => {
+    for (const j of D.journeys) for (const st of j.steps)
+      if ((st.screens || []).includes(id)) return `${j.name || j.id} · ${st.name || st.id}`;
+    return 'not in the agreed scope';
+  })();
+  const inv = (BOARDS[id] || '').match(/data-component="([^"]+)"/g) || [];
+  const gate = s.unagreed ? `<div class="gate">The scope document has not seen this. ${s.unagreed}</div>` : '';
+  el.innerHTML = `<h2>${s.title || id} <span class="pill">${s.kind}</span>${s.parent ? `<span class="pill">under ${s.parent}</span>` : ''}</h2>
+  ${gate}
+  <iframe srcdoc="${(BOARDS[id] || '').replace(/"/g, '&quot;')}"></iframe>
+  <dl>
+    <dt>Where in the scope</dt><dd>${step}</dd>
+    <dt>Why it is like this</dt><dd>${D.rationale[id] || '<em>no rationale — this is a finding</em>'}</dd>
+    <dt>Leads here</dt><dd>${inbound(id).map(r => `${r.from || 'system'} <code>${r.via}</code> ${r.label || r.gesture || ''}`).join('<br>') || '—'}</dd>
+    <dt>Leads away</dt><dd>${outbound(id).map(r => `${r.label || r.gesture} → ${r.to} <code>${r.via}</code>`).join('<br>') || '—'}</dd>
+    <dt>Made of</dt><dd>${[...new Set(inv.map(m => m.split('"')[1]))].join(', ') || '—'}</dd>
+    ${isFail(id) ? `<dt>Failure clause</dt><dd>${D.failures[id]}</dd>` : ''}
+  </dl>`;
+}
+
+document.addEventListener('click', e => {
+  const v = e.target.closest('[data-view]');
+  if (v) { view = v.dataset.view; current = null;
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-current', b === v));
+    renderList(); renderDetail(); return; }
+  const r = e.target.closest('[data-id],[data-dec]');
+  if (r) { current = r.dataset.id || r.dataset.dec; location.hash = current; renderList(); renderDetail(); }
+});
+document.getElementById('q').addEventListener('input', e => { query = e.target.value.toLowerCase(); renderList(); });
+document.getElementById('happy').addEventListener('change', e => { happy = e.target.checked; renderList(); });
+addEventListener('keydown', e => {
+  if (e.key === '/' && e.target.tagName !== 'INPUT') { e.preventDefault(); document.getElementById('q').focus(); }
+  if (e.key === 'Escape') { document.getElementById('q').value = ''; query = ''; renderList(); }
+});
+addEventListener('hashchange', () => { current = location.hash.slice(1); renderList(); renderDetail(); });
+current = location.hash.slice(1) || null;
+renderList(); renderDetail();
+</script>

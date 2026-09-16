@@ -1,0 +1,432 @@
+<title>Swarm Desktop Design Handoff</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F7F7F5; --raise:#FFFFFF; --ink:#15171A; --dim:#5C6169;
+  --line:#E2E2DF; --line2:#C9C9C5;
+  --accent:#B4530A; --accent-soft:#FDF1E6;
+  --good:#1F6F43; --good-soft:#E9F3ED;
+  --bad:#A32020;  --bad-soft:#FBECEC;
+  --warn:#8A5A00; --warn-soft:#FBF2DF;
+  --display:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  --body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121417; --raise:#191C20; --ink:#ECEDEA; --dim:#979CA3;
+    --line:#272B30; --line2:#3A3F46;
+    --accent:#E8934A; --accent-soft:#2A1E12;
+    --good:#4FAF7C; --good-soft:#132218;
+    --bad:#E0736B;  --bad-soft:#241414;
+    --warn:#D6A45A; --warn-soft:#241D0F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121417; --raise:#191C20; --ink:#ECEDEA; --dim:#979CA3;
+  --line:#272B30; --line2:#3A3F46;
+  --accent:#E8934A; --accent-soft:#2A1E12;
+  --good:#4FAF7C; --good-soft:#132218;
+  --bad:#E0736B;  --bad-soft:#241414;
+  --warn:#D6A45A; --warn-soft:#241D0F;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:24px;padding-block:0 96px}
+@media(max-width:560px){.wrap{padding-inline:18px}}
+
+/* ---------- masthead ---------- */
+.mast{border-bottom:2px solid var(--ink);padding-block:52px 22px;margin-bottom:44px}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 16px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6.2vw,58px);
+  line-height:1.02;letter-spacing:-.025em;margin:0 0 18px;text-wrap:balance}
+.standfirst{font-size:20px;line-height:1.5;color:var(--dim);max-width:60ch;margin:0}
+.mastmeta{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:26px;
+  font-family:var(--mono);font-size:12px;color:var(--dim)}
+.mastmeta b{color:var(--ink);font-weight:600}
+
+/* ---------- structure ---------- */
+h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,3.4vw,31px);
+  line-height:1.15;letter-spacing:-.018em;margin:64px 0 6px;text-wrap:balance}
+h2:first-of-type{margin-top:0}
+.sectrule{height:1px;background:var(--line2);margin:0 0 26px}
+h3{font-family:var(--display);font-weight:600;font-size:18.5px;letter-spacing:-.008em;
+  margin:36px 0 10px;text-wrap:balance}
+h4{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--dim);margin:30px 0 10px}
+p{margin:0 0 15px;max-width:68ch}
+ul,ol{margin:0 0 15px;padding-left:22px;max-width:68ch}
+li{margin-bottom:7px}
+a{color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+strong{font-weight:600}
+code,.m{font-family:var(--mono);font-size:.86em;background:var(--raise);
+  border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+em.lead{font-style:italic;font-weight:600}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:0 0 20px;border:1px solid var(--line);border-radius:5px;
+  background:var(--raise)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-family:var(--display);
+  font-weight:500}
+th{text-align:left;font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--dim);
+  padding:11px 14px;border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top;line-height:1.45}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tbody tr:first-child td{border-top:none}
+td .m{background:transparent;border:none;padding:0;font-size:13px}
+
+/* ---------- status chips ---------- */
+.s{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
+  font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 8px;
+  border-radius:3px;white-space:nowrap}
+.s.ok{background:var(--good-soft);color:var(--good)}
+.s.no{background:var(--bad-soft);color:var(--bad)}
+.s.wa{background:var(--warn-soft);color:var(--warn)}
+.s.nu{background:var(--raise);color:var(--dim);border:1px solid var(--line2)}
+
+/* ---------- measured panel ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;
+  overflow:hidden;margin:0 0 22px}
+.cell{background:var(--raise);padding:15px 16px}
+.cell .v{font-family:var(--display);font-weight:700;font-size:29px;line-height:1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.cell .v.z{color:var(--good)}
+.cell .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dim);margin-top:8px;line-height:1.4}
+
+/* ---------- callouts ---------- */
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:15px 18px;margin:0 0 22px;border-radius:0 4px 4px 0}
+.note p:last-child{margin-bottom:0}
+.note .lbl{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:7px}
+.warnbox{border-left-color:var(--bad);background:var(--bad-soft)}
+.warnbox .lbl{color:var(--bad)}
+
+/* ---------- flow ---------- */
+.flow{display:flex;flex-wrap:wrap;gap:9px;align-items:stretch;margin:0 0 22px}
+.step{flex:1 1 150px;min-width:0;background:var(--raise);border:1px solid var(--line);
+  border-radius:5px;padding:13px 14px}
+.step .t{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);
+  margin-bottom:5px}
+.step .d{font-size:13.5px;font-family:var(--display);font-weight:500;line-height:1.4}
+.step .x{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:6px;
+  line-height:1.45;word-break:break-word}
+
+/* ---------- link list ---------- */
+.links{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:5px;overflow:hidden;margin:0 0 22px}
+.lk{background:var(--raise);padding:13px 15px;display:flex;flex-wrap:wrap;
+  gap:4px 14px;align-items:baseline}
+.lk .nm{font-family:var(--display);font-weight:600;font-size:15px;flex:1 1 210px}
+.lk .ds{font-size:13.5px;color:var(--dim);flex:2 1 300px;line-height:1.45}
+.lk .vn{font-family:var(--mono);font-size:11px;color:var(--dim)}
+footer{margin-top:76px;padding-top:20px;border-top:1px solid var(--line2);
+  font-family:var(--mono);font-size:11.5px;color:var(--dim);line-height:1.7}
+</style>
+
+<div class="wrap">
+
+<div class="mast">
+  <p class="kicker">Solar Punk · Swarm Desktop · design handoff</p>
+  <h1>The File Manager, as it stands</h1>
+  <p class="standfirst">Ninety-three drawn screens, the reasoning behind each one, and the
+  machinery that proves the set is still coherent after every change.</p>
+  <div class="mastmeta">
+    <span>Updated <b>15 September 2026</b></span>
+    <span>Prototype <b>v20</b></span>
+    <span>Source <span class="m">work/flowA</span></span>
+    <span>Jira <b>SPDV-1500 / SPDV-1501</b></span>
+  </div>
+</div>
+
+<h2>What this is</h2>
+<div class="sectrule"></div>
+
+<p>The File Manager redesign has two audiences and therefore two documents, and the
+project rule is that <strong>both stay current or neither is trusted</strong>:</p>
+
+<ul>
+  <li>The <strong>BizDev canvas</strong> (Google Doc <span class="m">1-nvpA2OER…EQtmHs</span>) —
+  the agreed scope. Journeys, step IDs and gates live there and are copied into the
+  prototype <em class="lead">without paraphrase</em>, so a name means the same thing in both.</li>
+  <li>The <strong>prototype</strong> — every screen, with the reasoning, the routes, the
+  failure states and the product IA. This is what engineering and QA build from.</li>
+</ul>
+
+<p>Everything in the prototype is generated from Python source. No screen is hand-authored
+HTML, no copy is typed twice, and the build refuses to complete if the route map and the
+boards disagree.</p>
+
+<div class="note">
+  <span class="lbl">The one rule that shaped everything</span>
+  <p>Say the <strong>consequence</strong> in plain words; never the <strong>mechanism</strong>.
+  A person is told that sharing cannot be taken back. They are never told about postage
+  batches, chunks, ACT, feeds or dilution — those words appear only inside Advanced, and a
+  build-time check counts them everywhere else. The count outside Advanced is <strong>0</strong>.</p>
+</div>
+
+<h2>Where everything lives</h2>
+<div class="sectrule"></div>
+
+<h4>Published — the working set</h4>
+<div class="links">
+  <div class="lk"><span class="nm">Swarm Desktop Prototype</span>
+    <span class="ds">The spine. All 93 screens on the canvas's own 46 steps, with map, grid, search and product views.</span>
+    <span class="vn">v20</span></div>
+  <div class="lk"><span class="nm">First Run</span>
+    <span class="ds">Unlocking, account creation, the first purchase, and the return to the file.</span>
+    <span class="vn">v12 · 24 artboards</span></div>
+  <div class="lk"><span class="nm">The File List</span>
+    <span class="ds">124 items at 32px rows, search, multi-select, and the three direct-manipulation gestures.</span>
+    <span class="vn">v8 · 15 artboards</span></div>
+  <div class="lk"><span class="nm">Websites</span>
+    <span class="ds">Private and public, the one-way door, version history, and Removed.</span>
+    <span class="vn">v7 · 11 artboards</span></div>
+  <div class="lk"><span class="nm">Sharing</span>
+    <span class="ds">Picking a person, the invite, the public door, and receiving.</span>
+    <span class="vn">v9 · 11 artboards</span></div>
+  <div class="lk"><span class="nm">Storage and Advanced</span>
+    <span class="ds">The two dials, the address book (journey F), and the real names.</span>
+    <span class="vn">v11 · 16 artboards</span></div>
+  <div class="lk"><span class="nm">When Things Go Wrong</span>
+    <span class="ds">Offline, full, stalled, refused, blocked elsewhere.</span>
+    <span class="vn">v14 · 14 artboards</span></div>
+  <div class="lk"><span class="nm">Levelling the Canvas</span>
+    <span class="ds">The queued edits the live Google Doc still needs. Eleven, not eight.</span>
+    <span class="vn">behind</span></div>
+</div>
+
+<h4>Also delivered</h4>
+<p><span class="m">Swarm-Desktop-Prototype-offline.html</span> — the same prototype with React
+inlined. 2.2 MB, zero external requests, opens from a disk with no network. Built by
+<span class="m">offline.py</span> so it can never drift from the online copy.</p>
+
+<h2>How a change flows</h2>
+<div class="sectrule"></div>
+
+<p>One direction, always. Nothing is edited downstream of where it is defined.</p>
+
+<div class="flow">
+  <div class="step"><div class="t">1 · source</div><div class="d">Board generators</div>
+    <div class="x">build.py … build11.py — tokens, CSS, icons, shell, every screen</div></div>
+  <div class="step"><div class="t">2 · structure</div><div class="d">Canvas correspondence</div>
+    <div class="x">journeys.py — 7 journeys, 46 steps, gates, recorded gaps</div></div>
+  <div class="step"><div class="t">3 · meaning</div><div class="d">Payload + IA</div>
+    <div class="x">proto.py — IA kinds, decisions, trouble, routes, the build gate</div></div>
+  <div class="step"><div class="t">4 · output</div><div class="d">Prototype &amp; canvases</div>
+    <div class="x">proto.py · canvases.py · sync-all.sh · seed-all.sh · offline.py</div></div>
+</div>
+
+<h4>The whole rebuild</h4>
+<p>Four commands, deterministic — re-running produces byte-identical files, which is how you
+know the published copy is still the current one:</p>
+<ul>
+  <li><span class="m">for f in build*.py; do python3 $f; done</span> — redraw all 93 boards</li>
+  <li><span class="m">python3 proto.py</span> — rebuild the prototype; <em class="lead">refuses</em> on a bad route map</li>
+  <li><span class="m">python3 offline.py</span> — rebuild the offline copy</li>
+  <li><span class="m">sh sync-all.sh &amp;&amp; sh seed-all.sh</span> — stage and re-seed the six canvases</li>
+</ul>
+
+<h2>Where it stands</h2>
+<div class="sectrule"></div>
+
+<div class="grid">
+  <div class="cell"><div class="v">93</div><div class="k">screens drawn</div></div>
+  <div class="cell"><div class="v">46</div><div class="k">canvas steps served</div></div>
+  <div class="cell"><div class="v">119</div><div class="k">placements</div></div>
+  <div class="cell"><div class="v">177</div><div class="k">routes, all binding</div></div>
+  <div class="cell"><div class="v z">0</div><div class="k">dead routes</div></div>
+  <div class="cell"><div class="v z">0</div><div class="k">undrawn canvas steps</div></div>
+</div>
+
+<h4>Product IA — every screen is exactly one kind</h4>
+<div class="tw"><table>
+<thead><tr><th>Kind</th><th class="n">Count</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td><strong>Place</strong></td><td class="n">13</td><td>Somewhere you can be and come back to. Has a nav row and a name a person would say aloud.</td></tr>
+<tr><td><strong>State</strong></td><td class="n">41</td><td>A place under a condition — same route, same heading, different content. Not a destination.</td></tr>
+<tr><td><strong>Detour</strong></td><td class="n">25</td><td>Opened, finished, returned from. It has to end where you were.</td></tr>
+<tr><td><strong>Entrance</strong></td><td class="n">14</td><td>Before you are inside the product at all.</td></tr>
+</tbody></table></div>
+
+<h4>Journeys — copied from the canvas, not invented</h4>
+<div class="tw"><table>
+<thead><tr><th>ID</th><th>Journey</th><th class="n">Steps</th><th>In canvas</th></tr></thead>
+<tbody>
+<tr><td class="m">A</td><td>First use and first upload</td><td class="n">9</td><td><span class="s ok">yes</span></td></tr>
+<tr><td class="m">B</td><td>Website workspace and publishing</td><td class="n">8</td><td><span class="s ok">yes</span></td></tr>
+<tr><td class="m">C</td><td>Private sharing</td><td class="n">7</td><td><span class="s ok">yes</span></td></tr>
+<tr><td class="m">D</td><td>Receiving a shared file</td><td class="n">5</td><td><span class="s ok">yes</span></td></tr>
+<tr><td class="m">E</td><td>Personal Drive and recovery</td><td class="n">6</td><td><span class="s ok">yes</span></td></tr>
+<tr><td class="m">F</td><td>Knowing who you are sharing with</td><td class="n">6</td><td><span class="s wa">ours</span></td></tr>
+<tr><td class="m">S</td><td>Always available</td><td class="n">5</td><td><span class="s wa">ours</span></td></tr>
+</tbody></table></div>
+<p>F and S are labels <em class="lead">added here</em>, not citations. The artifact says so on
+every screen, because someone quoting "S2" in a ticket must not believe they are quoting
+the canvas.</p>
+
+<h2>What the product decided</h2>
+<div class="sectrule"></div>
+
+<p>Forty-two decision records ride on the screens they govern, so a reviewer is never looking
+at a screen without its reasoning. The ones that shaped the most:</p>
+
+<div class="tw"><table>
+<thead><tr><th>Decision</th><th>What it settles</th></tr></thead>
+<tbody>
+<tr><td><span class="m">r-plainwords</span></td><td>Consequence in plain words, mechanism never. Mechanism vocabulary outside Advanced: <strong>158 → 0</strong>.</td></tr>
+<tr><td><span class="m">r-landing</span></td><td>Home is a permanent landing page, not a dashboard. Reverses canvas E1, which is right for a product you live in and wrong for one you visit every few weeks.</td></tr>
+<tr><td><span class="m">r-provenance</span></td><td>Something the product <em class="lead">observed</em> wears the inbound chip; something the user <em class="lead">asserted</em> is plain grey. Never "strong / weak evidence".</td></tr>
+<tr><td><span class="m">r-chips</span></td><td>"Only you" is plain text; every other access state is a chip, graded by reach. Blue is revocable, amber is not — because with a public link the chunks are already fetchable.</td></tr>
+<tr><td><span class="m">r-forget</span></td><td>Removing moves things to <strong>Removed</strong>, which still costs storage. The verb is "Remove", so the place is its past tense.</td></tr>
+<tr><td><span class="m">r-drag</span></td><td>Dropping is buying and says the size before you let go. <strong>Moving is not</strong>, and says so while you are still holding — everywhere else in software, dropping a file into a shared folder shares it.</td></tr>
+<tr><td><span class="m">r-wait</span></td><td>The purchase wall stays; the wait behind it becomes leaveable. The queued file is named, and the end of the wait comes and finds you.</td></tr>
+<tr><td><span class="m">r-empty</span></td><td>Every user-facing place has its empty state drawn, from one shared component. Seven were missing; seven teams would have invented seven answers.</td></tr>
+</tbody></table></div>
+
+<h4>The three truths</h4>
+<p>Taught once on the landing page, referenced in six words or fewer everywhere else:
+<strong>It's yours</strong> · <strong>It's permanent</strong> · <strong>You buy space</strong>.</p>
+
+<h2>How quality is proved</h2>
+<div class="sectrule"></div>
+
+<p>Nothing in this project is argued when it can be measured. Each harness runs against the
+93 built boards or the assembled prototype and prints a number; the number is what goes in a
+review, not an opinion.</p>
+
+<div class="tw"><table>
+<thead><tr><th>Harness</th><th>What it proves</th><th>Now</th></tr></thead>
+<tbody>
+<tr><td><span class="m">proto.py check()</span></td><td>Every declared route binds to text that exists; no duplicate keys in any table</td><td><span class="s ok">177 / 177</span></td></tr>
+<tr><td><span class="m">fits.mjs</span></td><td>No content falls off a board, at 1440 and 1280</td><td><span class="s ok">0</span></td></tr>
+<tr><td><span class="m">px + measure.py</span></td><td>Contrast, light theme, 794 elements</td><td><span class="s ok">0 fail</span></td></tr>
+<tr><td><span class="m">pxdark + measured.py</span></td><td>Contrast, dark theme, same elements</td><td><span class="s ok">0 fail</span></td></tr>
+<tr><td><span class="m">veil.mjs</span></td><td>No translucent layer dims text below 4.5:1 — the case the contrast checker structurally cannot see</td><td><span class="s ok">0</span></td></tr>
+<tr><td><span class="m">chipfit.mjs</span></td><td>No chip wider than its grid cell</td><td><span class="s ok">0</span></td></tr>
+<tr><td><span class="m">audit.mjs</span></td><td>Headings, labelled controls, colour-only status, line measure</td><td><span class="s ok">0 / 0 / 0 / 0</span></td></tr>
+<tr><td><span class="m">copy.mjs</span></td><td>Mechanism words outside Advanced; teaching clauses</td><td><span class="s ok">0 / 0</span></td></tr>
+<tr><td><span class="m">dens.mjs</span></td><td>Element count per board — density at the scale the design was chosen for</td><td><span class="s ok">median 30</span></td></tr>
+<tr><td><span class="m">views.mjs · ia.mjs</span></td><td>Map, grid, search and product views render with no errors</td><td><span class="s ok">clean</span></td></tr>
+<tr><td><span class="m">offline.mjs</span></td><td>The offline copy mounts with the browser offline and every non-file request refused</td><td><span class="s ok">mounts</span></td></tr>
+</tbody></table></div>
+
+<p>One known finding stands, deliberately: <strong>35 boards carry sub-24px chips</strong>. Checked
+— six on the busiest board, none interactive. They are status marks, not controls, so the
+touch-target rule does not apply.</p>
+
+<h2>Correspondence with the backlog</h2>
+<div class="sectrule"></div>
+
+<p>SPDV-1500 (the Swarm Desktop shell) and SPDV-1501 (the File Manager widget) decompose into
+twelve epics. Eleven land on a place in this IA; the twelfth is a process epic and correctly
+has no design. <strong>The split is better than this artifact's</strong> — it separates host from
+widget, and this artifact has never drawn the File Manager without the shell around it.</p>
+
+<div class="grid">
+  <div class="cell"><div class="v">12</div><div class="k">epics</div></div>
+  <div class="cell"><div class="v">14</div><div class="k">stories</div></div>
+  <div class="cell"><div class="v">14</div><div class="k">of 93 screens storied</div></div>
+  <div class="cell"><div class="v" style="color:var(--bad)">15</div><div class="k">stale required strings</div></div>
+</div>
+
+<div class="note warnbox">
+  <span class="lbl">Act on this before anyone builds</span>
+  <p>All 122 bolded "text required" strings across the 14 stories were tested against the
+  built prototype. <strong>103 still match; 15 no longer exist</strong> — the stories were
+  transcribed from a pre-audit prototype. Built literally, they revert the copy work.
+  SPDV-1514 alone has seven, including the whole replaced
+  <span class="m">BEFORE YOU ADD ANYTHING</span> block.</p>
+  <p>The durable fix is not a one-off correction: replace "text required" with a pointer to
+  the prototype board, so copy has <strong>one</strong> source of truth rather than two that drift.</p>
+</div>
+
+<h4>Unowned work</h4>
+<div class="tw"><table>
+<thead><tr><th>What</th><th class="n">Screens</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Sign-in and account — every unlock variant, account creation, backup file, two restore failures</td><td class="n">15</td><td><span class="s no">no epic</span></td></tr>
+<tr><td>Second computer and recovery</td><td class="n">3</td><td><span class="s no">no epic</span></td></tr>
+<tr><td>Sharing — logic and function <span class="m">SPDV-1510</span></td><td class="n">10</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Address book <span class="m">SPDV-1511</span> — journey F</td><td class="n">9</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Shared with me <span class="m">SPDV-1508</span></td><td class="n">7</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Advanced <span class="m">SPDV-1504</span></td><td class="n">4</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Direct manipulation — under <span class="m">SPDV-1506</span></td><td class="n">5</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Home and HomeQuiet — the permanent landing</td><td class="n">2</td><td><span class="s wa">no story</span></td></tr>
+</tbody></table></div>
+
+<p>The backlog is thinnest exactly where the design is thickest. Journey F is nine finished
+screens with rationale and failure states, and no ticket.</p>
+
+<h2>Open items</h2>
+<div class="sectrule"></div>
+
+<h3>1 · The Google Doc is eleven edits behind</h3>
+<p>This is the only thing genuinely blocking handoff, because the doc is the other source of
+truth. Missing: gates <strong>G13, G14, JF1</strong> (asserted in the artifact, never seen in the
+doc), the G11/G12 remedy fix, the S section, the rail decision, the A0/A1 password
+corrections, journey F, and now the two renames plus the gesture step-text changes.</p>
+
+<h3>2 · Six steps the canvas asks for that nothing draws</h3>
+<p>Recorded against their step IDs, so they read as scope gaps rather than a to-do list:</p>
+<div class="tw"><table>
+<thead><tr><th>Step</th><th>Gap</th></tr></thead>
+<tbody>
+<tr><td class="m">A5 / A8</td><td>Pre-save storage estimate for a file — the same gap from both ends. Websites show a cost before saving; files do not.</td></tr>
+<tr><td class="m">A3</td><td>Two distinguishable upload-refusal causes. Only the partitioned-storage case is drawn, so a stamper that failed reads as storage never bought.</td></tr>
+<tr><td class="m">B7</td><td>Stopping the public link — the <em class="lead">site</em> case, where every published version stays reachable by index at the same address.</td></tr>
+<tr><td class="m">C7</td><td>The stop-sharing confirmation door. The list offers it and the aftermath is drawn; the screen between them is missing.</td></tr>
+<tr><td class="m">E5</td><td>Choosing between two kept versions of one file.</td></tr>
+</tbody></table></div>
+
+<h3>3 · Two gaps the backlog found in us</h3>
+<ul>
+  <li><strong>No home page in the chosen folder.</strong> Falls under the documented trouble rule —
+  <em class="lead">the input is ambiguous and the product refuses to guess</em>. Never auto-pick: a wrong
+  home page publishes the wrong thing under a permanent address.</li>
+  <li><strong>The scanning state</strong> between folder pick and modal. Nothing under 400ms; past
+  that, name the folder and the count so far, because silence reads as a crash.</li>
+</ul>
+
+<h3>4 · One decision engineering must settle</h3>
+<p>The one-computer-at-a-time constraint (<span class="m">r-devices</span>) is inferred from two
+documented facts, not from a documented two-node case. If devices are already coordinated,
+<span class="m">OtherComputer</span> and <span class="m">TakeOver</span> should be deleted rather
+than built.</p>
+
+<h3>5 · The widget has never been drawn alone</h3>
+<p>SPDV-1505 requires the File Manager to ship standalone. All 93 boards draw the full window —
+titlebar, rail, sidebar, content. If that requirement is real, it affects every board.</p>
+
+<h2>Picking this up</h2>
+<div class="sectrule"></div>
+
+<ol>
+  <li><strong>Rebuild and verify first.</strong> Run the four commands above, then the harnesses.
+  If <span class="m">proto.py</span> refuses, it is telling you the route map and the boards
+  disagree — fix that before anything else.</li>
+  <li><strong>Read the prototype's product view</strong> (press <span class="m">p</span>) before the
+  map. It answers "what kind of thing is this screen" for all 93, which is the question that
+  makes the rest legible.</li>
+  <li><strong>Change copy in the generator, never in the HTML.</strong> The <span class="m">.dc.html</span>
+  files are build output and are overwritten.</li>
+  <li><strong>Add a screen in four places</strong> or the build will stop you: the generator, a
+  journey step in <span class="m">journeys.py</span>, an IA kind and title in
+  <span class="m">proto.py</span>, and a canvas artboard in <span class="m">canvases.py</span>.</li>
+  <li><strong>Never bulk-edit copy with a regex across the generators.</strong> See the procedure
+  document — this failed once, damaged five files, and the repair took longer than the rewrite.</li>
+</ol>
+
+<footer>
+Swarm Desktop · File Manager redesign · handoff prepared 15 September 2026<br>
+Companion document: <em class="lead">Designing a Product You Can Prove</em> — the general procedure this project followed.
+</footer>
+
+</div>

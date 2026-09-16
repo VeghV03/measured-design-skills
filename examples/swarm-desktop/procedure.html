@@ -1,0 +1,664 @@
+<title>Designing a Product You Can Prove</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F7F7F5; --raise:#FFFFFF; --ink:#15171A; --dim:#5C6169;
+  --line:#E2E2DF; --line2:#C9C9C5;
+  --accent:#B4530A; --accent-soft:#FDF1E6;
+  --good:#1F6F43; --good-soft:#E9F3ED;
+  --bad:#A32020;  --bad-soft:#FBECEC;
+  --warn:#8A5A00; --warn-soft:#FBF2DF;
+  --display:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  --body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121417; --raise:#191C20; --ink:#ECEDEA; --dim:#979CA3;
+    --line:#272B30; --line2:#3A3F46;
+    --accent:#E8934A; --accent-soft:#2A1E12;
+    --good:#4FAF7C; --good-soft:#132218;
+    --bad:#E0736B;  --bad-soft:#241414;
+    --warn:#D6A45A; --warn-soft:#241D0F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121417; --raise:#191C20; --ink:#ECEDEA; --dim:#979CA3;
+  --line:#272B30; --line2:#3A3F46;
+  --accent:#E8934A; --accent-soft:#2A1E12;
+  --good:#4FAF7C; --good-soft:#132218;
+  --bad:#E0736B;  --bad-soft:#241414;
+  --warn:#D6A45A; --warn-soft:#241D0F;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:24px;padding-block:0 96px}
+@media(max-width:560px){.wrap{padding-inline:18px}}
+
+.mast{border-bottom:2px solid var(--ink);padding-block:52px 22px;margin-bottom:40px}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 16px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6.2vw,58px);
+  line-height:1.02;letter-spacing:-.025em;margin:0 0 18px;text-wrap:balance}
+.standfirst{font-size:20px;line-height:1.5;color:var(--dim);max-width:62ch;margin:0}
+
+/* phase numbering — earned: this genuinely is a sequence */
+.phase{display:flex;gap:18px;align-items:baseline;margin:68px 0 6px;
+  border-top:2px solid var(--ink);padding-top:16px}
+.phase .no{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--accent);
+  flex:none;padding-top:9px;letter-spacing:.06em}
+.phase h2{margin:0;font-family:var(--display);font-weight:600;
+  font-size:clamp(25px,3.6vw,33px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
+.phase .out{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:7px;
+  letter-spacing:.04em}
+h2.plain{font-family:var(--display);font-weight:600;font-size:clamp(25px,3.6vw,33px);
+  line-height:1.1;letter-spacing:-.02em;margin:68px 0 20px;padding-top:16px;
+  border-top:2px solid var(--ink);text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.008em;
+  margin:34px 0 10px;text-wrap:balance}
+h4{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--dim);margin:28px 0 10px}
+p{margin:0 0 15px;max-width:68ch}
+ul,ol{margin:0 0 15px;padding-left:22px;max-width:68ch}
+li{margin-bottom:8px}
+a{color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:2px}
+strong{font-weight:600}
+code,.m{font-family:var(--mono);font-size:.86em;background:var(--raise);
+  border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+em.lead{font-style:italic;font-weight:600}
+
+.tw{overflow-x:auto;margin:0 0 20px;border:1px solid var(--line);border-radius:5px;
+  background:var(--raise)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-family:var(--display);
+  font-weight:500}
+th{text-align:left;font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--dim);
+  padding:11px 14px;border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top;line-height:1.45}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tbody tr:first-child td{border-top:none}
+td .m{background:transparent;border:none;padding:0;font-size:13px;white-space:nowrap}
+
+/* example — the thing that makes this concrete */
+.eg{border:1px solid var(--line2);border-radius:5px;background:var(--raise);
+  padding:16px 18px;margin:0 0 22px}
+.eg .lbl{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:9px}
+.eg p:last-child{margin-bottom:0}
+.eg p{max-width:none}
+
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:15px 18px;margin:0 0 22px;border-radius:0 4px 4px 0}
+.note p:last-child{margin-bottom:0}
+.note p{max-width:none}
+.note .lbl{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:7px}
+.warnbox{border-left-color:var(--bad);background:var(--bad-soft)}
+.warnbox .lbl{color:var(--bad)}
+
+pre{background:var(--raise);border:1px solid var(--line);border-radius:5px;
+  padding:14px 16px;overflow-x:auto;margin:0 0 20px;
+  font-family:var(--mono);font-size:12.5px;line-height:1.62}
+pre code{background:none;border:none;padding:0;font-size:inherit}
+
+.skills{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:5px;overflow:hidden;margin:0 0 22px}
+.sk{background:var(--raise);padding:13px 15px;display:flex;flex-wrap:wrap;gap:4px 14px;
+  align-items:baseline}
+.sk .n{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--accent);
+  flex:1 1 235px;word-break:break-word}
+.sk .w{font-size:14px;color:var(--ink);flex:2 1 320px;line-height:1.5;
+  font-family:var(--display);font-weight:500}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;
+  overflow:hidden;margin:0 0 22px}
+.cell{background:var(--raise);padding:15px 16px}
+.cell .v{font-family:var(--display);font-weight:700;font-size:28px;line-height:1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.cell .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dim);margin-top:8px;line-height:1.4}
+
+.rule{border-left:3px solid var(--line2);padding-left:16px;margin:0 0 20px}
+.rule .t{font-family:var(--display);font-weight:600;font-size:16px;margin-bottom:5px}
+.rule p{margin-bottom:0}
+
+footer{margin-top:76px;padding-top:20px;border-top:1px solid var(--line2);
+  font-family:var(--mono);font-size:11.5px;color:var(--dim);line-height:1.7}
+</style>
+
+<div class="wrap">
+
+<div class="mast">
+  <p class="kicker">Solar Punk · design practice</p>
+  <h1>Designing a Product You Can Prove</h1>
+  <p class="standfirst">A repeatable procedure for taking a product from an agreed scope
+  document to a measured, engineering-ready prototype — with the skills to invoke at each
+  stage, and worked examples from the Swarm Desktop File Manager.</p>
+</div>
+
+<h2 class="plain">The principle</h2>
+
+<p>Design reviews go wrong in a predictable way: two people hold different opinions about a
+screen, the more senior opinion wins, and nobody learns anything. The alternative is not more
+process. It is arranging the work so that <strong>most questions have an answer that can be
+counted</strong>, and spending the meeting only on the ones that genuinely cannot.</p>
+
+<p>This changes what a designer produces. The deliverable is not a set of screens. It is a
+set of screens <em class="lead">plus the machinery that proves they are still coherent after the
+next change</em> — because the expensive failure is never the first version, it is version
+eleven, where three screens quietly contradict each other and nobody notices for a month.</p>
+
+<div class="grid">
+  <div class="cell"><div class="v">158&thinsp;→&thinsp;0</div><div class="k">jargon words outside Advanced</div></div>
+  <div class="cell"><div class="v">42&thinsp;→&thinsp;0</div><div class="k">screens with no heading</div></div>
+  <div class="cell"><div class="v">22&thinsp;→&thinsp;0</div><div class="k">routes pointing at nothing</div></div>
+  <div class="cell"><div class="v">14&thinsp;→&thinsp;0</div><div class="k">chips painting over a column</div></div>
+</div>
+
+<p>Every one of those was invisible until something counted it. None of them would have come
+up in a review.</p>
+
+<div class="note">
+  <span class="lbl">The test for a good finding</span>
+  <p>A finding is worth having if it would <strong>change what someone builds</strong>. "This
+  feels cluttered" fails the test. "Nine screens have no heading element, so a screen-reader
+  user cannot tell where they are" passes it, because there is now a definite thing to do
+  and a definite way to know it is done.</p>
+</div>
+
+<!-- ============================================================= PHASE 1 -->
+<div class="phase">
+  <span class="no">01</span>
+  <div><h2>Frame the problem before drawing anything</h2>
+  <div class="out">Output: a problem statement, the audience, and the one worst outcome</div></div>
+</div>
+
+<p>The first hour decides whether the next hundred are useful. Three questions, and they
+must be answered in words a non-designer would use.</p>
+
+<h4>Who is this for, exactly</h4>
+<p>Not a segment — a person with a frequency. "Someone who opens this every few weeks" and
+"someone who lives in this all day" produce opposite products, and the difference shows up
+immediately in whether the landing page is a dashboard or a teaching surface.</p>
+
+<div class="eg">
+  <span class="lbl">Swarm Desktop</span>
+  <p>The persona was <strong>chosen on purpose, not technical</strong>. That single decision
+  reversed a line in the agreed canvas: the canvas said the first release has no Home screen,
+  which is right for a product you live in and wrong for one you visit periodically. Home
+  became a permanent landing page that teaches what you can do here, because a periodic
+  visitor has forgotten.</p>
+</div>
+
+<h4>What is the worst thing this product can do</h4>
+<p>Name one. It becomes the tie-breaker for every later argument, and it earns disproportionate
+design attention.</p>
+
+<div class="eg">
+  <span class="lbl">Swarm Desktop</span>
+  <p><strong>A file reaches the wrong person.</strong> Everything downstream followed: the
+  address book was rebuilt around provenance, the share picker gained a duplicate-name warning,
+  and the drag-into-folder screen exists almost entirely to carry one sentence — <em class="lead">moving
+  does not share</em> — because every other file manager has taught people the opposite.</p>
+</div>
+
+<h4>What must never be said, and what must always be</h4>
+<p>Products built on unusual infrastructure have a vocabulary problem. Decide the policy once,
+in a form that can be checked mechanically later.</p>
+
+<div class="eg">
+  <span class="lbl">Swarm Desktop</span>
+  <p>Policy: <strong>consequence in plain words, mechanism never.</strong> A person is told
+  sharing cannot be taken back; they are never told about postage batches, chunks, ACT, feeds
+  or dilution. Because the policy named a word list, it became a test — and the count outside
+  Advanced went from 158 to 0.</p>
+</div>
+
+<div class="skills">
+  <div class="sk"><span class="n">ux-strategy:frame-problem</span><span class="w">Turn an ambiguous brief into constraints and success criteria</span></div>
+  <div class="sk"><span class="n">design-research:user-persona</span><span class="w">A person with a frequency, not a segment</span></div>
+  <div class="sk"><span class="n">design-research:jobs-to-be-done</span><span class="w">What someone hired this product to do</span></div>
+  <div class="sk"><span class="n">ai-alignment-reasoning:harm-anticipation</span><span class="w">Name the worst outcome before it is a bug report</span></div>
+  <div class="sk"><span class="n">ux-strategy:design-principles</span><span class="w">Write the rules that will settle later arguments</span></div>
+  <div class="sk"><span class="n">thinking-systems</span><span class="w">Second-order effects: what does this decision force elsewhere</span></div>
+</div>
+
+<!-- ============================================================= PHASE 2 -->
+<div class="phase">
+  <span class="no">02</span>
+  <div><h2>Model the structure, in two layers that disagree on purpose</h2>
+  <div class="out">Output: journeys · a product IA · a recorded list of what nothing serves</div></div>
+</div>
+
+<p>Most projects model one structure and suffer for it. You need two, and the tension between
+them is informative.</p>
+
+<div class="rule">
+  <div class="t">Layer one — journeys: what happens in what order</div>
+  <p>Sequence, preconditions, consequences. This is what QA walks and what engineering
+  sequences work by. If a scope document already defines journeys, <strong>copy them
+  verbatim</strong> — never paraphrase. A developer holding both documents must never have
+  to build the mapping in their head.</p>
+</div>
+
+<div class="rule">
+  <div class="t">Layer two — product IA: what kind of thing each screen is</div>
+  <p>Orthogonal to sequence. Every screen is exactly one of four kinds, and the classification
+  is a design constraint, not a label.</p>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>Kind</th><th>Definition</th><th>What it obliges</th></tr></thead>
+<tbody>
+<tr><td><strong>Place</strong></td><td>Somewhere you can be and come back to</td><td>A nav row, a name people say aloud, and an empty state</td></tr>
+<tr><td><strong>State</strong></td><td>A place under a condition</td><td>Same route and heading as its parent. Not a routing target.</td></tr>
+<tr><td><strong>Detour</strong></td><td>Opened, finished, returned from</td><td>Must end where it started</td></tr>
+<tr><td><strong>Entrance</strong></td><td>Before you are inside the product</td><td>No assumed prior state</td></tr>
+</tbody></table></div>
+
+<div class="eg">
+  <span class="lbl">Why the second layer earns its keep</span>
+  <p>Classifying all 93 Swarm Desktop screens made a gap <strong>countable</strong>: four places
+  had exactly one state, and <strong>seven had no empty state at all</strong>. An empty place is
+  the most common screen any of them will ever show — every account starts there — and it was
+  the one nobody had drawn. Seven teams would have invented seven different answers to the
+  same three questions. They now come from one shared component.</p>
+</div>
+
+<h3>Record what nothing serves</h3>
+<p>Keep a gap list keyed to steps, not floating free. "Not on my list" and "the agreed scope
+asks for this and nothing serves it" are different claims, and only the second is useful.
+The Swarm Desktop artifact carries six, visible in the prototype beside the steps they belong
+to — including a pre-save cost estimate that websites have and files do not.</p>
+
+<div class="skills">
+  <div class="sk"><span class="n">ux-strategy:information-architecture</span><span class="w">The place / state / detour / entrance model</span></div>
+  <div class="sk"><span class="n">design-research:journey-map</span><span class="w">Sequence with preconditions and consequences</span></div>
+  <div class="sk"><span class="n">prototyping-testing:user-flow-diagram</span><span class="w">What precedes what, drawn so QA can walk it</span></div>
+  <div class="sk"><span class="n">interaction-design:state-machine</span><span class="w">States, events, guards — where an edge case hides</span></div>
+  <div class="sk"><span class="n">interaction-design:navigation-patterns</span><span class="w">Turning places into a rail that survives growth</span></div>
+</div>
+
+<!-- ============================================================= PHASE 3 -->
+<div class="phase">
+  <span class="no">03</span>
+  <div><h2>Generate the screens — never hand-author them</h2>
+  <div class="out">Output: every screen as build output, from one design system in code</div></div>
+</div>
+
+<p>This is the part most teams skip, and it is the part that makes everything after it
+possible. <strong>Screens are compiled, not drawn.</strong> A design tool gives you 93 files
+that drift; a generator gives you 93 files that cannot.</p>
+
+<h3>The pipeline</h3>
+<pre><code>build*.py      tokens · CSS · icons · shell · one function per screen
+     ↓
+*.dc.html      93 self-contained boards (build output, never edited)
+     ↓
+journeys.py    the scope document's own structure, copied verbatim
+proto.py       IA kinds · decisions · failure states · routes · THE GATE
+     ↓
+prototype      one navigable HTML file, map + grid + search + product views
+canvases.py    six themed canvases, each a slice of the same boards</code></pre>
+
+<h3>What lives where</h3>
+<div class="tw"><table>
+<thead><tr><th>File</th><th>Owns</th></tr></thead>
+<tbody>
+<tr><td><span class="m">build.py</span></td><td>Design tokens, the whole stylesheet, the icon set, the window shell, the nav. Everything else imports from it.</td></tr>
+<tr><td><span class="m">build2–11.py</span></td><td>One module per feature area. A screen is a function; its <strong>docstring is its rationale</strong>.</td></tr>
+<tr><td><span class="m">journeys.py</span></td><td>The correspondence with the agreed scope. Steps, gates, and which screens serve which step.</td></tr>
+<tr><td><span class="m">proto.py</span></td><td>Meaning: IA kinds, decision records, the failure-state register, the route map, and the build gate.</td></tr>
+<tr><td><span class="m">canvases.py</span></td><td>Which boards appear on which canvas, and the rationale notes pinned beside them.</td></tr>
+<tr><td><span class="m">offline.py</span></td><td>Inlines React so the prototype opens from a disk with no network.</td></tr>
+</tbody></table></div>
+
+<div class="note">
+  <span class="lbl">The single highest-value habit</span>
+  <p>Put the rationale in the function's <strong>docstring</strong> and extract it at build time
+  into the prototype. The reasoning then physically cannot drift from the screen, because they
+  are the same object. A reviewer is never looking at a screen without knowing why it is like
+  that — and you never maintain a separate rationale document that goes stale in a fortnight.</p>
+</div>
+
+<h3>Write components, not screens</h3>
+<p>The moment two screens do the same thing, that thing becomes a function. It is not
+DRY-for-its-own-sake — it is how a decision gets made <em class="lead">once</em>.</p>
+
+<div class="eg">
+  <span class="lbl">Swarm Desktop</span>
+  <p><span class="m">empty_state(glyph, heading, line, actions, foot)</span> answers the same
+  three questions on all seven empty places: where you are, what this place is for, and the
+  one action that fills it. <span class="m">door(…)</span> is the shape of every irreversible
+  confirmation: consequence, an explicit <em class="lead">what this will not do</em> list, the
+  precondition, and one destructive action. <span class="m">who_cell(who)</span> is the access
+  language in one place — which is why "Only you" is plain grey text on all 93 boards and not
+  a chip on some of them.</p>
+</div>
+
+<h3>Model the interactions that have no button</h3>
+<p>Every screen reachable by clicking a label is the easy half. People drag files in and
+right-click rows, and if the model is silent, each engineer invents an answer.</p>
+
+<div class="eg">
+  <span class="lbl">Swarm Desktop</span>
+  <p>Five late boards closed this: dragging in, dropping with nowhere to put it, what the
+  holding means, the right-click menu, and dragging rows into a folder. The menu alone was
+  the home of <strong>six actions that had screens already and no drawn way in</strong>. Because
+  a route map is built from clickable labels, these can never have an arrow drawn to them —
+  so the model records them as <em class="lead">gesture entrances</em> rather than counting them
+  as unreachable.</p>
+</div>
+
+<div class="skills">
+  <div class="sk"><span class="n">design-systems:design-token</span><span class="w">Tokens first — every colour and space from one place</span></div>
+  <div class="sk"><span class="n">design-systems:create-component</span><span class="w">Props, states, variants, accessibility, in one spec</span></div>
+  <div class="sk"><span class="n">ui-design:design-screen</span><span class="w">Layout from requirements</span></div>
+  <div class="sk"><span class="n">interaction-design:gesture-patterns</span><span class="w">Drag, drop and context menus — the unbuttoned half</span></div>
+  <div class="sk"><span class="n">interaction-design:error-flow</span><span class="w">Prevention, detection, message, recovery</span></div>
+  <div class="sk"><span class="n">interaction-design:loading-states</span><span class="w">What an unavoidable wait shows</span></div>
+  <div class="sk"><span class="n">designer-toolkit:ux-writing</span><span class="w">When the words are the deliverable</span></div>
+  <div class="sk"><span class="n">designer-toolkit:design-rationale</span><span class="w">The docstring: context, options, why, trade-off, right-if</span></div>
+</div>
+
+<!-- ============================================================= PHASE 4 -->
+<div class="phase">
+  <span class="no">04</span>
+  <div><h2>Audit as a stack, and force the decisions out loud</h2>
+  <div class="out">Output: answered decisions, and findings that name a file and a line</div></div>
+</div>
+
+<p>Run the audits as a <strong>stack</strong>, not one at a time. Findings from different lenses
+land on the same screen and interact, and you want to see that before you fix anything.</p>
+
+<div class="skills">
+  <div class="sk"><span class="n">inclusive-interaction:audit</span><span class="w">Keyboard, targets, gesture alternatives, motion, feedback</span></div>
+  <div class="sk"><span class="n">design-systems:audit-system</span><span class="w">Consistency and completeness of the system itself</span></div>
+  <div class="sk"><span class="n">designer-toolkit:design-token-audit</span><span class="w">Hard-coded values that escaped the tokens</span></div>
+  <div class="sk"><span class="n">accessible-content:review</span><span class="w">Headings, labels, link text, reading level</span></div>
+  <div class="sk"><span class="n">adaptive-interfaces:information-density</span><span class="w">Cognitive load at the real scale, not the demo scale</span></div>
+  <div class="sk"><span class="n">ux-strategy:information-architecture</span><span class="w">Does the structure still hold</span></div>
+  <div class="sk"><span class="n">interaction-design:jakobs-law</span><span class="w">Where you break convention, and whether it is worth it</span></div>
+  <div class="sk"><span class="n">interaction-design:onboarding-design</span><span class="w">First run and time to first value</span></div>
+  <div class="sk"><span class="n">ai-alignment-reasoning:red-team</span><span class="w">How does this mislead someone acting in good faith</span></div>
+  <div class="sk"><span class="n">visual-critique:critique-screen</span><span class="w">Seven visual lenses on one rendered screen</span></div>
+  <div class="sk"><span class="n">model-interaction-design:design-conversation</span><span class="w">Who leads at each turn</span></div>
+</div>
+
+<h3>Red-team your own honesty, not just your security</h3>
+<p>The useful question is not "can this be attacked" but <strong>"where does this mislead
+someone who is behaving reasonably?"</strong> Those failures are far more common and nobody
+files them as bugs, because each individual screen is defensible.</p>
+
+<div class="eg">
+  <span class="lbl">Two findings this produced</span>
+  <p>The word <strong>Trash</strong>. Every trash metaphor in computing promises two things —
+  the item is gone, and the space comes back. This product delivers neither. The name was the
+  lie, so it became <strong>Removed</strong>: the button says "Remove", so the place is its past
+  tense, and the verb and the noun now agree.</p>
+  <p>The phrase <strong>"we opened them"</strong> in a status line. It directly contradicted the
+  product's own promise that it cannot read your files. Rewritten to "we asked for it and it
+  came back" — which is also the only thing that is actually true, since nobody can observe a
+  retrieval from outside.</p>
+</div>
+
+<h3>Force the open decisions into multiple choice</h3>
+<p>When an audit surfaces a question only the product owner can settle, do not write a
+paragraph asking about it. Put it as a <strong>multiple-choice question with the trade-off
+stated on each option</strong>. It converts a week of asynchronous ambiguity into a two-minute
+answer, and the trade-off text means the answer is informed.</p>
+
+<div class="eg">
+  <span class="lbl">The shape that works</span>
+  <p><em class="lead">Keep the purchase wall, make the wait worth watching</em> — "Purchase stays
+  first. Model the setup wait properly: what is happening, what you can do meanwhile, and
+  returning to the exact file." Each option carries what it costs and what it buys. The answer
+  to that one produced two screens and closed a question the backlog had also asked
+  independently.</p>
+</div>
+
+<h3>Cut what reveals the machinery</h3>
+<p>Audits reliably find screens explaining <em class="lead">how</em> when the user only needs
+<em class="lead">what happens</em>. Cutting is design work, not tidying: teaching clauses across the
+Swarm Desktop set went from <strong>36 to 4</strong>, and the four that remain are at the exact
+points of consequence.</p>
+
+<!-- ============================================================= PHASE 5 -->
+<div class="phase">
+  <span class="no">05</span>
+  <div><h2>Measure — and make the measurement permanent</h2>
+  <div class="out">Output: a harness per property, each printing one number</div></div>
+</div>
+
+<p>An audit finds a problem once. A harness finds it <strong>every time</strong>, including the
+time nobody was looking. This is the difference between a design that was good and a design
+that stays good.</p>
+
+<h3>The anatomy of a harness</h3>
+<p>Each one loads the built output in a headless browser, asks the DOM one question, and prints
+a count. Under thirty lines. The comment at the top explains <em class="lead">why this check exists</em>,
+usually by naming the bug that prompted it.</p>
+
+<pre><code>import { chromium } from 'playwright';
+import { readdirSync } from 'fs';
+const files = readdirSync('.').filter(f =&gt; f.endsWith('.dc.html'));
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+let bad = [];
+for (const f of files) {
+  await p.goto('file://' + dir + f);
+  const hits = await p.evaluate(() =&gt; { /* one question */ });
+  if (hits.length) bad.push([f, hits]);
+}
+console.log(`${files.length} boards · ${bad.length} affected`);
+await b.close();</code></pre>
+
+<h3>The catalogue worth building for any product</h3>
+<div class="tw"><table>
+<thead><tr><th>Checks</th><th>Question it asks</th></tr></thead>
+<tbody>
+<tr><td><strong>Overflow</strong></td><td>Does any content fall off the frame, at each supported width</td></tr>
+<tr><td><strong>Contrast</strong></td><td>Every text node against its <em class="lead">actual composited</em> background — in both themes</td></tr>
+<tr><td><strong>Translucency</strong></td><td>Does any semi-transparent layer dim text below 4.5:1</td></tr>
+<tr><td><strong>Cell fit</strong></td><td>Is any element wider than the grid cell containing it</td></tr>
+<tr><td><strong>Structure</strong></td><td>Heading present · controls labelled · status never colour-only · line measure</td></tr>
+<tr><td><strong>Vocabulary</strong></td><td>Forbidden words outside their permitted zone</td></tr>
+<tr><td><strong>Routes</strong></td><td>Does every declared link point at text that exists on the board</td></tr>
+<tr><td><strong>Density</strong></td><td>Element count per screen, at the real data scale</td></tr>
+<tr><td><strong>Offline</strong></td><td>Does the deliverable open with the network refused</td></tr>
+</tbody></table></div>
+
+<div class="note warnbox">
+  <span class="lbl">Write the harness for the bug you just found</span>
+  <p>Three of the Swarm Desktop harnesses exist because a specific bug got through, and each
+  found something the moment it ran:</p>
+  <p><strong>The route gate.</strong> Written after 22 of 162 declared routes turned out to point
+  at buttons that had been deleted months earlier. On its first run it caught a
+  <em class="lead">third</em> duplicate dictionary key — Python keeps the last of a duplicate and
+  drops the rest silently, so appending an entry had been deleting a working one with no error.</p>
+  <p><strong>The translucency check.</strong> A veil over a list measured fine to the contrast
+  harness, which reads <em class="lead">declared</em> colours. Composited, a white veil at 34% takes
+  muted text from 4.74:1 down to 2.53:1. There is no opacity that both reads as a veil and
+  keeps text legible, so the veil was deleted.</p>
+  <p><strong>The cell-fit check.</strong> A status chip was 137px in a 132px cell and had been
+  painting over the next column on 14 screens. The overflow harness never saw it, because
+  overflowing a grid cell never crosses the edge of the frame.</p>
+</div>
+
+<h3>Make the build refuse</h3>
+<p>The strongest checks do not report — they <strong>stop the build</strong>. A route map that
+lies to QA is worse than a missing one, so <span class="m">proto.py</span> will not produce a
+prototype if any declared route fails to bind.</p>
+
+<div class="skills">
+  <div class="sk"><span class="n">design-systems:accessibility-audit</span><span class="w">WCAG with severity and remediation, on a real build</span></div>
+  <div class="sk"><span class="n">adaptive-interfaces:responsive-review</span><span class="w">Behaviour across the supported widths</span></div>
+  <div class="sk"><span class="n">prototyping-testing:heuristic-evaluation</span><span class="w">Expert review with severity ratings</span></div>
+  <div class="sk"><span class="n">design-ops:design-qa-checklist</span><span class="w">Turning findings into a repeatable gate</span></div>
+  <div class="sk"><span class="n">interaction-design:doherty-threshold</span><span class="w">Response budgets, and what a wait shows past them</span></div>
+</div>
+
+<!-- ============================================================= PHASE 6 -->
+<div class="phase">
+  <span class="no">06</span>
+  <div><h2>Ship it as a document engineering can hold</h2>
+  <div class="out">Output: one navigable artifact, and a sync discipline</div></div>
+</div>
+
+<p>A folder of PNGs is not a handoff. What engineering and QA need is one artifact that answers
+five questions about any screen without asking a designer.</p>
+
+<div class="tw"><table>
+<thead><tr><th>Question</th><th>Answered by</th></tr></thead>
+<tbody>
+<tr><td>What kind of thing is this?</td><td>The product view — place, state, detour or entrance, with its parent</td></tr>
+<tr><td>Where does it sit in the agreed scope?</td><td>The journey and step, named exactly as the scope document names them</td></tr>
+<tr><td>Why is it like this?</td><td>The rationale, extracted from the generator's docstring</td></tr>
+<tr><td>What leads here and what leads away?</td><td>The route map — and it is <em class="lead">true</em>, because the build refuses otherwise</td></tr>
+<tr><td>What is it made of?</td><td>The component inventory, derived from the markup rather than typed</td></tr>
+</tbody></table></div>
+
+<h3>Two features worth building into the viewer</h3>
+<ul>
+  <li><strong>A happy-path switch.</strong> A reader walking the design for the first time wants
+  the path that works; a reader building it wants every state. Mixed into one list, neither is
+  readable. Swarm Desktop: 119 nodes, 97 on the happy path.</li>
+  <li><strong>A failure register with a written rule.</strong> A screen is trouble when something
+  was refused, timed out, ran out, will not decrypt, cannot be reached, cannot be done here —
+  or when the input is ambiguous and the product refuses to guess. <em class="lead">Not</em> when it
+  is merely an alternative or an empty result. A search that matched nothing found nothing;
+  that is an answer, not a failure.</li>
+</ul>
+
+<h3>Keep the sources of truth level</h3>
+<p>Where a scope document and a prototype both exist, they drift, and drift is silent. Two
+defences: copy structure verbatim so names mean one thing, and <strong>flag every claim the
+prototype makes that the scope document has not yet seen</strong> — visibly, on the screen that
+makes it. Swarm Desktop marks three gates this way, so nobody mistakes a proposal for
+an agreement.</p>
+
+<div class="skills">
+  <div class="sk"><span class="n">design-ops:handoff-spec</span><span class="w">Specs, measurements, assets, states, QA checklist</span></div>
+  <div class="sk"><span class="n">design-systems:documentation-template</span><span class="w">A shape a reader can navigate</span></div>
+  <div class="sk"><span class="n">designer-toolkit:design-rationale</span><span class="w">Decision records that survive the author leaving</span></div>
+  <div class="sk"><span class="n">cross-functional-alignment:decision-log</span><span class="w">What was settled, when, and on what evidence</span></div>
+</div>
+
+<!-- ============================================================= COOKBOOK -->
+<h2 class="plain">Cookbook: building a prototype like this one</h2>
+
+<p>Concrete steps, in order. About two days for the scaffolding; everything after is content.</p>
+
+<h3>1 · One stylesheet, in code, before any screen</h3>
+<p>Tokens for colour, space, radius and type. Both themes defined at token level from the
+start — retrofitting dark mode means auditing every screen twice. One function per icon. One
+shell function that every screen calls, so the window chrome is identical by construction
+rather than by discipline.</p>
+
+<h3>2 · A screen is a function that returns a string</h3>
+<p>Take the varying data as arguments. Write <span class="m">write(name, html)</span> to emit a
+self-contained file. A screen is now cheap enough that drawing the failure case costs the same
+as drawing the happy one — which is the actual reason most products have no failure screens.</p>
+
+<h3>3 · A structure module that mirrors the agreed scope</h3>
+<p>Journeys, steps, gates, and <span class="m">step → [screens]</span>. Add an
+<span class="m">undrawn()</span> function that lists steps with no screen. Print it on every
+build; the number should be zero, and when it is not, it is the honest scope gap.</p>
+
+<h3>4 · A payload module that carries the meaning</h3>
+<p>IA kinds, decision records, the failure register, the route map, titles. This is the file
+that turns a folder of screens into a document. Put the build gate here.</p>
+
+<h3>5 · A viewer, once</h3>
+<p>Data in a <span class="m">&lt;script type="application/json"&gt;</span>, React from a pinned CDN
+build, several views over the same data: map by journey, grid by group, search, and the IA
+tree. Keyboard shortcuts and URL hashes, so a reviewer can link a colleague to one screen.</p>
+
+<h3>6 · Harnesses from day one</h3>
+<p>Start with overflow and contrast. Add one per bug that escapes. Run all of them before every
+publish — the whole set takes under two minutes and has never once been a waste.</p>
+
+<h3>7 · Make the deliverable survive the CDN</h3>
+<p>An artifact that pulls React from a CDN is useless on a plane and in five years. Inline the
+library into a second copy, and <em class="lead">script it</em> — Swarm Desktop's offline build was
+made by hand once and went stale the moment the prototype changed.</p>
+
+<!-- ============================================================= TRAPS -->
+<h2 class="plain">Five traps, each of which cost real time</h2>
+
+<div class="rule">
+  <div class="t">Never bulk-edit copy with a regex across generators</div>
+  <p>A scripted rewrite matched across Python string-concatenation boundaries and swallowed
+  closing quotes, <span class="m">&lt;/p&gt;</span> tags and triple-quote terminators. Five files
+  damaged, some silently — the repair took longer than the rewrite. Change copy one string at a
+  time with an exact-match assertion, and add a malformed-markup sweep to verification.</p>
+</div>
+
+<div class="rule">
+  <div class="t">Duplicate dictionary keys are a silent data-loss bug</div>
+  <p>Python keeps the last of a duplicate key and drops the rest without a word. Appending an
+  entry below an existing one had been <em class="lead">deleting</em> the existing one for months. A
+  dict cannot be asked about this after the fact, so the check must read the source text.</p>
+</div>
+
+<div class="rule">
+  <div class="t">A harness proves only the thing it looks at</div>
+  <p>The overflow check passed on 14 screens with a chip painting over the next column, because
+  overflowing a grid cell never crosses the frame edge. When a bug gets through, ask which
+  harness <em class="lead">should</em> have caught it and why it structurally could not.</p>
+</div>
+
+<div class="rule">
+  <div class="t">A design-system inconsistency shows up as a false quality result</div>
+  <p>One screen dimmed its background with a hand-rolled div instead of the system's scrim
+  class. The contrast harness excluded scrims by class name, so it measured the wrong thing and
+  reported a failure at 3.58:1. The real finding was not the contrast — it was the screen that
+  had gone off-system.</p>
+</div>
+
+<div class="rule">
+  <div class="t">Renaming is cheap in the UI and expensive in the record</div>
+  <p>Renaming Trash to Removed touched the nav label, board copy, screen IDs, journey steps, the
+  IA table, the route map, canvas manifests and two shell scripts. Rename the <strong>ID</strong>
+  too, not only the label: the ID is the name engineers put in tickets, and leaving the old one
+  reintroduces the lie exactly where it will be read most.</p>
+</div>
+
+<!-- ============================================================= SKILL MAP -->
+<h2 class="plain">Skill map</h2>
+
+<div class="tw"><table>
+<thead><tr><th>When you are…</th><th>Reach for</th></tr></thead>
+<tbody>
+<tr><td>Starting from an ambiguous brief</td><td><span class="m">ux-strategy:frame-problem</span> · <span class="m">ux-strategy:design-brief</span> · <span class="m">design-research:jobs-to-be-done</span></td></tr>
+<tr><td>Deciding what the structure is</td><td><span class="m">ux-strategy:information-architecture</span> · <span class="m">design-research:journey-map</span> · <span class="m">interaction-design:state-machine</span></td></tr>
+<tr><td>Building the system</td><td><span class="m">design-systems:design-token</span> · <span class="m">design-systems:create-component</span> · <span class="m">ui-design:color-system</span> · <span class="m">ui-design:typography-scale</span></td></tr>
+<tr><td>Designing one flow</td><td><span class="m">interaction-design:design-interaction</span> · <span class="m">interaction-design:error-flow</span> · <span class="m">interaction-design:form-design</span></td></tr>
+<tr><td>Writing the words</td><td><span class="m">designer-toolkit:ux-writing</span> · <span class="m">accessible-content:readable-content</span> · <span class="m">ux-strategy:content-strategy</span></td></tr>
+<tr><td>Judging a rendered screen</td><td><span class="m">visual-critique:critique-screen</span> · <span class="m">visual-critique:critique-information-density</span> · <span class="m">visual-critique:critique-affordance</span></td></tr>
+<tr><td>Auditing the whole thing</td><td><span class="m">inclusive-interaction:audit</span> · <span class="m">design-systems:audit-system</span> · <span class="m">design-systems:accessibility-audit</span> · <span class="m">accessible-content:review</span></td></tr>
+<tr><td>Checking you are not misleading anyone</td><td><span class="m">ai-alignment-reasoning:red-team</span> · <span class="m">ai-alignment-reasoning:transparency-patterns</span> · <span class="m">ai-alignment-reasoning:harm-anticipation</span></td></tr>
+<tr><td>Thinking about knock-on effects</td><td><span class="m">thinking-systems</span> · <span class="m">interaction-design:teslers-law</span> · <span class="m">interaction-design:jakobs-law</span></td></tr>
+<tr><td>Handing over</td><td><span class="m">design-ops:handoff-spec</span> · <span class="m">design-ops:design-qa-checklist</span> · <span class="m">designer-toolkit:design-rationale</span></td></tr>
+</tbody></table></div>
+
+<div class="note">
+  <span class="lbl">Two standing rules for this practice</span>
+  <p>Always run the <strong>designer skills</strong> and the <strong>thinking skills</strong> together.
+  A design skill tells you what good looks like in its own lane; a thinking skill catches what
+  that lane's answer breaks two screens away. The address-book rebuild came from the second
+  kind, not the first.</p>
+  <p>And where a prototype and a scope document both exist, <strong>the audited prototype
+  dictates</strong>. The scope document is brought level with it, not the other way round —
+  otherwise every audit finding is optional.</p>
+</div>
+
+<footer>
+Solar Punk · design practice · derived from the Swarm Desktop File Manager redesign, September 2026<br>
+Companion document: <em class="lead">The File Manager, as it stands</em> — the project handoff.
+</footer>
+
+</div>

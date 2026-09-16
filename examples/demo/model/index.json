@@ -1,0 +1,277 @@
+{
+ "screens": [
+  {
+   "id": "first-run-welcome",
+   "title": "Welcome",
+   "kind": "entrance",
+   "group": "First run"
+  },
+  {
+   "id": "files-list",
+   "title": "Files",
+   "kind": "place",
+   "group": "Files"
+  },
+  {
+   "id": "files-empty",
+   "title": "Files, empty",
+   "kind": "state",
+   "parent": "files-list",
+   "group": "Files",
+   "empty_state": true
+  },
+  {
+   "id": "files-move",
+   "title": "Move to folder",
+   "kind": "detour",
+   "group": "Files"
+  },
+  {
+   "id": "files-removed",
+   "title": "Removed",
+   "kind": "place",
+   "group": "Files"
+  },
+  {
+   "id": "share-failed",
+   "title": "Share did not go out",
+   "kind": "state",
+   "parent": "files-list",
+   "group": "Sharing",
+   "unagreed": "The scope document still calls this place Trash."
+  }
+ ],
+ "journeys": [
+  {
+   "id": "first-run",
+   "name": "First run",
+   "steps": [
+    {
+     "id": "arrive",
+     "name": "Arrive with no account",
+     "screens": [
+      "first-run-welcome"
+     ]
+    },
+    {
+     "id": "first-file",
+     "name": "Add the first file",
+     "screens": [
+      "files-empty"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "manage",
+   "name": "Manage files",
+   "steps": [
+    {
+     "id": "see",
+     "name": "See what is here",
+     "screens": [
+      "files-list"
+     ]
+    },
+    {
+     "id": "move",
+     "name": "Move a file into a folder",
+     "screens": [
+      "files-move"
+     ]
+    },
+    {
+     "id": "remove",
+     "name": "Remove a file",
+     "screens": [
+      "files-removed"
+     ]
+    },
+    {
+     "id": "share",
+     "name": "Share a file",
+     "screens": [
+      "share-failed"
+     ]
+    },
+    {
+     "id": "estimate",
+     "name": "See the cost before saving",
+     "screens": []
+    }
+   ]
+  }
+ ],
+ "routes": [
+  {
+   "from": null,
+   "to": "first-run-welcome",
+   "via": "system"
+  },
+  {
+   "from": "first-run-welcome",
+   "label": "Add your first file",
+   "to": "files-empty",
+   "via": "click"
+  },
+  {
+   "from": "files-empty",
+   "label": "Add a file",
+   "to": "files-list",
+   "via": "click"
+  },
+  {
+   "from": "files-list",
+   "label": "Move to folder\u2026",
+   "to": "files-move",
+   "via": "click"
+  },
+  {
+   "from": "files-list",
+   "label": "Remove",
+   "to": "files-removed",
+   "via": "click"
+  },
+  {
+   "from": "files-list",
+   "gesture": "drag a row onto a folder",
+   "to": "files-move",
+   "via": "gesture"
+  },
+  {
+   "from": "files-list",
+   "to": "share-failed",
+   "via": "system"
+  },
+  {
+   "from": "files-move",
+   "label": "Move the file",
+   "to": "files-list",
+   "via": "click"
+  },
+  {
+   "from": "files-removed",
+   "label": "Back to files",
+   "to": "files-list",
+   "via": "click"
+  },
+  {
+   "from": "share-failed",
+   "label": "Try again",
+   "to": "files-list",
+   "via": "click"
+  }
+ ],
+ "rationale": {
+  "first-run-welcome": "Context: an entrance assumes no prior state. Options: start at the file list, or teach first. Why: a periodic visitor has forgotten what this is for. Trade-off: a screen between a returning person and their files. Right if: the audience opens this every few weeks rather than all day.",
+  "files-empty": "Context: seven places had no empty state, and an empty place is the most common screen any of them will ever show. Options: draw one per place, or one component. Why: one component makes the decision once. Trade-off: the copy has to be generic enough to fit all of them. Right if: the places are genuinely the same shape; when one is not, it gets its own screen, not a flag.",
+  "files-list": "Context: the list is where a periodic visitor lands. Options: a dashboard of activity, or the files themselves. Why: a visitor has forgotten what this is for, and the files are the memory. Trade-off: no room for status. Right if: the audience visits every few weeks rather than living here.",
+  "files-move": "Context: every other file manager has taught people that moving a file into a shared folder shares it. Options: a silent move, or a screen carrying one sentence. Why: the worst outcome is a file reaching the wrong person, so the sentence earns a screen. Trade-off: one more step in a common action. Right if: the worst outcome stays what it is.",
+  "files-removed": "Context: every trash metaphor promises the item is gone and the space comes back. This product delivers neither, so the name was the lie. Options: keep Trash and explain, or rename. Why: the button says Remove, so the place is its past tense, and the verb and the noun agree. Trade-off: one unfamiliar word. Right if: the storage genuinely cannot be reclaimed.",
+  "share-failed": "Context: a failure state is a screen where something was refused, timed out, ran out or cannot be done here. Options: a toast, or a screen. Why: the person needs to know what did not happen and what is still true. Trade-off: a screen to maintain. Right if: the failure is recoverable and the recovery is not obvious."
+ },
+ "decisions": [
+  {
+   "id": "d-001",
+   "question": "Does the cost estimate appear before saving, or after?",
+   "context": "Audit found one step in the agreed scope that nothing serves.",
+   "options": [
+    {
+     "label": "Before saving",
+     "buys": "nobody is surprised by a charge",
+     "costs": "the estimate must be computed on a file that does not exist yet",
+     "kills": "the one-click save"
+    },
+    {
+     "label": "After saving, before publishing",
+     "buys": "an exact number instead of an estimate",
+     "costs": "the person has already committed",
+     "kills": "the promise that nothing happens until you choose"
+    }
+   ],
+   "chosen": null,
+   "right_if": "Before wins if arrivals are price-sensitive rather than already committed.",
+   "status": "open",
+   "screens": [
+    "files-list"
+   ]
+  }
+ ],
+ "failures": {
+  "share-failed": "Refused: the share was asked for and did not come back. Not an empty result \u2014 nobody gained access, and the person needs to know what is still true."
+ },
+ "gaps": {
+  "manage/estimate": "The agreed scope asks for a cost estimate before saving. Nothing serves it. Websites have one and files do not."
+ },
+ "policy": {
+  "terms": [
+   {
+    "word": "postage batch",
+    "allow_zones": [
+     "advanced"
+    ],
+    "severity": "error"
+   },
+   {
+    "word": "chunk",
+    "allow_zones": [
+     "advanced"
+    ],
+    "severity": "error"
+   },
+   {
+    "word": "dilution",
+    "allow_zones": [
+     "advanced"
+    ],
+    "severity": "error"
+   },
+   {
+    "word": "trash",
+    "allow_zones": [],
+    "severity": "error"
+   }
+  ],
+  "zones": {
+   "advanced": {
+    "screens": [
+     "settings-storage"
+    ],
+    "selectors": [
+     ".adv"
+    ]
+   }
+  },
+  "scan": {
+   "ignore_selectors": [
+    "code",
+    "pre",
+    "[data-verbatim]"
+   ]
+  }
+ },
+ "counts": {
+  "screens": 6,
+  "boards": 6,
+  "routes": 10,
+  "places_without_an_empty_state": 1,
+  "screens_with_no_inbound_route": 0,
+  "steps_nothing_serves": 0,
+  "open_decisions": 1,
+  "screens_without_rationale": 0,
+  "failure_states": 1,
+  "recorded_gaps": 1
+ },
+ "reports": {
+  "places_without_an_empty_state": [
+   "files-removed"
+  ],
+  "screens_with_no_inbound_route": [],
+  "steps_nothing_serves": [],
+  "open_decisions": [
+   "d-001"
+  ],
+  "screens_without_rationale": [],
+  "model_notes": []
+ }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "measured-design-harnesses",
+  "private": true,
+  "type": "module",
+  "scripts": { "all": "node run-all.mjs" },
+  "devDependencies": { "playwright": "^1.47.0" }
+}

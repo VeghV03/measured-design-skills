@@ -1,0 +1,11 @@
+[
+ {"id":"first-run","name":"First run","steps":[
+   {"id":"arrive","name":"Arrive with no account","screens":["first-run-welcome"]},
+   {"id":"first-file","name":"Add the first file","screens":["files-empty"]}]},
+ {"id":"manage","name":"Manage files","steps":[
+   {"id":"see","name":"See what is here","screens":["files-list"]},
+   {"id":"move","name":"Move a file into a folder","screens":["files-move"]},
+   {"id":"remove","name":"Remove a file","screens":["files-removed"]},
+   {"id":"share","name":"Share a file","screens":["share-failed"]},
+   {"id":"estimate","name":"See the cost before saving","screens":[]}]}
+]

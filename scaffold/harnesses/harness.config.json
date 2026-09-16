@@ -1,0 +1,10 @@
+{
+  "boards": "../../boards",
+  "model": "../../model",
+  "widths": [1440, 1024, 768],
+  "height": 900,
+  "executablePath": null,
+  "scrimSelector": ".scrim",
+  "cellChildSelector": ".chip",
+  "ignoreSelectors": ["code", "pre", "[data-verbatim]"]
+}

@@ -1,0 +1,9 @@
+{
+ "terms":[
+  {"word":"postage batch","allow_zones":["advanced"],"severity":"error"},
+  {"word":"chunk","allow_zones":["advanced"],"severity":"error"},
+  {"word":"dilution","allow_zones":["advanced"],"severity":"error"},
+  {"word":"trash","allow_zones":[],"severity":"error"}],
+ "zones":{"advanced":{"screens":["settings-storage"],"selectors":[".adv"]}},
+ "scan":{"ignore_selectors":["code","pre","[data-verbatim]"]}
+}

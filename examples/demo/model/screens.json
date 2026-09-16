@@ -1,0 +1,9 @@
+[
+ {"id":"first-run-welcome","title":"Welcome","kind":"entrance","group":"First run"},
+ {"id":"files-list","title":"Files","kind":"place","group":"Files"},
+ {"id":"files-empty","title":"Files, empty","kind":"state","parent":"files-list","group":"Files","empty_state":true},
+ {"id":"files-move","title":"Move to folder","kind":"detour","group":"Files"},
+ {"id":"files-removed","title":"Removed","kind":"place","group":"Files"},
+ {"id":"share-failed","title":"Share did not go out","kind":"state","parent":"files-list","group":"Sharing",
+  "unagreed":"The scope document still calls this place Trash."}
+]

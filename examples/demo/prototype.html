@@ -1,0 +1,441 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Demo · File manager</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--bg:#fbfbf9;--fg:#1d1d1b;--mut:#6b6b66;--line:#e2e1db;--card:#fff;--acc:#1d6e56;--warn:#8a4b0b}
+@media(prefers-color-scheme:dark){:root{--bg:#141413;--fg:#eceae2;--mut:#97958d;--line:#2c2c2a;--card:#1c1c1a;--acc:#5dcaa5;--warn:#efa727}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.6 ui-sans-serif,system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+header{display:flex;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
+h1{font-size:15px;font-weight:500;margin:0 12px 0 0}
+nav button{font:inherit;background:none;border:1px solid var(--line);color:var(--mut);padding:4px 10px;border-radius:6px;cursor:pointer}
+nav button[aria-current=true]{color:var(--fg);border-color:var(--fg)}
+input[type=search]{font:inherit;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);min-width:200px}
+label.sw{color:var(--mut);display:flex;gap:6px;align-items:center;cursor:pointer}
+main{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);gap:0;min-height:calc(100vh - 53px)}
+#list{border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 53px);padding:8px 0}
+#detail{padding:16px 20px;overflow:auto;max-height:calc(100vh - 53px)}
+.grp{padding:10px 16px 4px;color:var(--mut);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.row{display:block;width:100%;text-align:left;font:inherit;background:none;border:0;color:inherit;padding:6px 16px;cursor:pointer;border-left:2px solid transparent}
+.row:hover{background:var(--card)}
+.row[aria-current=true]{border-left-color:var(--acc);background:var(--card)}
+.row .k{color:var(--mut);font-size:12px;margin-left:6px}
+.row.fail .k{color:var(--warn)}
+iframe{width:100%;height:620px;border:1px solid var(--line);border-radius:10px;background:#fff}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:16px 0}
+dt{color:var(--mut)}
+dd{margin:0}
+.gate{border:1px solid var(--warn);color:var(--warn);border-radius:8px;padding:8px 12px;margin:12px 0;font-size:14px}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:12px;color:var(--mut);margin-right:6px}
+.counts{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+code{font:12px/1.5 ui-monospace,monospace;background:var(--card);padding:1px 4px;border-radius:4px}
+h2{font-size:14px;font-weight:500;margin:20px 0 6px}
+ul{margin:6px 0;padding-left:18px}
+</style>
+<header>
+  <h1>Demo · File manager</h1>
+  <nav>
+    <button data-view="journey" aria-current="true">Journeys</button>
+    <button data-view="group">Groups</button>
+    <button data-view="ia">IA</button>
+    <button data-view="failures">Failures</button>
+    <button data-view="decisions">Decisions</button>
+  </nav>
+  <input type="search" id="q" placeholder="Search screens  /">
+  <label class="sw"><input type="checkbox" id="happy"> Happy path only</label>
+  <span id="count" class="pill"></span>
+</header>
+<main>
+  <div id="list"></div>
+  <div id="detail"></div>
+</main>
+<script type="application/json" id="model">{"screens": [{"id": "first-run-welcome", "title": "Welcome", "kind": "entrance", "group": "First run"}, {"id": "files-list", "title": "Files", "kind": "place", "group": "Files"}, {"id": "files-empty", "title": "Files, empty", "kind": "state", "parent": "files-list", "group": "Files", "empty_state": true}, {"id": "files-move", "title": "Move to folder", "kind": "detour", "group": "Files"}, {"id": "files-removed", "title": "Removed", "kind": "place", "group": "Files"}, {"id": "share-failed", "title": "Share did not go out", "kind": "state", "parent": "files-list", "group": "Sharing", "unagreed": "The scope document still calls this place Trash."}], "journeys": [{"id": "first-run", "name": "First run", "steps": [{"id": "arrive", "name": "Arrive with no account", "screens": ["first-run-welcome"]}, {"id": "first-file", "name": "Add the first file", "screens": ["files-empty"]}]}, {"id": "manage", "name": "Manage files", "steps": [{"id": "see", "name": "See what is here", "screens": ["files-list"]}, {"id": "move", "name": "Move a file into a folder", "screens": ["files-move"]}, {"id": "remove", "name": "Remove a file", "screens": ["files-removed"]}, {"id": "share", "name": "Share a file", "screens": ["share-failed"]}, {"id": "estimate", "name": "See the cost before saving", "screens": []}]}], "routes": [{"from": null, "to": "first-run-welcome", "via": "system"}, {"from": "first-run-welcome", "label": "Add your first file", "to": "files-empty", "via": "click"}, {"from": "files-empty", "label": "Add a file", "to": "files-list", "via": "click"}, {"from": "files-list", "label": "Move to folder\u2026", "to": "files-move", "via": "click"}, {"from": "files-list", "label": "Remove", "to": "files-removed", "via": "click"}, {"from": "files-list", "gesture": "drag a row onto a folder", "to": "files-move", "via": "gesture"}, {"from": "files-list", "to": "share-failed", "via": "system"}, {"from": "files-move", "label": "Move the file", "to": "files-list", "via": "click"}, {"from": "files-removed", "label": "Back to files", "to": "files-list", "via": "click"}, {"from": "share-failed", "label": "Try again", "to": "files-list", "via": "click"}], "rationale": {"first-run-welcome": "Context: an entrance assumes no prior state. Options: start at the file list, or teach first. Why: a periodic visitor has forgotten what this is for. Trade-off: a screen between a returning person and their files. Right if: the audience opens this every few weeks rather than all day.", "files-empty": "Context: seven places had no empty state, and an empty place is the most common screen any of them will ever show. Options: draw one per place, or one component. Why: one component makes the decision once. Trade-off: the copy has to be generic enough to fit all of them. Right if: the places are genuinely the same shape; when one is not, it gets its own screen, not a flag.", "files-list": "Context: the list is where a periodic visitor lands. Options: a dashboard of activity, or the files themselves. Why: a visitor has forgotten what this is for, and the files are the memory. Trade-off: no room for status. Right if: the audience visits every few weeks rather than living here.", "files-move": "Context: every other file manager has taught people that moving a file into a shared folder shares it. Options: a silent move, or a screen carrying one sentence. Why: the worst outcome is a file reaching the wrong person, so the sentence earns a screen. Trade-off: one more step in a common action. Right if: the worst outcome stays what it is.", "files-removed": "Context: every trash metaphor promises the item is gone and the space comes back. This product delivers neither, so the name was the lie. Options: keep Trash and explain, or rename. Why: the button says Remove, so the place is its past tense, and the verb and the noun agree. Trade-off: one unfamiliar word. Right if: the storage genuinely cannot be reclaimed.", "share-failed": "Context: a failure state is a screen where something was refused, timed out, ran out or cannot be done here. Options: a toast, or a screen. Why: the person needs to know what did not happen and what is still true. Trade-off: a screen to maintain. Right if: the failure is recoverable and the recovery is not obvious."}, "decisions": [{"id": "d-001", "question": "Does the cost estimate appear before saving, or after?", "context": "Audit found one step in the agreed scope that nothing serves.", "options": [{"label": "Before saving", "buys": "nobody is surprised by a charge", "costs": "the estimate must be computed on a file that does not exist yet", "kills": "the one-click save"}, {"label": "After saving, before publishing", "buys": "an exact number instead of an estimate", "costs": "the person has already committed", "kills": "the promise that nothing happens until you choose"}], "chosen": null, "right_if": "Before wins if arrivals are price-sensitive rather than already committed.", "status": "open", "screens": ["files-list"]}], "failures": {"share-failed": "Refused: the share was asked for and did not come back. Not an empty result \u2014 nobody gained access, and the person needs to know what is still true."}, "gaps": {"manage/estimate": "The agreed scope asks for a cost estimate before saving. Nothing serves it. Websites have one and files do not."}, "policy": {"terms": [{"word": "postage batch", "allow_zones": ["advanced"], "severity": "error"}, {"word": "chunk", "allow_zones": ["advanced"], "severity": "error"}, {"word": "dilution", "allow_zones": ["advanced"], "severity": "error"}, {"word": "trash", "allow_zones": [], "severity": "error"}], "zones": {"advanced": {"screens": ["settings-storage"], "selectors": [".adv"]}}, "scan": {"ignore_selectors": ["code", "pre", "[data-verbatim]"]}}, "counts": {"screens": 6, "boards": 6, "routes": 10, "places_without_an_empty_state": 1, "screens_with_no_inbound_route": 0, "steps_nothing_serves": 0, "open_decisions": 1, "screens_without_rationale": 0, "failure_states": 1, "recorded_gaps": 1}, "reports": {"places_without_an_empty_state": ["files-removed"], "screens_with_no_inbound_route": [], "steps_nothing_serves": [], "open_decisions": ["d-001"], "screens_without_rationale": [], "model_notes": []}}</script>
+<script type="text/plain" data-board="files-empty"><!doctype html>
+<meta charset="utf-8"><title>Files</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+:root[data-theme=dark],
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+</style>
+<body><div class="win">
+<div class="chrome"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><nav class="nav"><span aria-current=page>Files</span><span>Shared</span><span>Removed</span></nav></div>
+<div class="body"><div class="empty" data-component="empty_state"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><h1>Nothing here yet</h1><p>Files you add appear here. Only you can see them until you share one.</p><button class="btn primary">Add a file</button><p>Nothing is uploaded until you choose it.</p></div></div>
+</div></body></script>
+<script type="text/plain" data-board="files-list"><!doctype html>
+<meta charset="utf-8"><title>Files</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+:root[data-theme=dark],
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+</style>
+<body><div class="win">
+<div class="chrome"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><nav class="nav"><span aria-current=page>Files</span><span>Shared</span><span>Removed</span></nav></div>
+<div class="body"><h1>Files</h1><p>Three files. Sharing cannot be taken back.</p><div class="grid" data-component="row"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M6 3h8l4 4v14H6z"/></svg> notes.md</span><span class="who" data-component="who_cell">Only you</span><span class="chip">12 KB</span></div><div class="grid" data-component="row"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M6 3h8l4 4v14H6z"/></svg> budget-2026-final-v3.xlsx</span><span class="who" data-component="who_cell">Shared with 2</span><span class="chip">1.1 MB</span></div><div class="grid" data-component="row"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M6 3h8l4 4v14H6z"/></svg> photo.jpg</span><span class="who" data-component="who_cell">Only you</span><span class="chip">840 KB</span></div><p><button class="btn">Move to folder…</button> <button class="btn danger">Remove</button></p></div>
+</div></body></script>
+<script type="text/plain" data-board="files-move"><!doctype html>
+<meta charset="utf-8"><title>Move to folder</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+:root[data-theme=dark],
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+</style>
+<body><div class="win">
+<div class="chrome"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><nav class="nav"><span aria-current=page>Files</span><span>Shared</span><span>Removed</span></nav></div>
+<div class="body"><div data-component="door"><h1>Move budget-2026-final-v3.xlsx to Shared work</h1><p>What this will not do:</p><ul><li>Moving does not share. Nobody gains access by this move.</li><li>It does not change who can already see the file.</li></ul><p>The file stays where you can find it under Files.</p><button class="btn danger">Move the file</button></div></div>
+</div></body></script>
+<script type="text/plain" data-board="files-removed"><!doctype html>
+<meta charset="utf-8"><title>Removed</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+:root[data-theme=dark],
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+</style>
+<body><div class="win">
+<div class="chrome"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><nav class="nav"><span>Files</span><span>Shared</span><span aria-current=page>Removed</span></nav></div>
+<div class="body"><div class="empty" data-component="empty_state"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M6 3h8l4 4v14H6z"/></svg><h1>Nothing removed</h1><p>Files you remove stay here for 30 days. Removing does not free storage.</p><button class="btn primary">Back to files</button></div></div>
+</div></body></script>
+<script type="text/plain" data-board="first-run-welcome"><!doctype html>
+<meta charset="utf-8"><title>Welcome</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+:root[data-theme=dark],
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+</style>
+<body><div class="win">
+<div class="chrome"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><nav class="nav"><span>Files</span><span>Shared</span><span>Removed</span></nav></div>
+<div class="body"><h1>Your files, wherever you are</h1><p>Add a file and it stays yours. Share one and it cannot be taken back.</p><p><button class="btn primary">Add your first file</button></p></div>
+</div></body></script>
+<script type="text/plain" data-board="share-failed"><!doctype html>
+<meta charset="utf-8"><title>Share</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius:8px; --radius-lg:12px;
+  --type-body:15px; --type-small:13px; --type-head:20px; --measure:34em;
+  --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
+  --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
+}
+:root[data-theme=dark],
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}
+.win{max-width:1080px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden}
+.chrome{display:flex;gap:var(--space-3);align-items:center;padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--line)}
+.nav{display:flex;gap:var(--space-2);color:var(--mut);font-size:var(--type-small)}
+.nav [aria-current=page]{color:var(--fg)}
+.body{padding:var(--space-6)}
+h1{font-size:var(--type-head);font-weight:500;margin:0 0 var(--space-2)}
+p{max-width:var(--measure);color:var(--mut);margin:0 0 var(--space-3)}
+.btn{font:inherit;border:1px solid var(--line);background:none;color:var(--fg);
+  border-radius:var(--radius);padding:var(--space-2) var(--space-3);cursor:pointer}
+.btn.primary{border-color:var(--acc);color:var(--acc)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+  padding:1px var(--space-2);font-size:var(--type-small);color:var(--mut);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{text-align:center;padding:var(--space-8) var(--space-4)}
+.empty p{margin-inline:auto}
+.grid{display:grid;grid-template-columns:1fr 132px 120px;gap:var(--space-3);align-items:center}
+.who{color:var(--mut);font-size:var(--type-small)}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+</style>
+<body><div class="win">
+<div class="chrome"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5"><path d="M3 6h5l2 2h11v10H3z"/></svg><nav class="nav"><span>Files</span><span aria-current=page>Shared</span><span>Removed</span></nav></div>
+<div class="body"><h1>That share did not go out</h1><p>We asked for it and it did not come back. Nobody was given access.</p><p><button class="btn primary">Try again</button></p></div>
+</div></body></script>
+<script>
+const D = JSON.parse(document.getElementById('model').textContent);
+const BOARDS = {};
+document.querySelectorAll('script[data-board]').forEach(s => BOARDS[s.dataset.board] = s.textContent);
+const byId = Object.fromEntries(D.screens.map(s => [s.id, s]));
+const inbound = id => D.routes.filter(r => r.to === id);
+const outbound = id => D.routes.filter(r => r.from === id);
+const isFail = id => !!D.failures[id];
+let view = 'journey', current = null, happy = false, query = '';
+
+const happySet = new Set();
+D.journeys.forEach(j => j.steps.forEach(st => (st.screens || []).forEach(s => {
+  if (!isFail(s)) happySet.add(s);
+})));
+
+function visible(id) {
+  if (happy && !happySet.has(id)) return false;
+  if (!query) return true;
+  const s = byId[id] || {};
+  return (id + ' ' + (s.title || '') + ' ' + (D.rationale[id] || '')).toLowerCase().includes(query);
+}
+
+function row(id) {
+  const s = byId[id]; if (!s) return '';
+  return `<button class="row${isFail(id) ? ' fail' : ''}" data-id="${id}" aria-current="${current === id}">
+    ${s.title || id}<span class="k">${s.kind}${isFail(id) ? ' · failure' : ''}</span></button>`;
+}
+
+function renderList() {
+  const L = document.getElementById('list');
+  let h = '';
+  if (view === 'journey') {
+    for (const j of D.journeys) {
+      const steps = j.steps.map(st => {
+        const ids = (st.screens || []).filter(visible);
+        const gap = D.gaps[`${j.id}/${st.id}`];
+        if (!ids.length && !gap) return '';
+        return `<div class="grp">${st.name || st.id}</div>` + ids.map(row).join('') +
+          (gap ? `<div class="row" style="color:var(--warn)">nothing serves this — ${gap}</div>` : '');
+      }).join('');
+      if (steps) h += `<div class="grp" style="color:var(--fg)">${j.name || j.id}</div>` + steps;
+    }
+  } else if (view === 'group') {
+    const g = {};
+    D.screens.filter(s => visible(s.id)).forEach(s => (g[s.group || 'ungrouped'] ||= []).push(s.id));
+    for (const k of Object.keys(g).sort()) h += `<div class="grp">${k}</div>` + g[k].map(row).join('');
+  } else if (view === 'ia') {
+    for (const p of D.screens.filter(s => s.kind === 'place' && visible(s.id))) {
+      h += row(p.id);
+      h += D.screens.filter(s => s.parent === p.id && visible(s.id))
+        .map(s => `<div style="padding-left:14px">${row(s.id)}</div>`).join('');
+    }
+    const loose = D.screens.filter(s => ['detour', 'entrance'].includes(s.kind) && visible(s.id));
+    if (loose.length) h += `<div class="grp">detours and entrances</div>` + loose.map(s => row(s.id)).join('');
+  } else if (view === 'failures') {
+    h += `<div class="grp">failure register</div>`;
+    h += Object.keys(D.failures).filter(visible).map(row).join('');
+  } else {
+    h += `<div class="grp">decisions</div>`;
+    h += D.decisions.map(d => `<button class="row" data-dec="${d.id}">${d.question}
+      <span class="k">${d.status}</span></button>`).join('');
+  }
+  L.innerHTML = h || '<div class="grp">nothing matches</div>';
+  document.getElementById('count').textContent =
+    `${D.counts.screens} screens · ${D.counts.routes} routes bind`;
+}
+
+function renderDetail() {
+  const el = document.getElementById('detail');
+  if (view === 'decisions' && current && current.startsWith('d-')) {
+    const d = D.decisions.find(x => x.id === current);
+    el.innerHTML = `<h2>${d.question}</h2><p>${d.context || ''}</p>` +
+      d.options.map(o => `<p><strong>${o.label}</strong><br>buys ${o.buys}<br>costs ${o.costs}` +
+        (o.kills ? `<br>kills ${o.kills}` : '') + `</p>`).join('') +
+      `<dl><dt>Chosen</dt><dd>${d.chosen || '—'}</dd><dt>Right if</dt><dd>${d.right_if || '—'}</dd>
+       <dt>Status</dt><dd>${d.status}</dd></dl>`;
+    return;
+  }
+  const id = current; const s = byId[id];
+  if (!s) { el.innerHTML = '<p style="color:var(--mut)">Pick a screen.</p>'; return; }
+  const step = (() => {
+    for (const j of D.journeys) for (const st of j.steps)
+      if ((st.screens || []).includes(id)) return `${j.name || j.id} · ${st.name || st.id}`;
+    return 'not in the agreed scope';
+  })();
+  const inv = (BOARDS[id] || '').match(/data-component="([^"]+)"/g) || [];
+  const gate = s.unagreed ? `<div class="gate">The scope document has not seen this. ${s.unagreed}</div>` : '';
+  el.innerHTML = `<h2>${s.title || id} <span class="pill">${s.kind}</span>${s.parent ? `<span class="pill">under ${s.parent}</span>` : ''}</h2>
+  ${gate}
+  <iframe srcdoc="${(BOARDS[id] || '').replace(/"/g, '&quot;')}"></iframe>
+  <dl>
+    <dt>Where in the scope</dt><dd>${step}</dd>
+    <dt>Why it is like this</dt><dd>${D.rationale[id] || '<em>no rationale — this is a finding</em>'}</dd>
+    <dt>Leads here</dt><dd>${inbound(id).map(r => `${r.from || 'system'} <code>${r.via}</code> ${r.label || r.gesture || ''}`).join('<br>') || '—'}</dd>
+    <dt>Leads away</dt><dd>${outbound(id).map(r => `${r.label || r.gesture} → ${r.to} <code>${r.via}</code>`).join('<br>') || '—'}</dd>
+    <dt>Made of</dt><dd>${[...new Set(inv.map(m => m.split('"')[1]))].join(', ') || '—'}</dd>
+    ${isFail(id) ? `<dt>Failure clause</dt><dd>${D.failures[id]}</dd>` : ''}
+  </dl>`;
+}
+
+document.addEventListener('click', e => {
+  const v = e.target.closest('[data-view]');
+  if (v) { view = v.dataset.view; current = null;
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-current', b === v));
+    renderList(); renderDetail(); return; }
+  const r = e.target.closest('[data-id],[data-dec]');
+  if (r) { current = r.dataset.id || r.dataset.dec; location.hash = current; renderList(); renderDetail(); }
+});
+document.getElementById('q').addEventListener('input', e => { query = e.target.value.toLowerCase(); renderList(); });
+document.getElementById('happy').addEventListener('change', e => { happy = e.target.checked; renderList(); });
+addEventListener('keydown', e => {
+  if (e.key === '/' && e.target.tagName !== 'INPUT') { e.preventDefault(); document.getElementById('q').focus(); }
+  if (e.key === 'Escape') { document.getElementById('q').value = ''; query = ''; renderList(); }
+});
+addEventListener('hashchange', () => { current = location.hash.slice(1); renderList(); renderDetail(); });
+current = location.hash.slice(1) || null;
+renderList(); renderDetail();
+</script>

@@ -1,0 +1,12 @@
+[
+ {"id":"d-001",
+  "question":"Does the cost estimate appear before saving, or after?",
+  "context":"Audit found one step in the agreed scope that nothing serves.",
+  "options":[
+    {"label":"Before saving","buys":"nobody is surprised by a charge","costs":"the estimate must be computed on a file that does not exist yet","kills":"the one-click save"},
+    {"label":"After saving, before publishing","buys":"an exact number instead of an estimate","costs":"the person has already committed","kills":"the promise that nothing happens until you choose"}],
+  "chosen":null,
+  "right_if":"Before wins if arrivals are price-sensitive rather than already committed.",
+  "status":"open",
+  "screens":["files-list"]}
+]
