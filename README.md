@@ -109,13 +109,15 @@ and a Chromium; set `executablePath` in `harness.config.json` if yours is not on
 | `scaffold/harnesses/` | nine checks, each prints one number |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
+| `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |
 | `examples/demo/` | ten screens across four journeys that build, gate and ship end to end |
 
 ## The three things that make this different from a process document
 
 **Screens are compiled, not drawn.** A design tool gives you 93 files that drift; a generator gives
 you 93 files that cannot. Any stack satisfies the contract — Python is the reference adapter, not the
-requirement.
+requirement, and `scaffold/adapters/node/` is a second one built to prove it: same ten demo screens,
+same rationale text, same gate and harness results, zero shared code.
 
 **The rationale lives in the generator.** Put it in the docstring and extract it at build time, and
 the reasoning physically cannot drift from the screen, because they are the same object. There is no

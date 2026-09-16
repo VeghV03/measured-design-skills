@@ -41,12 +41,15 @@ not theoretical.
 
 ## New adapters
 
-`scaffold/adapters/python/` is the reference generator, not the requirement. An adapter for another
-stack is welcome provided it satisfies the same build contract: it reads a scope document, writes the
-`model/*.json` files listed in `AGENTS.md`, and the build rationale for each screen comes from the
-generator's own source — a docstring or comment extracted at build time — not a separate document.
-`scaffold/gate.py` and the harnesses are stack-agnostic; if your adapter produces the same `model/` and
-`boards/` shapes, they run against it unchanged.
+`scaffold/adapters/python/` is the reference generator, not the requirement — see
+`scaffold/adapters/node/` for a second one, built specifically to prove that claim rather than assert
+it. An adapter for another stack is welcome provided it satisfies the same build contract: it reads a
+scope document, writes the `model/*.json` files listed in `AGENTS.md`, and the build rationale for
+each screen comes from the generator's own source — a docstring, or a comment extracted at build time
+the way the Node adapter does it — not a separate document. `scaffold/gate.py` and the harnesses are
+stack-agnostic; if your adapter produces the same `model/` and `boards/` shapes, they run against it
+unchanged. Prove it the way the Node adapter's README does: build the same demo with both adapters and
+diff `rationale.json`.
 
 ## Sharper pairings
 

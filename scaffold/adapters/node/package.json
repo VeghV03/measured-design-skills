@@ -1,0 +1,9 @@
+{
+  "name": "measured-design-adapter-node",
+  "private": true,
+  "type": "module",
+  "description": "Second reference adapter, no dependencies — proves the build contract is stack-agnostic.",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}
