@@ -1,6 +1,6 @@
 // Four questions a screen must answer for a person who cannot see it:
 // is there a heading, is every control labelled, is any status colour-only,
-// is any line of prose too long to track. Swarm: 42 boards had no heading.
+// is any line of prose too long to track. 42 boards had no heading.
 import { boards, url, id, open, report } from './lib.mjs';
 const { p, close } = await open();
 const rows = [];

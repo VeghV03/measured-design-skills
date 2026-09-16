@@ -1,6 +1,6 @@
 # measured-design
 
-**Designing a product you can prove.** The Solar Punk UX/UI procedure, as an installable skill pack
+**Designing a product you can prove.** A measured UX/UI procedure, as an installable skill pack
 for Claude Code, Codex, and any agent that reads `SKILL.md`.
 
 [![CI](https://github.com/VeghV03/measured-design-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/VeghV03/measured-design-skills/actions/workflows/ci.yml)
@@ -164,7 +164,7 @@ If this saved you a design review, a star on the repo is how other people find i
 
 ## Provenance and licences
 
-The procedure is derived from the Swarm Desktop File Manager redesign, Solar Punk, September 2026.
+The procedure is derived from a file manager redesign carried out in September 2026.
 The worked examples throughout are from that project.
 
 `skills/library/` vendors 88 skills from two MIT-licensed repositories, unmodified except for the

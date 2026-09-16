@@ -48,7 +48,7 @@ different answer right.
 The moment two screens do the same thing, that thing becomes a function. This is not DRY for its own
 sake — it is how a decision gets made once.
 
-> Swarm Desktop: `empty_state(glyph, heading, line, actions, foot)` answers the same three questions
+> File manager: `empty_state(glyph, heading, line, actions, foot)` answers the same three questions
 > on all seven empty places — where you are, what this place is for, and the one action that fills it.
 > `door(…)` is the shape of every irreversible confirmation: consequence, an explicit *what this will
 > not do* list, the precondition, and one destructive action. `who_cell(who)` is the access language

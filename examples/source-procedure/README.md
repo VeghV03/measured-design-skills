@@ -1,7 +1,7 @@
 # Source of record
 
 `procedure.html` is the document this pack encodes — *Designing a Product You Can Prove*,
-Solar Punk, September 2026. `handoff.html` is the companion: the File Manager as it stood.
+September 2026. `handoff.html` is the companion: the File Manager as it stood.
 
 The numbers quoted throughout the skills come from that project: 93 screens, 177 routes declared and
 177 binding, 158 jargon words outside Advanced reduced to 0, 42 screens with no heading reduced to 0,

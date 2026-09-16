@@ -1,6 +1,6 @@
 // Is any element wider than the grid cell containing it. A chip 137px wide in a
 // 132px cell paints over the next column and never crosses the frame edge, so
-// overflow.mjs structurally cannot see it. It did this on 14 Swarm boards.
+// overflow.mjs structurally cannot see it. It did this on 14 real boards.
 import { cfg, boards, url, id, open, report } from './lib.mjs';
 const { p, close } = await open();
 const rows = [];

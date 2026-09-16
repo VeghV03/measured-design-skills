@@ -54,9 +54,10 @@ diff `rationale.json`.
 ## Sharper pairings
 
 `PAIRING.md` names which thinking skill each of the six stages should run alongside, argued from one
-project (Swarm Desktop). If a pairing does not hold up on a different kind of product, open an issue
-with the stage, the pairing that didn't fit, and what you used instead. This is the part of the pack
-most likely to be wrong in a way only a second project would surface.
+project (the file manager redesign in `examples/source-procedure/`). If a pairing does not hold up on
+a different kind of product, open an issue with the stage, the pairing that didn't fit, and what you
+used instead. This is the part of the pack most likely to be wrong in a way only a second project
+would surface.
 
 ## Bug reports
 

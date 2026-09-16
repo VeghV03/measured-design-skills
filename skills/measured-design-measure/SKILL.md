@@ -51,8 +51,8 @@ await b.close();
 
 ## Write the harness for the bug you just found
 
-Three Swarm Desktop harnesses exist because a specific bug got through, and each found something the
-moment it ran.
+Three of the file manager harnesses exist because a specific bug got through, and each found
+something the moment it ran.
 
 - **The route gate.** Written after 22 of 162 declared routes turned out to point at buttons deleted
   months earlier. On its first run it caught a third duplicate dictionary key.

@@ -132,11 +132,11 @@ footer{margin-top:76px;padding-top:20px;border-top:1px solid var(--line2);
 <div class="wrap">
 
 <div class="mast">
-  <p class="kicker">Solar Punk · design practice</p>
+  <p class="kicker">design practice</p>
   <h1>Designing a Product You Can Prove</h1>
   <p class="standfirst">A repeatable procedure for taking a product from an agreed scope
   document to a measured, engineering-ready prototype — with the skills to invoke at each
-  stage, and worked examples from the Swarm Desktop File Manager.</p>
+  stage, and worked examples from a file manager redesign.</p>
 </div>
 
 <h2 class="plain">The principle</h2>
@@ -185,7 +185,7 @@ must be answered in words a non-designer would use.</p>
 immediately in whether the landing page is a dashboard or a teaching surface.</p>
 
 <div class="eg">
-  <span class="lbl">Swarm Desktop</span>
+  <span class="lbl">File manager</span>
   <p>The persona was <strong>chosen on purpose, not technical</strong>. That single decision
   reversed a line in the agreed canvas: the canvas said the first release has no Home screen,
   which is right for a product you live in and wrong for one you visit periodically. Home
@@ -198,7 +198,7 @@ immediately in whether the landing page is a dashboard or a teaching surface.</p
 design attention.</p>
 
 <div class="eg">
-  <span class="lbl">Swarm Desktop</span>
+  <span class="lbl">File manager</span>
   <p><strong>A file reaches the wrong person.</strong> Everything downstream followed: the
   address book was rebuilt around provenance, the share picker gained a duplicate-name warning,
   and the drag-into-folder screen exists almost entirely to carry one sentence — <em class="lead">moving
@@ -210,7 +210,7 @@ design attention.</p>
 in a form that can be checked mechanically later.</p>
 
 <div class="eg">
-  <span class="lbl">Swarm Desktop</span>
+  <span class="lbl">File manager</span>
   <p>Policy: <strong>consequence in plain words, mechanism never.</strong> A person is told
   sharing cannot be taken back; they are never told about postage batches, chunks, ACT, feeds
   or dilution. Because the policy named a word list, it became a test — and the count outside
@@ -261,7 +261,7 @@ them is informative.</p>
 
 <div class="eg">
   <span class="lbl">Why the second layer earns its keep</span>
-  <p>Classifying all 93 Swarm Desktop screens made a gap <strong>countable</strong>: four places
+  <p>Classifying all 93 screens of the file manager made a gap <strong>countable</strong>: four places
   had exactly one state, and <strong>seven had no empty state at all</strong>. An empty place is
   the most common screen any of them will ever show — every account starts there — and it was
   the one nobody had drawn. Seven teams would have invented seven different answers to the
@@ -271,7 +271,7 @@ them is informative.</p>
 <h3>Record what nothing serves</h3>
 <p>Keep a gap list keyed to steps, not floating free. "Not on my list" and "the agreed scope
 asks for this and nothing serves it" are different claims, and only the second is useful.
-The Swarm Desktop artifact carries six, visible in the prototype beside the steps they belong
+The file manager artifact carries six, visible in the prototype beside the steps they belong
 to — including a pre-save cost estimate that websites have and files do not.</p>
 
 <div class="skills">
@@ -329,7 +329,7 @@ canvases.py    six themed canvases, each a slice of the same boards</code></pre>
 DRY-for-its-own-sake — it is how a decision gets made <em class="lead">once</em>.</p>
 
 <div class="eg">
-  <span class="lbl">Swarm Desktop</span>
+  <span class="lbl">File manager</span>
   <p><span class="m">empty_state(glyph, heading, line, actions, foot)</span> answers the same
   three questions on all seven empty places: where you are, what this place is for, and the
   one action that fills it. <span class="m">door(…)</span> is the shape of every irreversible
@@ -344,7 +344,7 @@ DRY-for-its-own-sake — it is how a decision gets made <em class="lead">once</e
 right-click rows, and if the model is silent, each engineer invents an answer.</p>
 
 <div class="eg">
-  <span class="lbl">Swarm Desktop</span>
+  <span class="lbl">File manager</span>
   <p>Five late boards closed this: dragging in, dropping with nowhere to put it, what the
   holding means, the right-click menu, and dragging rows into a folder. The menu alone was
   the home of <strong>six actions that had screens already and no drawn way in</strong>. Because
@@ -423,7 +423,7 @@ answer, and the trade-off text means the answer is informed.</p>
 <h3>Cut what reveals the machinery</h3>
 <p>Audits reliably find screens explaining <em class="lead">how</em> when the user only needs
 <em class="lead">what happens</em>. Cutting is design work, not tidying: teaching clauses across the
-Swarm Desktop set went from <strong>36 to 4</strong>, and the four that remain are at the exact
+set went from <strong>36 to 4</strong>, and the four that remain are at the exact
 points of consequence.</p>
 
 <!-- ============================================================= PHASE 5 -->
@@ -473,7 +473,7 @@ await b.close();</code></pre>
 
 <div class="note warnbox">
   <span class="lbl">Write the harness for the bug you just found</span>
-  <p>Three of the Swarm Desktop harnesses exist because a specific bug got through, and each
+  <p>Three of the file manager harnesses exist because a specific bug got through, and each
   found something the moment it ran:</p>
   <p><strong>The route gate.</strong> Written after 22 of 162 declared routes turned out to point
   at buttons that had been deleted months earlier. On its first run it caught a
@@ -525,7 +525,7 @@ five questions about any screen without asking a designer.</p>
 <ul>
   <li><strong>A happy-path switch.</strong> A reader walking the design for the first time wants
   the path that works; a reader building it wants every state. Mixed into one list, neither is
-  readable. Swarm Desktop: 119 nodes, 97 on the happy path.</li>
+  readable. The file manager: 119 nodes, 97 on the happy path.</li>
   <li><strong>A failure register with a written rule.</strong> A screen is trouble when something
   was refused, timed out, ran out, will not decrypt, cannot be reached, cannot be done here —
   or when the input is ambiguous and the product refuses to guess. <em class="lead">Not</em> when it
@@ -537,7 +537,7 @@ five questions about any screen without asking a designer.</p>
 <p>Where a scope document and a prototype both exist, they drift, and drift is silent. Two
 defences: copy structure verbatim so names mean one thing, and <strong>flag every claim the
 prototype makes that the scope document has not yet seen</strong> — visibly, on the screen that
-makes it. Swarm Desktop marks three gates this way, so nobody mistakes a proposal for
+makes it. The file manager marks three gates this way, so nobody mistakes a proposal for
 an agreement.</p>
 
 <div class="skills">
@@ -583,7 +583,7 @@ publish — the whole set takes under two minutes and has never once been a wast
 
 <h3>7 · Make the deliverable survive the CDN</h3>
 <p>An artifact that pulls React from a CDN is useless on a plane and in five years. Inline the
-library into a second copy, and <em class="lead">script it</em> — Swarm Desktop's offline build was
+library into a second copy, and <em class="lead">script it</em> — the file manager's offline build was
 made by hand once and went stale the moment the prototype changed.</p>
 
 <!-- ============================================================= TRAPS -->
@@ -657,7 +657,7 @@ made by hand once and went stale the moment the prototype changed.</p>
 </div>
 
 <footer>
-Solar Punk · design practice · derived from the Swarm Desktop File Manager redesign, September 2026<br>
+design practice · derived from a file manager redesign, September 2026<br>
 Companion document: <em class="lead">The File Manager, as it stands</em> — the project handoff.
 </footer>
 

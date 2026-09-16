@@ -1,6 +1,6 @@
 // Does every declared click route point at text that exists on its source board.
 // This is the check the gate also runs, here as a standalone report. Written
-// after 22 of 162 Swarm routes turned out to point at buttons deleted months
+// after 22 of 162 routes turned out to point at buttons deleted months
 // earlier. Gesture and system routes are exempt from the label check by design —
 // they have no clickable label, and counting them as dead deletes real screens.
 import { boards, url, id, open, report, model } from './lib.mjs';

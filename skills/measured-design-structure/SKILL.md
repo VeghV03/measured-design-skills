@@ -25,7 +25,7 @@ constraint, not a label. The definitions and their obligations are in `measured-
 
 The second layer earns its keep by making gaps countable.
 
-> Swarm Desktop: classifying all 93 screens showed four places with exactly one state, and seven with
+> File manager: classifying all 93 screens showed four places with exactly one state, and seven with
 > no empty state at all. An empty place is the most common screen any of them will ever show — every
 > account starts there — and it was the one nobody had drawn. Seven teams would have invented seven
 > different answers to the same three questions. They now come from one shared component.
@@ -43,7 +43,7 @@ rows, and if the model is silent, each engineer invents an answer. Record these 
 routes — see `measured-design-contract`. They can never have an arrow drawn from a clickable label,
 so without the distinction they read as unreachable and get deleted.
 
-> Swarm Desktop: the right-click menu alone was the home of six actions that had screens already and
+> File manager: the right-click menu alone was the home of six actions that had screens already and
 > no drawn way in.
 
 ## Skills to invoke

@@ -1,7 +1,7 @@
 // Forbidden words outside their permitted zone, per model/policy.json.
 // A word list alone produces false findings — a term inside a code sample or a
 // filename is not a policy breach. Zones and ignore_selectors are what make the
-// count trustworthy. Swarm: 158 jargon words outside Advanced, then 0.
+// count trustworthy. 158 jargon words outside Advanced, then 0.
 import { boards, url, id, open, report, model } from './lib.mjs';
 const policy = model('policy.json');
 const { p, close } = await open();

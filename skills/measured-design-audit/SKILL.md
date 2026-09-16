@@ -37,7 +37,7 @@ The useful question is not "can this be attacked" but **"where does this mislead
 behaving reasonably?"** Those failures are far more common and nobody files them as bugs, because
 each individual screen is defensible.
 
-> Two findings this produced in Swarm Desktop. The word **Trash**: every trash metaphor in computing
+> Two findings this produced in the file manager. The word **Trash**: every trash metaphor in computing
 > promises two things — the item is gone, and the space comes back. The product delivers neither. The
 > name was the lie, so it became **Removed**; the button says "Remove", so the place is its past
 > tense, and the verb and the noun now agree. And the phrase **"we opened them"** in a status line,
@@ -57,7 +57,7 @@ informed. Use `measured-design-decide`; it writes into `model/decisions.json`.
 Audits reliably find screens explaining *how* when the user only needs *what happens*. Cutting is
 design work, not tidying.
 
-> Swarm Desktop: teaching clauses across the set went from 36 to 4, and the four that remain are at
+> File manager: teaching clauses across the set went from 36 to 4, and the four that remain are at
 > the exact points of consequence.
 
 ## Finding format

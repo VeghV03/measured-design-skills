@@ -1,6 +1,6 @@
 // A translucent layer over text composites that text toward the layer's colour.
 // contrast.mjs reads declared colours, so a veil is exactly what it cannot see.
-// Swarm Desktop: a white veil at 34% took muted text from 4.74:1 to 2.53:1.
+// A white veil at 34% took muted text from 4.74:1 to 2.53:1.
 import { cfg, boards, url, id, open, report } from './lib.mjs';
 const { p, close } = await open();
 const rows = [];

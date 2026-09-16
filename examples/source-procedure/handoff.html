@@ -1,4 +1,4 @@
-<title>Swarm Desktop Design Handoff</title>
+<title>File Manager Design Handoff</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 :root{
@@ -134,7 +134,7 @@ footer{margin-top:76px;padding-top:20px;border-top:1px solid var(--line2);
 <div class="wrap">
 
 <div class="mast">
-  <p class="kicker">Solar Punk · Swarm Desktop · design handoff</p>
+  <p class="kicker">File manager · design handoff</p>
   <h1>The File Manager, as it stands</h1>
   <p class="standfirst">Ninety-three drawn screens, the reasoning behind each one, and the
   machinery that proves the set is still coherent after every change.</p>
@@ -142,7 +142,7 @@ footer{margin-top:76px;padding-top:20px;border-top:1px solid var(--line2);
     <span>Updated <b>15 September 2026</b></span>
     <span>Prototype <b>v20</b></span>
     <span>Source <span class="m">work/flowA</span></span>
-    <span>Jira <b>SPDV-1500 / SPDV-1501</b></span>
+    <span>Jira <b>FM-1500 / FM-1501</b></span>
   </div>
 </div>
 
@@ -177,7 +177,7 @@ boards disagree.</p>
 
 <h4>Published — the working set</h4>
 <div class="links">
-  <div class="lk"><span class="nm">Swarm Desktop Prototype</span>
+  <div class="lk"><span class="nm">File Manager Prototype</span>
     <span class="ds">The spine. All 93 screens on the canvas's own 46 steps, with map, grid, search and product views.</span>
     <span class="vn">v20</span></div>
   <div class="lk"><span class="nm">First Run</span>
@@ -204,7 +204,7 @@ boards disagree.</p>
 </div>
 
 <h4>Also delivered</h4>
-<p><span class="m">Swarm-Desktop-Prototype-offline.html</span> — the same prototype with React
+<p><span class="m">File-Manager-Prototype-offline.html</span> — the same prototype with React
 inlined. 2.2 MB, zero external requests, opens from a disk with no network. Built by
 <span class="m">offline.py</span> so it can never drift from the online copy.</p>
 
@@ -325,7 +325,7 @@ touch-target rule does not apply.</p>
 <h2>Correspondence with the backlog</h2>
 <div class="sectrule"></div>
 
-<p>SPDV-1500 (the Swarm Desktop shell) and SPDV-1501 (the File Manager widget) decompose into
+<p>FM-1500 (the desktop shell) and FM-1501 (the File Manager widget) decompose into
 twelve epics. Eleven land on a place in this IA; the twelfth is a process epic and correctly
 has no design. <strong>The split is better than this artifact's</strong> — it separates host from
 widget, and this artifact has never drawn the File Manager without the shell around it.</p>
@@ -342,7 +342,7 @@ widget, and this artifact has never drawn the File Manager without the shell aro
   <p>All 122 bolded "text required" strings across the 14 stories were tested against the
   built prototype. <strong>103 still match; 15 no longer exist</strong> — the stories were
   transcribed from a pre-audit prototype. Built literally, they revert the copy work.
-  SPDV-1514 alone has seven, including the whole replaced
+  FM-1514 alone has seven, including the whole replaced
   <span class="m">BEFORE YOU ADD ANYTHING</span> block.</p>
   <p>The durable fix is not a one-off correction: replace "text required" with a pointer to
   the prototype board, so copy has <strong>one</strong> source of truth rather than two that drift.</p>
@@ -354,11 +354,11 @@ widget, and this artifact has never drawn the File Manager without the shell aro
 <tbody>
 <tr><td>Sign-in and account — every unlock variant, account creation, backup file, two restore failures</td><td class="n">15</td><td><span class="s no">no epic</span></td></tr>
 <tr><td>Second computer and recovery</td><td class="n">3</td><td><span class="s no">no epic</span></td></tr>
-<tr><td>Sharing — logic and function <span class="m">SPDV-1510</span></td><td class="n">10</td><td><span class="s wa">no story</span></td></tr>
-<tr><td>Address book <span class="m">SPDV-1511</span> — journey F</td><td class="n">9</td><td><span class="s wa">no story</span></td></tr>
-<tr><td>Shared with me <span class="m">SPDV-1508</span></td><td class="n">7</td><td><span class="s wa">no story</span></td></tr>
-<tr><td>Advanced <span class="m">SPDV-1504</span></td><td class="n">4</td><td><span class="s wa">no story</span></td></tr>
-<tr><td>Direct manipulation — under <span class="m">SPDV-1506</span></td><td class="n">5</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Sharing — logic and function <span class="m">FM-1510</span></td><td class="n">10</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Address book <span class="m">FM-1511</span> — journey F</td><td class="n">9</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Shared with me <span class="m">FM-1508</span></td><td class="n">7</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Advanced <span class="m">FM-1504</span></td><td class="n">4</td><td><span class="s wa">no story</span></td></tr>
+<tr><td>Direct manipulation — under <span class="m">FM-1506</span></td><td class="n">5</td><td><span class="s wa">no story</span></td></tr>
 <tr><td>Home and HomeQuiet — the permanent landing</td><td class="n">2</td><td><span class="s wa">no story</span></td></tr>
 </tbody></table></div>
 
@@ -402,7 +402,7 @@ documented facts, not from a documented two-node case. If devices are already co
 than built.</p>
 
 <h3>5 · The widget has never been drawn alone</h3>
-<p>SPDV-1505 requires the File Manager to ship standalone. All 93 boards draw the full window —
+<p>FM-1505 requires the File Manager to ship standalone. All 93 boards draw the full window —
 titlebar, rail, sidebar, content. If that requirement is real, it affects every board.</p>
 
 <h2>Picking this up</h2>
@@ -425,7 +425,7 @@ titlebar, rail, sidebar, content. If that requirement is real, it affects every 
 </ol>
 
 <footer>
-Swarm Desktop · File Manager redesign · handoff prepared 15 September 2026<br>
+File Manager redesign · handoff prepared 15 September 2026<br>
 Companion document: <em class="lead">Designing a Product You Can Prove</em> — the general procedure this project followed.
 </footer>
 

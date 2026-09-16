@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "measured-design",
-  "owner": { "name": "Solar Punk", "url": "https://solarpunk.buzz" },
-  "description": "Designing a product you can prove — the Solar Punk UX/UI procedure as an installable pack.",
+  "owner": { "name": "VeghV03", "url": "https://github.com/VeghV03" },
+  "description": "Designing a product you can prove — a measured UX/UI procedure as an installable pack.",
   "plugins": [
     {
       "name": "measured-design",

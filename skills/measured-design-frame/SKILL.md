@@ -18,7 +18,7 @@ the landing page is a dashboard or a teaching surface.
 State the frequency explicitly. Then ask what it reverses: a frequency claim almost always
 contradicts a line in the agreed scope, and that contradiction is the first useful finding.
 
-> Swarm Desktop: the persona was chosen on purpose, not technical. That decision reversed a line in
+> File manager: the persona was chosen on purpose, not technical. That decision reversed a line in
 > the agreed canvas — the canvas said the first release has no Home screen, which is right for a
 > product you live in and wrong for one you visit periodically. Home became a permanent landing page
 > that teaches what you can do here, because a periodic visitor has forgotten.
@@ -28,7 +28,7 @@ contradicts a line in the agreed scope, and that contradiction is the first usef
 Name one. It becomes the tie-breaker for every later argument, and it earns disproportionate design
 attention. One, not a list — a list is a way of not choosing.
 
-> Swarm Desktop: *a file reaches the wrong person.* Everything downstream followed. The address book
+> File manager: *a file reaches the wrong person.* Everything downstream followed. The address book
 > was rebuilt around provenance, the share picker gained a duplicate-name warning, and the
 > drag-into-folder screen exists almost entirely to carry one sentence — moving does not share —
 > because every other file manager has taught people the opposite.
@@ -39,7 +39,7 @@ Products built on unusual infrastructure have a vocabulary problem. Decide the p
 that can be checked mechanically later. Write it into `model/policy.json` now, with zones — not a
 loose note, or it will never be enforced.
 
-> Swarm Desktop policy: consequence in plain words, mechanism never. A person is told sharing cannot
+> File manager policy: consequence in plain words, mechanism never. A person is told sharing cannot
 > be taken back; they are never told about postage batches, chunks, ACT, feeds or dilution. Because
 > the policy named a word list, it became a test — and the count outside Advanced went from 158 to 0.
 

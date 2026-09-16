@@ -20,7 +20,7 @@ asynchronous ambiguity into a two-minute answer, and the trade-off text means th
 - **Right-if:** the condition under which this option would be the correct answer. This is what makes
   a decision re-openable later without re-arguing it from scratch.
 
-> The shape that works, from Swarm Desktop: *Keep the purchase wall, make the wait worth watching* —
+> The shape that works, from the file manager: *Keep the purchase wall, make the wait worth watching* —
 > "Purchase stays first. Model the setup wait properly: what is happening, what you can do meanwhile,
 > and returning to the exact file." Each option carried what it cost and what it bought. The answer
 > produced two screens and closed a question the backlog had also asked independently.
