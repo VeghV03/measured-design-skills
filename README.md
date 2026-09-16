@@ -1,7 +1,13 @@
 # measured-design
 
-**Designing a product you can prove.** The Solar Punk UX/UI procedure, as an installable pack for
-Claude Code, Codex, and any agent that reads `SKILL.md`.
+**Designing a product you can prove.** The Solar Punk UX/UI procedure, as an installable skill pack
+for Claude Code, Codex, and any agent that reads `SKILL.md`.
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-informational)](LICENSE)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install)
+[![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install)
+[![Skills](https://img.shields.io/badge/skills-98-brightgreen)](#what-is-in-it)
+[![Harnesses](https://img.shields.io/badge/harnesses-9%20numbers-orange)](#what-is-in-it)
 
 Design reviews go wrong in a predictable way: two people hold different opinions about a screen, the
 more senior opinion wins, and nobody learns anything. The fix is not more process. It is arranging
@@ -17,6 +23,45 @@ the ones that genuinely cannot.
 
 Every one of those was invisible until something counted it. None would have come up in a review.
 
+## See it, don't just read about it
+
+This is the actual output of `examples/demo` — a real handover viewer, built from a scope document,
+with a gap the audit caught still sitting in the sidebar in orange:
+
+![The generated prototype viewer: a screen list on the left with one gap flagged in orange, the rendered screen in the middle, and its extracted build rationale below it](docs/prototype-hero.png)
+
+Nobody hand-wrote that rationale panel or that gap warning. Both came out of the build in
+[Try it in thirty seconds](#try-it-in-thirty-seconds) below — clone the repo and you'll have this same
+file, for this same demo, in under a minute.
+
+## Contents
+
+- [How it fits together](#how-it-fits-together)
+- [Install](#install)
+- [Try it in thirty seconds](#try-it-in-thirty-seconds)
+- [What is in it](#what-is-in-it)
+- [What makes this different from a process document](#the-three-things-that-make-this-different-from-a-process-document)
+- [Two standing rules](#two-standing-rules)
+- [Contributing](#contributing)
+- [Provenance and licences](#provenance-and-licences)
+
+## How it fits together
+
+Six stages, one contract, one refusing gate:
+
+```mermaid
+flowchart LR
+    F1["01 Frame<br/>scope → job stories"] --> F2["02 Structure<br/>IA, routes, gaps"]
+    F2 --> F3["03 Generate<br/>screens compiled, not drawn"]
+    F3 --> F4["04 Audit<br/>findings → harnesses"]
+    F4 --> F5["05 Measure<br/>counts, not opinions"]
+    F5 --> F6["06 Ship<br/>handover viewer"]
+```
+
+A route the contract declares but nothing binds stops the build at stage 3. Everything else — jargon,
+missing headings, empty states, contrast — prints a number at stage 5 and lets a person decide what to
+do with it.
+
 ## Install
 
 ```sh
@@ -31,23 +76,6 @@ fit. The library skills are marked `disable-model-invocation` for the same reaso
 deliberately from a stage, not picked up opportunistically.
 
 Claude Code can also add the directory as a marketplace (`.claude-plugin/marketplace.json`).
-
-## What is in it
-
-| | |
-|---|---|
-| `skills/measured-design` | the entry point; routes to the six stages |
-| `skills/measured-design-contract` | the build contract — read before generating anything |
-| `skills/measured-design-{frame,structure,generate,audit,measure,ship}` | stages 01–06 |
-| `skills/measured-design-decide` | an open question forced into multiple choice with trade-offs |
-| `skills/measured-design-drift` | scope document versus prototype |
-| `skills/library/` | 88 vendored designer and thinking skills |
-| `commands/` | `/prove` and nine others, for agents with slash commands |
-| `scaffold/gate.py` | refuses the build on a route that does not bind |
-| `scaffold/harnesses/` | nine checks, each prints one number |
-| `scaffold/viewer/` | the handover artifact — one file, no dependencies |
-| `scaffold/adapters/python/` | the reference generator |
-| `examples/demo/` | six screens that build, gate and ship end to end |
 
 ## Try it in thirty seconds
 
@@ -65,6 +93,23 @@ The gate prints one line per property and writes `model/index.json`. Break a rou
 
 For the harnesses: `cd scaffold/harnesses && npm install && node run-all.mjs`. They need Playwright
 and a Chromium; set `executablePath` in `harness.config.json` if yours is not on the default path.
+
+## What is in it
+
+| | |
+|---|---|
+| `skills/measured-design` | the entry point; routes to the six stages |
+| `skills/measured-design-contract` | the build contract — read before generating anything |
+| `skills/measured-design-{frame,structure,generate,audit,measure,ship}` | stages 01–06 |
+| `skills/measured-design-decide` | an open question forced into multiple choice with trade-offs |
+| `skills/measured-design-drift` | scope document versus prototype |
+| `skills/library/` | 88 vendored designer and thinking skills |
+| `commands/` | `/prove` and nine others, for agents with slash commands |
+| `scaffold/gate.py` | refuses the build on a route that does not bind |
+| `scaffold/harnesses/` | nine checks, each prints one number |
+| `scaffold/viewer/` | the handover artifact — one file, no dependencies |
+| `scaffold/adapters/python/` | the reference generator |
+| `examples/demo/` | six screens that build, gate and ship end to end |
 
 ## The three things that make this different from a process document
 
@@ -89,6 +134,26 @@ of this pack that is not in the source procedure.
 
 Where a prototype and a scope document both exist, the audited prototype dictates. The scope document
 is brought level with it, not the other way round, otherwise every audit finding is optional.
+
+## Contributing
+
+The pack is deliberately small at its core — ten skills, one contract, one gate. Most of the value in
+growing it is in:
+
+- **New harnesses.** Each one prints a single number for a single property. If you have a check that
+  would have caught a real regression, `scaffold/harnesses/` is the place for it — see the existing
+  ones for the shape.
+- **New adapters.** `scaffold/adapters/python/` is the reference, not the requirement. A generator for
+  another stack that satisfies the same build contract is welcome.
+- **Sharper pairings.** `PAIRING.md` is a proposal, argued from one project. If a stage's thinking-skill
+  pairing does not hold up on yours, open an issue with the counter-example.
+- **Bug reports with the counter-example attached.** "This refused when it should not have" is far more
+  useful with the `routes.json` that triggered it than without.
+
+Open an issue or a pull request. Keep additions consistent with the rest of the pack: something that
+prints a number beats something that adds a meeting.
+
+If this saved you a design review, a star on the repo is how other people find it.
 
 ## Provenance and licences
 
