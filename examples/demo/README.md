@@ -19,6 +19,11 @@ What is deliberately wrong in it, so you can see the reports work:
 - `settings-storage` is the one screen `policy.json` zones "advanced" — it is the only place `chunk`
   is allowed to appear. `vocab.mjs` enforces that, not a comment.
 
+What the harnesses actually caught here, not staged: `lang.mjs` reported all ten boards with no
+`<html lang>` the first time this demo was rebuilt with the current adapters — real, not planted. It
+was a one-line fix in both `system.py` and `system.mjs`, and the count went to zero on the next build.
+That is the loop the whole pack is for: a number, a fix, the same number checked again.
+
 Break something on purpose:
 
 ```sh

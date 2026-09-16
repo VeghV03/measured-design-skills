@@ -14,7 +14,8 @@ export const cfg = Object.assign({
   executablePath: null,
   scrimSelector: '.scrim',
   cellChildSelector: '.chip',
-  densityBudget: 400
+  densityBudget: 400,
+  targetSize: 24
 }, existsSync(cfgPath) ? JSON.parse(readFileSync(cfgPath, 'utf8')) : {});
 
 export const boardsDir = resolve(here, cfg.boards);

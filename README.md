@@ -7,7 +7,7 @@ for Claude Code, Codex, and any agent that reads `SKILL.md`.
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install)
 [![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install)
 [![Skills](https://img.shields.io/badge/skills-98-brightgreen)](#what-is-in-it)
-[![Harnesses](https://img.shields.io/badge/harnesses-9%20numbers-orange)](#what-is-in-it)
+[![Harnesses](https://img.shields.io/badge/harnesses-12%20numbers-orange)](#what-is-in-it)
 
 Design reviews go wrong in a predictable way: two people hold different opinions about a screen, the
 more senior opinion wins, and nobody learns anything. The fix is not more process. It is arranging
@@ -106,7 +106,7 @@ and a Chromium; set `executablePath` in `harness.config.json` if yours is not on
 | `skills/library/` | 88 vendored designer and thinking skills |
 | `commands/` | `/prove` and nine others, for agents with slash commands |
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
-| `scaffold/harnesses/` | nine checks, each prints one number |
+| `scaffold/harnesses/` | twelve checks, each prints one number |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |

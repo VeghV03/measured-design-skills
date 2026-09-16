@@ -15,7 +15,7 @@ skills/library/                  88 vendored designer and thinking skills, colle
 commands/                        slash commands for agents that have them
 scaffold/gate.py                 the build gate — refuses on a route that does not bind
 scaffold/drift.py                scope document versus model
-scaffold/harnesses/              nine checks, each prints one number
+scaffold/harnesses/              twelve checks, each prints one number
 scaffold/viewer/                 the handover artifact, no dependencies
 scaffold/adapters/python/        the reference generator; one adapter, not the requirement
 scaffold/adapters/node/          a second generator, no dependencies, proving the contract holds

@@ -67,6 +67,7 @@ export function icon(name) {
 export function shell(title, body, navCurrent = '', nav = ['Files', 'Shared', 'Removed']) {
   const items = nav.map(n => `<span${n === navCurrent ? ' aria-current=page' : ''}>${n}</span>`).join('');
   return `<!doctype html>
+<html lang="en">
 <meta charset="utf-8"><title>${title}</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>${TOKENS}</style>

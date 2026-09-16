@@ -69,6 +69,7 @@ def shell(title: str, body: str, nav_current: str = "", nav=("Files", "Shared", 
     items = "".join(
         f'<span{" aria-current=page" if n == nav_current else ""}>{n}</span>' for n in nav)
     return f"""<!doctype html>
+<html lang="en">
 <meta charset="utf-8"><title>{title}</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>{TOKENS}</style>

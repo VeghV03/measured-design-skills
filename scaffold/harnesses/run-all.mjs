@@ -2,7 +2,7 @@
 // hundred boards, and it has never once been a waste. Run before every publish.
 import { execFileSync } from 'child_process';
 const checks = ['overflow', 'contrast light', 'contrast dark', 'translucency',
-  'cellfit', 'structure', 'vocab', 'routes', 'density'];
+  'cellfit', 'structure', 'vocab', 'routes', 'density', 'lang', 'target-size', 'motion'];
 let failed = 0;
 for (const c of checks) {
   const [file, ...args] = c.split(' ');
