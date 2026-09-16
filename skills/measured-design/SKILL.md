@@ -54,5 +54,9 @@ whole data model. Anything not in them can never be measured.
 ## Where the library is
 
 `skills/library/` holds 88 vendored designer and thinking skills, named in collection-qualified form
-(`ux-strategy-frame-problem`, not `frame-problem`). They do not self-invoke. Read
-`skills/library/INDEX.md` for the full map, and invoke them by name from a stage.
+(`ux-strategy-frame-problem`, not `frame-problem`). They do not self-invoke.
+
+Read the **Reached from** section of `skills/library/INDEX.md` first: it lists, per stage, exactly
+which of the 88 that stage invokes. Every one of them is reachable from a stage — `check_library.py`
+fails the build if any becomes an orphan, so the list cannot quietly rot. The alphabetical table
+after it is for resolving an upstream id, not for browsing.

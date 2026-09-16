@@ -81,6 +81,8 @@ Design:
 - `prototyping-testing-heuristic-evaluation` — expert review with severity ratings
 - `design-ops-design-qa-checklist` — turning findings into a repeatable gate
 - `interaction-design-doherty-threshold` — response budgets, and what a wait shows past them
+- `interaction-design-fitts-law` — the reasoning a target-size threshold has to stand on
+- `prototyping-testing-accessibility-test-plan` — the coverage plan behind the accessibility harnesses
 
 Thinking, run alongside:
 - `thinking-scientific-method` — the harness is the cheapest discriminating observation

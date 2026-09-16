@@ -82,10 +82,19 @@ which is the actual reason most products have no failure screens.
 Design:
 - `design-systems-design-token` — every colour and space from one place
 - `design-systems-create-component` / `design-systems-component-spec` — props, states, variants, accessibility
-- `ui-design-color-system`, `ui-design-typography-scale`, `ui-design-dark-mode-design`
+- `ui-design-color-system`, `ui-design-typography-scale`, `ui-design-readable-measure`
+- `ui-design-dark-mode-design` / `design-systems-theming-system` — one build, more than one theme
 - `ui-design-design-screen` — layout from requirements
+- `ui-design-platform-conventions` — the platform's conventions, established before you break one
+- `ui-design-data-visualization` — when a screen's payload is numbers
 - `interaction-design-gesture-patterns` — drag, drop and context menus: the unbuttoned half
 - `interaction-design-error-flow`, `interaction-design-loading-states`, `interaction-design-form-design`
+- `interaction-design-error-handling-ux` — the message itself: cause, consequence, the way out
+- `interaction-design-feedback-patterns` / `interaction-design-micro-interaction-spec` — what
+  acknowledges an action, and how long it is allowed to take
+- `interaction-design-design-interaction` — the whole flow, when a feature is more than one screen
+- `ai-alignment-reasoning-transparency-patterns` — showing what the system did without showing the
+  machinery; the build-time half of the vocabulary policy
 - `designer-toolkit-ux-writing` — when the words are the deliverable
 - `designer-toolkit-design-rationale` — the docstring: context, options, why, trade-off, right-if
 

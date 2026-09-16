@@ -54,6 +54,10 @@ Design:
 - `prototyping-testing-user-flow-diagram` — what precedes what, drawn so QA can walk it
 - `interaction-design-state-machine` — states, events, guards; where an edge case hides
 - `interaction-design-navigation-patterns` — turning places into a rail that survives growth
+- `interaction-design-hicks-law` — how many choices one place can offer before it stops being a place
+- `interaction-design-teslers-law` — complexity that cannot be removed, only moved; decide who absorbs it
+- `design-research-card-sort-analysis` — when the IA should come from evidence rather than argument
+- `ux-strategy-experience-map` — the parts of the experience that happen outside your product
 
 Thinking, run alongside:
 - `thinking-systems` — where the boundary is, and which loops the structure creates

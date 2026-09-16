@@ -52,6 +52,9 @@ Design:
 - `design-research-jobs-to-be-done` — what someone hired this product to do
 - `ai-alignment-reasoning-harm-anticipation` — name the worst outcome before it is a bug report
 - `ux-strategy-design-principles` — the rules that will settle later arguments
+- `ux-strategy-north-star-vision` — the end state this release is one step toward
+- `ux-strategy-content-strategy` — the vocabulary policy is content strategy with a test attached
+- `design-research-empathy-map` — what the person already believes before they arrive
 
 Thinking, run alongside:
 - `thinking-jobs-to-be-done` — the progress being hired, under which circumstance
@@ -59,6 +62,8 @@ Thinking, run alongside:
 - `thinking-socratic` — surface the assumptions in the brief before building on them
 - `thinking-first-principles` — separate what the infrastructure forces from what convention assumes
 - `thinking-circle-of-competence` — mark which claims in the brief you cannot actually verify
+- `thinking-cynefin` — whether this is a clear, complicated or complex problem; the wrong mode wastes
+  the whole stage
 
 ## Stop condition
 

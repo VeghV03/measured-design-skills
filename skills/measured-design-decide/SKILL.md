@@ -54,6 +54,16 @@ Append to `model/decisions.json`:
 `status` is `open` or `settled`. The gate reports open decisions on every build. An open decision is
 not a failure — an *invisible* one is.
 
+## Skills to invoke
+
+Design:
+- `designer-toolkit-design-negotiation` — when the answer is owned by someone who has to be persuaded
+- `cross-functional-alignment-decision-log` — where the settled answer goes so it survives the author
+
+Thinking, run alongside:
+- `thinking-kepner-tregoe` — decision analysis: weight the musts and the wants before comparing
+- `thinking-reversibility` — how cheap this is to undo sets how much evidence the answer needs
+
 ## Two rules
 
 Never ask a question whose answer is already countable. Run the check instead; a question you could

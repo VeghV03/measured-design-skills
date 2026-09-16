@@ -109,12 +109,13 @@ and a Chromium; set `executablePath` in `harness.config.json` if yours is not on
 | `skills/library/` | 88 vendored designer and thinking skills |
 | `commands/` | `/prove` and nine others, for agents with slash commands |
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
+| `scaffold/check_library.py` | refuses if a vendored skill is unreachable, or a stage names one that does not exist |
 | `scaffold/harnesses/` | twelve checks, each prints one number |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |
 | `examples/demo/` | ten screens across four journeys that build, gate and ship end to end |
-| `.github/workflows/ci.yml` | builds the demo with both adapters, gates it, runs all twelve harnesses, on every push |
+| `.github/workflows/ci.yml` | checks library reachability, builds the demo with both adapters, gates it, runs all twelve harnesses, on every push |
 
 ## The three things that make this different from a process document
 

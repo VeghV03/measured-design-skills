@@ -16,12 +16,17 @@ changes that undo each other.
 - `design-systems-audit-system` — consistency and completeness of the system itself
 - `designer-toolkit-design-token-audit` — hard-coded values that escaped the tokens
 - `accessible-content-review` — headings, labels, link text, reading level
+- `accessible-content-readable-content` — reading level and plain language, on the prose you shipped
 - `adaptive-interfaces-information-density` — cognitive load at the real scale, not the demo scale
 - `ux-strategy-information-architecture` — does the structure still hold
 - `interaction-design-jakobs-law` — where you break convention, and whether it is worth it
 - `interaction-design-onboarding-design` — first run and time to first value
 - `ai-alignment-reasoning-red-team` — how does this mislead someone acting in good faith
 - `visual-critique-critique-screen` — seven visual lenses on one rendered screen
+- `visual-critique-critique-affordance`, `visual-critique-critique-typography`,
+  `visual-critique-critique-information-density` — the individual lenses, when `critique-screen`
+  flags one and you want it on its own
+- `design-ops-design-critique` — running the review itself so it produces findings, not opinions
 - `model-interaction-design-design-conversation` — who leads at each turn
 
 Thinking, run alongside:

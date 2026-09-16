@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Library — every vendored skill must be reachable from a stage
+        run: python3 scaffold/check_library.py
+
       - name: Build examples/demo with the Python adapter
         working-directory: examples/demo
         run: python3 ../../scaffold/adapters/python/build.py --boards boards --model model
