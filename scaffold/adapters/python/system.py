@@ -17,11 +17,14 @@ TOKENS = """
   --bg:#fbfbf9; --card:#fff; --fg:#1d1d1b; --mut:#6b6b66; --line:#e2e1db;
   --acc:#1d6e56; --warn:#8a4b0b; --danger:#a32d2d;
 }
-:root[data-theme=dark],
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){
   --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
   --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
 }}
+:root[data-theme=dark]{
+  --bg:#141413; --card:#1c1c1a; --fg:#eceae2; --mut:#97958d; --line:#2c2c2a;
+  --acc:#5dcaa5; --warn:#efa727; --danger:#f09595;
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
   font:var(--type-body)/1.6 ui-sans-serif,system-ui,sans-serif}

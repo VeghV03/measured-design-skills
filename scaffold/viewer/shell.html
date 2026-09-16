@@ -3,35 +3,57 @@
 <title>__TITLE__</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-:root{--bg:#fbfbf9;--fg:#1d1d1b;--mut:#6b6b66;--line:#e2e1db;--card:#fff;--acc:#1d6e56;--warn:#8a4b0b}
-@media(prefers-color-scheme:dark){:root{--bg:#141413;--fg:#eceae2;--mut:#97958d;--line:#2c2c2a;--card:#1c1c1a;--acc:#5dcaa5;--warn:#efa727}}
+:root{--bg:#fbfbf9;--fg:#1d1d1b;--mut:#6b6b66;--line:#e2e1db;--card:#fff;--acc:#1d6e56;--acc-bg:#1d6e5614;--warn:#8a4b0b;--warn-bg:#8a4b0b14;--shadow:0 1px 2px rgba(20,20,19,.04),0 8px 24px rgba(20,20,19,.05)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#141413;--fg:#eceae2;--mut:#97958d;--line:#2c2c2a;--card:#1c1c1a;--acc:#5dcaa5;--acc-bg:#5dcaa51c;--warn:#efa727;--warn-bg:#efa7271c;--shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.3)
+}}
+:root[data-theme=dark]{
+  --bg:#141413;--fg:#eceae2;--mut:#97958d;--line:#2c2c2a;--card:#1c1c1a;--acc:#5dcaa5;--acc-bg:#5dcaa51c;--warn:#efa727;--warn-bg:#efa7271c;--shadow:0 1px 2px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.3)
+}
 *{box-sizing:border-box}
-body{margin:0;font:15px/1.6 ui-sans-serif,system-ui,sans-serif;background:var(--bg);color:var(--fg)}
-header{display:flex;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
-h1{font-size:15px;font-weight:500;margin:0 12px 0 0}
-nav button{font:inherit;background:none;border:1px solid var(--line);color:var(--mut);padding:4px 10px;border-radius:6px;cursor:pointer}
-nav button[aria-current=true]{color:var(--fg);border-color:var(--fg)}
-input[type=search]{font:inherit;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);min-width:200px}
-label.sw{color:var(--mut);display:flex;gap:6px;align-items:center;cursor:pointer}
+body{margin:0;font:15px/1.6 ui-sans-serif,system-ui,sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+header{display:flex;gap:14px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
+h1{font-size:15px;font-weight:600;letter-spacing:-.01em;margin:0 4px 0 0;white-space:nowrap}
+nav{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:3px}
+nav button{font:inherit;font-size:13px;background:none;border:0;color:var(--mut);padding:5px 11px;border-radius:6px;cursor:pointer;transition:color .12s,background .12s}
+nav button:hover{color:var(--fg)}
+nav button[aria-current=true]{color:var(--fg);background:var(--bg);box-shadow:var(--shadow)}
+input[type=search]{font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--fg);min-width:180px;transition:border-color .12s}
+input[type=search]:focus{outline:none;border-color:var(--acc)}
+label.sw{color:var(--mut);font-size:13px;display:flex;gap:6px;align-items:center;cursor:pointer;white-space:nowrap}
+button.ghost{font:inherit;font-size:13px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:7px;padding:5px 9px;cursor:pointer;line-height:1}
+button.ghost:hover{color:var(--fg);border-color:var(--mut)}
+.spacer{flex:1}
 main{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);gap:0;min-height:calc(100vh - 53px)}
-#list{border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 53px);padding:8px 0}
-#detail{padding:16px 20px;overflow:auto;max-height:calc(100vh - 53px)}
-.grp{padding:10px 16px 4px;color:var(--mut);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
-.row{display:block;width:100%;text-align:left;font:inherit;background:none;border:0;color:inherit;padding:6px 16px;cursor:pointer;border-left:2px solid transparent}
+#list{border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 53px);padding:10px 0}
+#detail{padding:20px 24px;overflow:auto;max-height:calc(100vh - 53px)}
+.grp{padding:12px 16px 5px;color:var(--mut);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.grp.top{color:var(--fg);font-size:12px}
+.row{display:block;width:calc(100% - 12px);margin:1px 6px;text-align:left;font:inherit;font-size:14px;background:none;border:0;border-radius:7px;color:inherit;padding:7px 10px;cursor:pointer;transition:background .1s}
 .row:hover{background:var(--card)}
-.row[aria-current=true]{border-left-color:var(--acc);background:var(--card)}
-.row .k{color:var(--mut);font-size:12px;margin-left:6px}
+.row[aria-current=true]{background:var(--acc-bg);box-shadow:inset 2px 0 0 var(--acc)}
+.row .k{color:var(--mut);font-size:11.5px;margin-left:7px}
 .row.fail .k{color:var(--warn)}
-iframe{width:100%;height:620px;border:1px solid var(--line);border-radius:10px;background:#fff}
-dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:16px 0}
-dt{color:var(--mut)}
+.row.gap{color:var(--warn);background:var(--warn-bg);white-space:normal;line-height:1.5}
+.frame{border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;margin:4px 0 16px}
+.dots{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+iframe{display:block;width:100%;height:600px;border:0;background:#fff}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:9px 18px;margin:16px 0}
+dt{color:var(--mut);font-size:13px}
 dd{margin:0}
-.gate{border:1px solid var(--warn);color:var(--warn);border-radius:8px;padding:8px 12px;margin:12px 0;font-size:14px}
-.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:12px;color:var(--mut);margin-right:6px}
+.gate{border:1px solid var(--warn);background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:8px 12px;margin:12px 0;font-size:14px}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:12px;color:var(--mut);margin-right:6px}
+.pill.stat{color:var(--fg);background:var(--card)}
 .counts{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
-code{font:12px/1.5 ui-monospace,monospace;background:var(--card);padding:1px 4px;border-radius:4px}
-h2{font-size:14px;font-weight:500;margin:20px 0 6px}
+code{font:12px/1.5 ui-monospace,monospace;background:var(--card);padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
+h2{font-size:19px;font-weight:600;letter-spacing:-.01em;margin:4px 0 10px;display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 ul{margin:6px 0;padding-left:18px}
+.landing{color:var(--mut);max-width:46em}
+.landing h2{color:var(--fg)}
+.landing .stats{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+.landing kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--card)}
+::selection{background:var(--acc-bg)}
 </style>
 <header>
   <h1>__TITLE__</h1>
@@ -44,7 +66,9 @@ ul{margin:6px 0;padding-left:18px}
   </nav>
   <input type="search" id="q" placeholder="Search screens  /">
   <label class="sw"><input type="checkbox" id="happy"> Happy path only</label>
-  <span id="count" class="pill"></span>
+  <span class="spacer"></span>
+  <span id="count" class="pill stat"></span>
+  <button class="ghost" id="theme" title="Toggle light / dark">◐</button>
 </header>
 <main>
   <div id="list"></div>
@@ -90,9 +114,9 @@ function renderList() {
         const gap = D.gaps[`${j.id}/${st.id}`];
         if (!ids.length && !gap) return '';
         return `<div class="grp">${st.name || st.id}</div>` + ids.map(row).join('') +
-          (gap ? `<div class="row" style="color:var(--warn)">nothing serves this — ${gap}</div>` : '');
+          (gap ? `<div class="row gap">nothing serves this — ${gap}</div>` : '');
       }).join('');
-      if (steps) h += `<div class="grp" style="color:var(--fg)">${j.name || j.id}</div>` + steps;
+      if (steps) h += `<div class="grp top">${j.name || j.id}</div>` + steps;
     }
   } else if (view === 'group') {
     const g = {};
@@ -131,7 +155,23 @@ function renderDetail() {
     return;
   }
   const id = current; const s = byId[id];
-  if (!s) { el.innerHTML = '<p style="color:var(--mut)">Pick a screen.</p>'; return; }
+  if (!s) {
+    const c = D.counts;
+    el.innerHTML = `<div class="landing">
+      <h2>${document.title}</h2>
+      <p>${c.screens} screens across ${D.journeys.length} journeys, ${c.routes} declared routes, all bound.
+      Pick a screen on the left, or press <kbd>/</kbd> to search.</p>
+      <div class="stats">
+        <span class="pill stat">${c.failure_states} failure state${c.failure_states === 1 ? '' : 's'}</span>
+        <span class="pill stat">${c.open_decisions} open decision${c.open_decisions === 1 ? '' : 's'}</span>
+        <span class="pill stat">${c.recorded_gaps} recorded gap${c.recorded_gaps === 1 ? '' : 's'}</span>
+        <span class="pill stat">${c.places_without_an_empty_state} place${c.places_without_an_empty_state === 1 ? '' : 's'} with no empty state</span>
+      </div>
+      <p>Every rationale on the right came out of the generator that built its screen — not a
+      separate document. Nothing here was drawn twice.</p>
+    </div>`;
+    return;
+  }
   const step = (() => {
     for (const j of D.journeys) for (const st of j.steps)
       if ((st.screens || []).includes(id)) return `${j.name || j.id} · ${st.name || st.id}`;
@@ -141,7 +181,10 @@ function renderDetail() {
   const gate = s.unagreed ? `<div class="gate">The scope document has not seen this. ${s.unagreed}</div>` : '';
   el.innerHTML = `<h2>${s.title || id} <span class="pill">${s.kind}</span>${s.parent ? `<span class="pill">under ${s.parent}</span>` : ''}</h2>
   ${gate}
-  <iframe srcdoc="${(BOARDS[id] || '').replace(/"/g, '&quot;')}"></iframe>
+  <div class="frame">
+    <div class="dots"><i></i><i></i><i></i></div>
+    <iframe srcdoc="${(BOARDS[id] || '').replace(/"/g, '&quot;')}"></iframe>
+  </div>
   <dl>
     <dt>Where in the scope</dt><dd>${step}</dd>
     <dt>Why it is like this</dt><dd>${D.rationale[id] || '<em>no rationale — this is a finding</em>'}</dd>
@@ -167,6 +210,27 @@ addEventListener('keydown', e => {
   if (e.key === 'Escape') { document.getElementById('q').value = ''; query = ''; renderList(); }
 });
 addEventListener('hashchange', () => { current = location.hash.slice(1); renderList(); renderDetail(); });
+
+const THEME_KEY = 'measured-design-viewer-theme';
+const themeBtn = document.getElementById('theme');
+// file:// pages can throw on localStorage access (Chrome denies it by origin policy);
+// the toggle still works for the session, it just forgets on reload there.
+const store = { get: () => { try { return localStorage.getItem(THEME_KEY); } catch { return null; } },
+                 set: v => { try { localStorage.setItem(THEME_KEY, v); } catch {} } };
+function applyTheme(t) {
+  if (t === 'system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  themeBtn.textContent = t === 'dark' ? '●' : t === 'light' ? '○' : '◐';
+  themeBtn.title = `Theme: ${t} (click to change)`;
+}
+let theme = store.get() || 'system';
+applyTheme(theme);
+themeBtn.addEventListener('click', () => {
+  theme = { system: 'light', light: 'dark', dark: 'system' }[theme];
+  store.set(theme);
+  applyTheme(theme);
+});
+
 current = location.hash.slice(1) || null;
 renderList(); renderDetail();
 </script>
