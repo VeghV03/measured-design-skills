@@ -11,3 +11,7 @@ for (const c of checks) {
   catch { failed++; process.stdout.write(`   ${c} errored\n`); }
 }
 console.log(`\n${checks.length} checks · ${failed} errored`);
+// A harness printing a finding is not a failure — a person decides what to do with
+// a number. A harness crashing is: it measured nothing, and silently exiting 0
+// here would let CI go green on that.
+process.exitCode = failed ? 1 : 0;

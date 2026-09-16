@@ -3,6 +3,7 @@
 **Designing a product you can prove.** The Solar Punk UX/UI procedure, as an installable skill pack
 for Claude Code, Codex, and any agent that reads `SKILL.md`.
 
+[![CI](https://github.com/VeghV03/measured-design-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/VeghV03/measured-design-skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install)
 [![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install)
@@ -111,6 +112,7 @@ and a Chromium; set `executablePath` in `harness.config.json` if yours is not on
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |
 | `examples/demo/` | ten screens across four journeys that build, gate and ship end to end |
+| `.github/workflows/ci.yml` | builds the demo with both adapters, gates it, runs all twelve harnesses, on every push |
 
 ## The three things that make this different from a process document
 

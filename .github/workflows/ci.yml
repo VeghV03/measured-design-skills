@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-gate-harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build examples/demo with the Python adapter
+        working-directory: examples/demo
+        run: python3 ../../scaffold/adapters/python/build.py --boards boards --model model
+
+      - name: Gate — a route that does not bind must stop the build
+        working-directory: examples/demo
+        run: python3 ../../scaffold/gate.py --model model --boards boards
+
+      - name: Build the same demo with the Node adapter, prove the contract holds
+        run: |
+          mkdir -p /tmp/node-boards /tmp/node-model
+          cp examples/demo/model/*.json /tmp/node-model/
+          rm -f /tmp/node-model/rationale.json /tmp/node-model/index.json
+          node scaffold/adapters/node/build.mjs --boards /tmp/node-boards --model /tmp/node-model
+          python3 scaffold/gate.py --model /tmp/node-model --boards /tmp/node-boards
+          python3 - <<'PY'
+          import json, sys
+          a = json.load(open("examples/demo/model/rationale.json"))
+          b = json.load(open("/tmp/node-model/rationale.json"))
+          if a != b:
+              print("rationale.json differs between the Python and Node adapters:")
+              for k in sorted(set(a) | set(b)):
+                  if a.get(k) != b.get(k):
+                      print(f"  {k}:\n    python: {a.get(k)!r}\n    node:   {b.get(k)!r}")
+              sys.exit(1)
+          print(f"rationale.json identical across both adapters ({len(a)} screens)")
+          PY
+
+      - name: Install harness dependencies
+        working-directory: scaffold/harnesses
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Run all twelve harnesses against examples/demo
+        working-directory: scaffold/harnesses
+        run: |
+          cat > harness.config.json <<'EOF'
+          {
+            "boards": "../../examples/demo/boards",
+            "model": "../../examples/demo/model",
+            "widths": [1440, 1024, 768],
+            "height": 900,
+            "executablePath": null,
+            "scrimSelector": ".scrim",
+            "cellChildSelector": ".chip",
+            "ignoreSelectors": ["code", "pre", "[data-verbatim]"]
+          }
+          EOF
+          node run-all.mjs
