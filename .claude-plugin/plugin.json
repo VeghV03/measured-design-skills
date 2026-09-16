@@ -1,9 +1,9 @@
 {
   "name": "measured-design",
   "version": "1.0.0",
-  "description": "Take a product from an agreed scope document to a measured, engineering-ready prototype. Six stage skills, a stack-agnostic build contract, a route-binding gate that refuses, nine runnable harnesses, a dependency-free handover viewer, and 88 vendored designer and thinking skills.",
+  "description": "Take a product from an agreed scope document to a measured, engineering-ready prototype. Six stage skills, a stack-agnostic build contract proven by two independent generators, a route-binding gate that refuses, twelve runnable harnesses, a dependency-free handover viewer, and 88 vendored designer and thinking skills.",
   "author": { "name": "Solar Punk", "url": "https://solarpunk.buzz" },
-  "keywords": ["ux", "ui", "design-system", "prototype", "audit", "accessibility", "handoff", "harness", "design-ops"],
+  "keywords": ["ux", "ui", "design-system", "prototype", "audit", "accessibility", "handoff", "harness", "design-ops", "design-engineering", "claude-code"],
   "license": "MIT",
   "skills": ["skills/"],
   "commands": ["commands/"]

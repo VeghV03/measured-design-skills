@@ -39,3 +39,7 @@ GitHub Pages source for this repo (Settings → Pages → Deploy from a branch �
 
   There is no checked-in script for this; the frame list and the terminal template are both cheap to
   reconstruct from a fresh set of screenshots when the demo changes enough to make it stale.
+
+- `social-preview.png` — 1280×640, for Settings → General → Social preview (not settable from a
+  file; upload it there by hand). Same palette and stat block as the README's opening hook, so a link
+  card and the page it points to look like the same product.
