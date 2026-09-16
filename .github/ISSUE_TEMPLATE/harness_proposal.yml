@@ -1,0 +1,49 @@
+name: Harness proposal
+description: Propose a new check for scaffold/harnesses/ — one property, one number.
+labels: ["harness"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A harness measures one property across the boards and prints one number. See
+        `CONTRIBUTING.md` for the shape (`lib.mjs` gives you `cfg`, `boards`, `open`, `report`) and
+        `scaffold/harnesses/density.mjs` as a worked example under thirty lines.
+
+  - type: textarea
+    id: property
+    attributes:
+      label: What property does it measure
+      description: One sentence. "Element count per screen at the real data scale," not "checks density and also flags long labels."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: What regression would this have caught
+      description: A specific screen or PR where this property was wrong and nothing flagged it, if you have one.
+    validations:
+      required: true
+
+  - type: input
+    id: config
+    attributes:
+      label: Config it needs
+      description: A budget, a selector, a viewport width — whatever belongs in harness.config.json.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Printing or refusing
+      description: The gate has exactly one refusing check on purpose (see README). Default to printing.
+      options:
+        - Printing (prints a number, does not stop the build)
+        - Refusing (proposing this as a second build-stopping check — explain why in the field below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: refusing-case
+    attributes:
+      label: If you chose "Refusing" above, make the case
+      description: What failure mode does this prevent that a printed number would not catch in time?

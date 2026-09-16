@@ -1,0 +1,54 @@
+name: Bug report
+description: The gate, a harness, an adapter, or a skill did something other than what the contract says it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Most useful with the exact input attached — trim `routes.json` / `screens.json` down to the
+        smallest version that still reproduces it, rather than pasting a whole `model/`.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where
+      options:
+        - scaffold/gate.py (the refusing gate)
+        - scaffold/harnesses/ (a printing check)
+        - scaffold/viewer/ (the handover artifact)
+        - scaffold/adapters/python (the reference generator)
+        - a skill (frame/structure/generate/audit/measure/ship/decide/drift)
+        - install script
+        - something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the contract says should happen
+      description: Point at the line in AGENTS.md or the relevant SKILL.md if you can.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Command and input that reproduce it
+      description: The exact command you ran, and the minimal model/*.json or routes.json that triggers it.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Agent (Claude Code / Codex / other), OS, Python or Node version.

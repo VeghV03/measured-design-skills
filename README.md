@@ -150,8 +150,9 @@ growing it is in:
 - **Bug reports with the counter-example attached.** "This refused when it should not have" is far more
   useful with the `routes.json` that triggered it than without.
 
-Open an issue or a pull request. Keep additions consistent with the rest of the pack: something that
-prints a number beats something that adds a meeting.
+Open an issue or a pull request — `CONTRIBUTING.md` has the shape a harness or adapter needs to take,
+and the issue templates ask for the input that reproduces a bug. Keep additions consistent with the
+rest of the pack: something that prints a number beats something that adds a meeting.
 
 If this saved you a design review, a star on the repo is how other people find it.
 

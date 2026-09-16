@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Sharper pairing for PAIRING.md
+    url: https://github.com/VeghV03/measured-design-skills/blob/main/CONTRIBUTING.md#sharper-pairings
+    about: A stage's thinking-skill pairing didn't hold up on a different kind of product.
+  - name: Everything else
+    url: https://github.com/VeghV03/measured-design-skills/blob/main/CONTRIBUTING.md
+    about: Read the contributing guide for what does and doesn't need an issue first.
