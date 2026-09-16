@@ -8,5 +8,15 @@
   "chosen":null,
   "right_if":"Before wins if arrivals are price-sensitive rather than already committed.",
   "status":"open",
-  "screens":["files-list"]}
+  "screens":["files-list"]},
+ {"id":"d-002",
+  "question":"Does search include removed files?",
+  "context":"Search was designed after Removed already existed; the two features were not built together.",
+  "options":[
+    {"label":"Include, marked as removed","buys":"a file someone half-remembers deleting is still findable","costs":"every result needs a removed indicator, even when nothing is removed","kills":"a result list that is just files"},
+    {"label":"Exclude removed files entirely","buys":"search only ever returns things the person can use right now","costs":"a removed file is invisible to search on top of being out of the list","kills":"finding a file you deleted an hour ago without opening Removed"}],
+  "chosen":null,
+  "right_if":"Include wins if removal is read as \"out of the way\" rather than \"gone\" — see files-removed.",
+  "status":"open",
+  "screens":["search-results"]}
 ]

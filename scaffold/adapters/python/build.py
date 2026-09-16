@@ -35,8 +35,67 @@ def files_list():
             + row("budget-2026-final-v3.xlsx", "Shared with 2", "1.1 MB")
             + row("photo.jpg", "Only you", "840 KB")
             + '<p><button class="btn">Move to folder…</button> '
-              '<button class="btn danger">Remove</button></p>')
+              '<button class="btn danger">Remove</button></p>'
+            + '<p><button class="btn">Search files</button> '
+              '<button class="btn">Storage details</button></p>')
     return shell("Files", body, "Files")
+
+
+def sync_failed():
+    """Context: share_failed already established the shape for a refusal: what was
+    asked for, and what is still true. Options: one generic "something went wrong"
+    screen for every failure, or one screen per failure with its own honest sentence.
+    Why: "the file did not sync" and "the share did not go out" are different facts,
+    and a person deciding what to do next needs the actual one. Trade-off: a new
+    screen for every way the network can fail. Right if: the failures are few enough
+    to still be countable, the way this one is."""
+    body = ("<h1>Changes have not synced</h1>"
+            "<p>Your changes are saved on this device. They have not reached your "
+            "other devices yet.</p>"
+            '<p><button class="btn primary">Retry sync</button></p>')
+    return shell("Sync", body, "Files")
+
+
+def search_results():
+    """Context: a returning visitor forgets where a file ended up more often than
+    they forget its name. Options: browse by folder, or search by name. Why: search
+    is the faster path once the name is known and the location is not. Trade-off:
+    this ships ahead of d-002, so whether a removed file can appear here is still
+    open. Right if: the audience accumulates enough files that browsing stops being
+    the fast path."""
+    body = ('<h1>Search results</h1><p>3 results for "budget".</p>'
+            + row("budget-2026-final-v3.xlsx", "Shared with 2", "1.1 MB")
+            + row("budget-2026-draft.xlsx", "Only you", "980 KB")
+            + row("budget-notes.md", "Only you", "4 KB")
+            + '<p><button class="btn">Back to files</button></p>')
+    return shell("Search", body)
+
+
+def search_empty():
+    """Context: files_empty already exists for "nothing added yet"; a search with
+    no results is a different empty — something exists, this query does not match
+    it. Options: write new copy for this case, or reuse the empty_state component.
+    Why: empty_state was built to answer where you are, what this place is for, and
+    the one action that fills it, for exactly this shape of screen. Trade-off: the
+    same visual appears twice in one sitting if someone clears a file list and then
+    a search. Right if: that repetition reads as consistency, not deja vu."""
+    return shell("Search", empty_state(
+        "file", "Nothing matches",
+        "Try a different name, or check the spelling.", "Clear search"))
+
+
+def settings_storage():
+    """Context: this is the one screen the policy zones "advanced" — the jargon a
+    file has no business using anywhere else is allowed here on purpose. Options:
+    keep storage detail on the main Files screen, or split it behind a link. Why: a
+    periodic visitor never needs upload-chunking mechanics; the person who does has
+    clicked through on purpose. Trade-off: a level of indirection between the number
+    and the person asking about it. Right if: checking storage stays a small minority
+    of visits."""
+    body = ("<h1>Storage</h1><p>1.9 GB of 5 GB used.</p>"
+            "<p>Large files upload in chunks; a failed chunk retries on its own.</p>"
+            '<p><button class="btn">Back to files</button></p>')
+    return shell("Storage", body)
 
 
 def files_move():
@@ -95,6 +154,10 @@ SCREENS = {
     "files-move": files_move,
     "files-removed": files_removed,
     "share-failed": share_failed,
+    "sync-failed": sync_failed,
+    "search-results": search_results,
+    "search-empty": search_empty,
+    "settings-storage": settings_storage,
 }
 
 

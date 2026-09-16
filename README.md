@@ -109,7 +109,7 @@ and a Chromium; set `executablePath` in `harness.config.json` if yours is not on
 | `scaffold/harnesses/` | nine checks, each prints one number |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
-| `examples/demo/` | six screens that build, gate and ship end to end |
+| `examples/demo/` | ten screens across four journeys that build, gate and ship end to end |
 
 ## The three things that make this different from a process document
 

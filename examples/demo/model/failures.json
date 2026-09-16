@@ -1,3 +1,4 @@
 {
- "share-failed":"Refused: the share was asked for and did not come back. Not an empty result — nobody gained access, and the person needs to know what is still true."
+ "share-failed":"Refused: the share was asked for and did not come back. Not an empty result — nobody gained access, and the person needs to know what is still true.",
+ "sync-failed":"Refused: changes made on this device have not reached the others. Not a crash — the local copy is safe and is exactly what the failure state says it is."
 }

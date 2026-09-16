@@ -18,7 +18,7 @@ scaffold/drift.py                scope document versus model
 scaffold/harnesses/              nine checks, each prints one number
 scaffold/viewer/                 the handover artifact, no dependencies
 scaffold/adapters/python/        the reference generator; one adapter, not the requirement
-examples/demo/                   six screens that build, gate, and ship end to end
+examples/demo/                   ten screens across four journeys that build, gate, and ship end to end
 ```
 
 ## The short version

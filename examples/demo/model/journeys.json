@@ -7,5 +7,9 @@
    {"id":"move","name":"Move a file into a folder","screens":["files-move"]},
    {"id":"remove","name":"Remove a file","screens":["files-removed"]},
    {"id":"share","name":"Share a file","screens":["share-failed"]},
-   {"id":"estimate","name":"See the cost before saving","screens":[]}]}
+   {"id":"estimate","name":"See the cost before saving","screens":[]}]},
+ {"id":"find","name":"Find things","steps":[
+   {"id":"search","name":"Search for a file","screens":["search-results"]}]},
+ {"id":"account","name":"Manage account","steps":[
+   {"id":"storage","name":"Check storage used","screens":["settings-storage"]}]}
 ]

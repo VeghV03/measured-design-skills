@@ -5,5 +5,9 @@
  {"id":"files-move","title":"Move to folder","kind":"detour","group":"Files"},
  {"id":"files-removed","title":"Removed","kind":"place","group":"Files"},
  {"id":"share-failed","title":"Share did not go out","kind":"state","parent":"files-list","group":"Sharing",
-  "unagreed":"The scope document still calls this place Trash."}
+  "unagreed":"The scope document still calls this place Trash."},
+ {"id":"sync-failed","title":"Sync did not finish","kind":"state","parent":"files-list","group":"Files"},
+ {"id":"search-results","title":"Search results","kind":"place","group":"Search"},
+ {"id":"search-empty","title":"No matches","kind":"state","parent":"search-results","group":"Search","empty_state":true},
+ {"id":"settings-storage","title":"Storage","kind":"place","group":"Account"}
 ]
