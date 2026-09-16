@@ -19,7 +19,23 @@ GitHub Pages source for this repo (Settings → Pages → Deploy from a branch �
   matching `.banner` rule in the `<style>` block — see the current file for the exact markup, it is a
   handful of lines.
 
-- `prototype-hero.png` — the screenshot embedded in the top-level `README.md`. Regenerate with a
-  headless browser against a built `prototype.html`, deep-linked to a screen with `#<screen-id>`, and
-  crop to remove trailing whitespace. There is no script for this; it has been done by hand each time
-  the demo changed enough to make the old screenshot stale.
+- `walkthrough.gif` — the animation embedded in the top-level `README.md`. Built from two kinds of
+  frame, screenshotted with a headless browser at `--window-size=1400,900` and cropped to 1400×860:
+  - UI frames: a built `prototype.html` deep-linked to a screen with `#<screen-id>`, one screenshot
+    per screen worth showing.
+  - Terminal frames: a small standalone HTML file styled to look like a terminal window (dark card,
+    three dots, monospace body), with the exact commands and output from this demo's own
+    "break something on purpose" example in its own README — screenshotted once per step so the
+    STOP appears, then again after the fix so the pass does.
+
+  Assembled with `ffmpeg`'s concat demuxer (one entry per frame, a `duration` line after each to set
+  its hold time) into a two-pass palette GIF:
+
+  ```sh
+  ffmpeg -f concat -safe 0 -i concat.txt -vf "fps=12,scale=1000:-1:flags=lanczos,palettegen" palette.png
+  ffmpeg -f concat -safe 0 -i concat.txt -i palette.png \
+    -filter_complex "fps=12,scale=1000:-1:flags=lanczos[x];[x][1:v]paletteuse" walkthrough.gif
+  ```
+
+  There is no checked-in script for this; the frame list and the terminal template are both cheap to
+  reconstruct from a fresh set of screenshots when the demo changes enough to make it stale.

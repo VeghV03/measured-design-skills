@@ -26,15 +26,16 @@ Every one of those was invisible until something counted it. None would have com
 
 ## See it, don't just read about it
 
-This is the actual output of `examples/demo` — a real handover viewer, built from a scope document,
-with a gap the audit caught still sitting in the sidebar in orange:
+This is the actual output of `examples/demo` — a handover viewer built from a scope document, a
+failure state with an undeclared claim flagged in orange, and the gate refusing a broken build before
+it ever reaches a prototype:
 
-![The generated prototype viewer: a screen list on the left with one gap flagged in orange, the rendered screen in the middle, and its extracted build rationale below it](docs/prototype-hero.png)
+![Walkthrough: clicking through the generated demo viewer — a gap flagged in the sidebar, a failure state carrying an unagreed-scope warning, a storage screen — then a terminal breaking a route on purpose and watching the gate refuse to build, before reverting and passing clean again](docs/walkthrough.gif)
 
-Nobody hand-wrote that rationale panel or that gap warning. Both came out of the build in
-[Try it in thirty seconds](#try-it-in-thirty-seconds) below — clone the repo and you'll have this same
-file, for this same demo, in under a minute. Or skip the clone: **[open the live demo](https://veghv03.github.io/measured-design-skills/)**
-and click around it right now.
+Nobody hand-wrote that rationale panel, that gap warning, or that refusal. All three came out of the
+build in [Try it in thirty seconds](#try-it-in-thirty-seconds) below — clone the repo and you'll have
+this same file, for this same demo, in under a minute. Or skip the clone:
+**[open the live demo](https://veghv03.github.io/measured-design-skills/)** and click around it right now.
 
 ## Contents
 
