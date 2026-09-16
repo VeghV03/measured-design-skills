@@ -4,8 +4,7 @@
 import { cfg, targets, open, report } from './lib.mjs';
 const T = await targets();
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   const hits = await p.evaluate(scrim => {
@@ -29,12 +28,13 @@ for (const board of T) {
         const fg = parse(getComputedStyle(t).color) || [0, 0, 0];
         const comp = [0, 1, 2].map(i => a * bg[i] + (1 - a) * fg[i]);
         const got = ratio(comp, [255, 255, 255]);
-        if (got < 4.5) out.push(`"${t.textContent.trim().slice(0, 24)}" ${got.toFixed(2)}:1 under ${Math.round(a * 100)}%`);
+        const text = t.textContent.trim().slice(0, 24);
+        if (got < 4.5) out.push({ text, detail: `"${text}" ${got.toFixed(2)}:1 under ${Math.round(a * 100)}%` });
       }
     }
     return out;
   }, cfg.scrimSelector);
-  if (hits.length) { affected++; rows.push([board.id, `${hits.length} dimmed — ${hits[0]}`]); }
+  for (const h of hits) found.push({ target: board.id, detail: h.detail, key: `dimmed by a veil: ${h.text}` });
 }
 await close();
-report('boards with text dimmed by a translucent layer', T.length, affected, rows);
+report('boards with text dimmed by a translucent layer', T.length, found, { noun: 'dimmed' });

@@ -4,12 +4,11 @@
 import { targets, open, report } from './lib.mjs';
 const T = await targets();
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   const lang = await p.evaluate(() => document.documentElement.lang);
-  if (!lang) { affected++; rows.push([board.id, 'no <html lang> — a screen reader has to guess']); }
+  if (!lang) found.push({ target: board.id, detail: 'no <html lang> — a screen reader has to guess' });
 }
 await close();
-report('boards with no html lang', T.length, affected, rows);
+report('boards with no html lang', T.length, found);

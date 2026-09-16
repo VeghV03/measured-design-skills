@@ -1,7 +1,7 @@
 {
   "name": "measured-design",
   "version": "1.0.0",
-  "description": "Checks that print a number about screens you already have \u2014 contrast, overflow, target size, reduced motion, language, structure, density, dead links \u2014 against a folder of built pages or a running app.",
+  "description": "Checks that print a number about screens you already have \u2014 contrast, overflow, target size, reduced motion, language, structure, density, dead links \u2014 against a folder of built pages or a running app. Baseline what is already there so the count can only go down.",
   "type": "module",
   "bin": {
     "measured-design": "./cli/measured-design.mjs"
@@ -34,7 +34,11 @@
     "ux",
     "audit",
     "design-engineering",
-    "playwright"
+    "playwright",
+    "baseline",
+    "ratchet",
+    "regression",
+    "ci"
   ],
   "license": "MIT",
   "author": "VeghV03",

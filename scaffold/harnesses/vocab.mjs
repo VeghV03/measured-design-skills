@@ -2,16 +2,12 @@
 // A word list alone produces false findings — a term inside a code sample or a
 // filename is not a policy breach. Zones and ignore_selectors are what make the
 // count trustworthy. 158 jargon words outside Advanced, then 0.
-import { targets, open, report, loadPolicy } from './lib.mjs';
+import { targets, open, report, loadPolicy, skip } from './lib.mjs';
 const policy = loadPolicy();
-if (!policy) {
-  console.log('  no vocabulary policy — write vocab.policy.json to turn this on.');
-  process.exit(0);
-}
+if (!policy) skip('no vocabulary policy — write vocab.policy.json to turn this on.');
 const T = await targets();
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   const allowedZones = Object.entries(policy.zones || {})
@@ -36,7 +32,10 @@ for (const board of T) {
     }
     return out;
   }, { policy, allowedZones });
-  if (hits.length) { affected++; rows.push([board.id, [...new Set(hits)].join(', ')]); }
+  // One finding per forbidden word per board, not per occurrence: the same word
+  // used four times in one list is one edit, and four fingerprints that all move
+  // together would report a four-finding regression on a single typo.
+  for (const detail of [...new Set(hits)]) found.push({ target: board.id, detail });
 }
 await close();
-report('boards using a forbidden term outside its zone', T.length, affected, rows);
+report('boards using a forbidden term outside its zone', T.length, found, { noun: 'forbidden terms' });

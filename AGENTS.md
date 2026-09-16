@@ -12,12 +12,14 @@ adding any field to the data model.
 ```
 skills/measured-design*          ten skills — the procedure itself
 skills/library/                  88 vendored designer and thinking skills, collection-qualified
-cli/                             npx measured-design init|check — runs the checks on any project
+cli/                             npx measured-design init|check|baseline|waive — the no-adoption entry
+cli/ratchet.mjs                  baseline, waivers, and new-versus-known
 commands/                        slash commands for agents that have them
 scaffold/gate.py                 the build gate — refuses on a route that does not bind
 scaffold/drift.py                scope document versus model
 scaffold/check_library.py        every vendored skill must be reachable from a stage
 scaffold/harnesses/              thirteen checks, twelve in any one run, each prints one number
+                                 and writes one record per finding, fingerprinted
 scaffold/viewer/                 the handover artifact, no dependencies
 scaffold/adapters/python/        the reference generator; one adapter, not the requirement
 scaffold/adapters/node/          a second generator, no dependencies, proving the contract holds
@@ -31,6 +33,11 @@ Screens are compiled, not drawn. The rationale lives in the generator and is ext
 so it cannot drift from the screen. Every declared route must bind or the build refuses. Every audit
 finding that would change what someone builds becomes a harness that prints a count. Where a scope
 document and a prototype disagree, the audited prototype dictates.
+
+A count is only worth taking if something remembers it. `measured-design baseline` freezes what is
+already there; `check --no-new` fails on what is not in the baseline. Nobody fixes 158 things —
+everybody can stop the 159th. Disagreement is recorded as a waiver with a reason and a date, never
+settled by deleting the check.
 
 ## If you have no slash commands
 

@@ -17,20 +17,37 @@ A harness is a file under thirty lines in `scaffold/harnesses/` that measures on
 one number. Look at `density.mjs` for the shape:
 
 ```js
-import { cfg, boards, url, id, open, report } from './lib.mjs';
+import { cfg, targets, open, report } from './lib.mjs';
+const T = await targets();
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
-for (const f of boards()) {
-  // measure something on the rendered board, push a [id, detail] row when it fails
+const found = [];
+for (const board of T) {
+  await p.goto(board.url);
+  // measure one thing, and push one finding per hit
+  found.push({ target: board.id, detail: `${n} elements, budget ${cfg.densityBudget}`, key: 'over budget' });
 }
 await close();
-report(`boards over budget`, boards().length, affected, rows);
+report('boards over budget', T.length, found);
 ```
 
 - Read the config it needs (a budget, a selector, a viewport width) from `cfg`, and add the default to
   `harness.config.json` if it is not already there.
 - `report()` is the only thing that prints a summary line — do not add a second one.
+- **One finding per hit, not one per board.** Three failures on one screen are three things a person
+  can fix, waive or regress independently. `report()` groups them back together for printing, so the
+  output still reads as one line per board.
+- **Give the finding a stable `key`.** It is what the fingerprint is built from, and the fingerprint is
+  what lets a baseline tell a known finding from a new one. `detail` is for a person to read and may
+  carry a measurement that moves; `key` should name the thing that is wrong and nothing else. Digits
+  are normalised out of both, so a ratio drifting from 3.12 to 3.40 stays one finding. Omit `key` and
+  `detail` is used instead — fine when the detail is already invariant, wrong when it embeds a value
+  that is not a number. Anything that changes between two runs of an unchanged board does not belong
+  in the identity: a fingerprint that rotates on its own reports a fix and a regression on a quiet day,
+  and a baseline that noisy gets deleted within the week.
+- If the check counts something other than boards — a dead route, a dead link — pass `{ count: 'items' }`
+  and name the unit in the label.
+- If the check cannot run, call `skip(why, ...how)` rather than returning a clean zero. A check that
+  measured nothing has not passed, and `baseline` refuses to record a run where one errored.
 - Register the new check in the `checks` array in `run-all.mjs`, in the order you want it to run.
 - It **prints**, it does not refuse. The gate has exactly one refusing check
   (`scaffold/gate.py`, an unbound route), and the README explains why a second one is a decision with

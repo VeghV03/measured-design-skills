@@ -120,10 +120,15 @@ jobs:
           cd /tmp/fixture
           node "$GITHUB_WORKSPACE/cli/measured-design.mjs" init > /tmp/cli.txt 2>&1 || { cat /tmp/cli.txt; exit 1; }
           test -f measured-design.config.json
-          grep -q "no <html lang>"              /tmp/cli.txt
-          grep -q "under threshold"             /tmp/cli.txt
-          grep -q "links needs a served origin" /tmp/cli.txt
-          grep -q "12 checks · 0 errored"       /tmp/cli.txt
+          grep -q "no <html lang>"                                /tmp/cli.txt
+          grep -qE "[1-9][0-9]* boards with a contrast failure"    /tmp/cli.txt
+          grep -q "links needs a served origin"                    /tmp/cli.txt
+          grep -q "12 checks · 0 errored"                          /tmp/cli.txt
+          # a check that cannot run must say so, not read as a clean pass
+          grep -q "2 skipped"                                      /tmp/cli.txt
+          # the run writes its findings down, so the next run can tell new from known
+          test -s .measured-design/findings.json
+          python3 -c "import json,sys; d=json.load(open('.measured-design/findings.json')); sys.exit(0 if d['findings'] else 1)"
           echo "  dir mode ok"
 
           # "/" and "/index.html" are one page; a dead link must be reported once
@@ -138,3 +143,62 @@ jobs:
           grep -q "1 links that do not resolve" /tmp/crawl.txt || {
             echo "expected exactly one unresolved link"; grep -A3 "links" /tmp/crawl.txt; exit 1; }
           echo "  crawl mode ok"
+
+      - name: Ratchet — a baselined finding is quiet, a new one refuses
+        run: |
+          set -e
+          cd /tmp/fixture
+          MD="node $GITHUB_WORKSPACE/cli/measured-design.mjs"
+          cat > measured-design.config.json <<'JSON'
+          { "target": { "mode": "dir", "dir": "./dist" },
+            "widths": [1440], "height": 900, "densityBudget": 400, "targetSize": 24 }
+          JSON
+
+          $MD baseline > /tmp/base.txt 2>&1 || { cat /tmp/base.txt; exit 1; }
+          grep -q "Recorded" /tmp/base.txt
+          test -f measured-design.baseline.json
+          echo "  baseline written"
+
+          # The same findings, now known: the ratchet must be silent and exit 0.
+          $MD check --no-new > /tmp/r1.txt 2>&1 || { echo "a baselined run must pass"; cat /tmp/r1.txt; exit 1; }
+          grep -q "0 new" /tmp/r1.txt
+          echo "  baselined run passes"
+
+          # A screen nobody measured before, carrying exactly one finding nobody
+          # accepted. It declares a lang so the heading is the only thing new —
+          # the assertions below are about the ratchet, not about the page.
+          cat > dist/settings.html <<'HTML'
+          <!doctype html><html lang="en"><head><meta charset="utf-8"><title>Settings</title></head>
+          <body style="font-family:system-ui"><div>Settings</div></body></html>
+          HTML
+          set +e; $MD check --no-new > /tmp/r2.txt 2>&1; code=$?; set -e
+          test "$code" = "1" || { echo "a new finding must fail, got exit $code"; cat /tmp/r2.txt; exit 1; }
+          grep -q "new since the baseline" /tmp/r2.txt
+          grep -q "structure · settings: no heading element" /tmp/r2.txt
+          echo "  new finding refuses"
+
+          # A recorded decision is accepted; an unexplained one is not.
+          FP=$(grep "structure · settings: no heading element" /tmp/r2.txt | awk '{print $1}')
+          test -n "$FP"
+          $MD waive "$FP" --why "Fixture screen, heading lands with the redesign" --until 2999-01-01
+          $MD check --no-new > /tmp/r3.txt 2>&1 || { echo "a waived finding must pass"; cat /tmp/r3.txt; exit 1; }
+          grep -q "1 waived" /tmp/r3.txt
+          echo "  waiver accepted"
+
+          set +e; $MD waive deadbeefcafe > /tmp/r4.txt 2>&1; code=$?; set -e
+          test "$code" = "2" || { echo "a waiver with no --why must be refused, got exit $code"; exit 1; }
+          grep -q "an opinion that won" /tmp/r4.txt
+          echo "  waiver without a reason refused"
+
+          # An expired waiver brings its finding straight back.
+          python3 - <<'PY'
+          import json
+          p = "measured-design.waivers.json"
+          d = json.load(open(p))
+          for w in d["waivers"]: w["until"] = "2020-01-01"
+          json.dump(d, open(p, "w"), indent=2)
+          PY
+          set +e; $MD check --no-new > /tmp/r5.txt 2>&1; code=$?; set -e
+          test "$code" = "1" || { echo "an expired waiver must stop protecting, got exit $code"; cat /tmp/r5.txt; exit 1; }
+          grep -q "waiver expired" /tmp/r5.txt
+          echo "  expired waiver refuses again"

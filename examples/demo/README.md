@@ -32,3 +32,24 @@ python3 ../../scaffold/gate.py --model model --boards boards   # STOP · 1 route
 ```
 
 That is the whole idea. The route map cannot lie to QA, because the build will not produce one that does.
+
+## The baseline is real too
+
+`measured-design.baseline.json` here holds two findings, both genuine: the two lines of prose on
+`files-move` run past 40em at 1440. They are recorded rather than fixed, which is the honest state of
+this demo and the normal state of any codebase that existed before the checks did.
+
+```sh
+npx measured-design check --no-new    # 2 baselined · 0 new — exits 0
+```
+
+Break a board and the ratchet refuses where the gate would not care:
+
+```sh
+sed -i 's/<html lang="en">/<html>/' boards/files-list.html
+npx measured-design check --no-new    # 2 baselined · 1 new — exits 1
+git checkout boards/
+```
+
+The two known findings stay quiet. The new one does not. That is the difference between a number you
+looked at once and a number that can only go down.

@@ -4,8 +4,7 @@
 import { cfg, targets, open, report } from './lib.mjs';
 const T = await targets();
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   const hits = await p.evaluate(min => {
@@ -14,12 +13,12 @@ for (const board of T) {
       const r = el.getBoundingClientRect();
       if (r.width > 0 && r.height > 0 && (r.width < min || r.height < min)) {
         const name = (el.textContent || '').trim().slice(0, 20) || el.tagName.toLowerCase();
-        out.push(`"${name}" ${Math.round(r.width)}x${Math.round(r.height)}`);
+        out.push({ name, detail: `"${name}" ${Math.round(r.width)}x${Math.round(r.height)}` });
       }
     });
     return out;
   }, cfg.targetSize);
-  if (hits.length) { affected++; rows.push([board.id, `${hits.length} under ${cfg.targetSize}px — ${hits[0]}`]); }
+  for (const h of hits) found.push({ target: board.id, detail: h.detail, key: `target under minimum: ${h.name}` });
 }
 await close();
-report(`boards with a target under ${cfg.targetSize}px`, T.length, affected, rows);
+report(`boards with a target under ${cfg.targetSize}px`, T.length, found, { noun: `under ${cfg.targetSize}px` });

@@ -41,6 +41,7 @@ this same file, for this same demo, in under a minute. Or skip the clone:
 
 - [How it fits together](#how-it-fits-together)
 - [Install](#install)
+- [Make the number go one way](#make-the-number-go-one-way)
 - [Try it in thirty seconds](#try-it-in-thirty-seconds)
 - [What is in it](#what-is-in-it)
 - [What makes this different from a process document](#the-three-things-that-make-this-different-from-a-process-document)
@@ -81,6 +82,46 @@ npx measured-design check
 
 Two of the thirteen checks need more than a DOM and will say so rather than guessing: route binding
 wants a declared route map, the vocabulary check wants a word list. The other eleven just run.
+
+## Make the number go one way
+
+A number you saw once is a fact about a Tuesday. The arrow at the top of this page is the part that
+matters, and it only exists if something remembers yesterday.
+
+```sh
+npx measured-design baseline        # freeze today's findings
+npx measured-design check --no-new  # fail only on a finding that is not in the baseline
+```
+
+Nobody fixes 158 things. Everybody can stop the 159th. `baseline` writes
+`measured-design.baseline.json` — every finding fingerprinted by what it is, not by where it sat in
+that run's output — and `--no-new` exits non-zero only on a fingerprint that was not already there.
+That is the line to put in CI on day one of a codebase that already exists.
+
+```
+  new since the baseline
+    73f98ce938a4  lang · files-list: no <html lang> — a screen reader has to guess
+
+155 baselined · 1 new · 3 fixed · 1 waived
+```
+
+Findings that leave the baseline are reported too. A fix nothing notices is a fix nobody gets credit
+for, and `baseline --update` locks the gain in so it cannot come back.
+
+Disagree with a finding? That is allowed, and it is the point — but the decision gets written down
+instead of winning an argument:
+
+```sh
+npx measured-design waive 73f98ce938a4 --why "Marketing shell, lang set by the CMS" --until 2027-01-01
+```
+
+`--why` is required, because a waiver without a reason is an opinion that won. `--until` is not, but a
+waiver without one is reported on every run so it cannot quietly become permanent — and an expired
+waiver brings its finding straight back. A waiver matching nothing is reported too, so the file does
+not rot.
+
+Every run also writes `.measured-design/findings.json`: the whole run, one record per finding, with
+the fingerprint. That is the file to build a report or a PR comment out of.
 
 That is the shallow end. The rest of this README is the part that makes the numbers stay fixed.
 
@@ -141,11 +182,12 @@ screens and needs `model/`; without one, `run-all` substitutes `links`, which on
 | `skills/measured-design-decide` | an open question forced into multiple choice with trade-offs |
 | `skills/measured-design-drift` | scope document versus prototype |
 | `skills/library/` | 88 vendored designer and thinking skills |
-| `cli/` | `npx measured-design init` and `check` — the no-adoption entry point |
+| `cli/` | `npx measured-design init`, `check`, `baseline` and `waive` — the no-adoption entry point |
+| `cli/ratchet.mjs` | the baseline, the waivers, and the comparison that makes a number go one way |
 | `commands/` | `/prove` and nine others, for agents with slash commands |
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
 | `scaffold/check_library.py` | refuses if a vendored skill is unreachable, or a stage names one that does not exist |
-| `scaffold/harnesses/` | thirteen checks — twelve in any one run, each prints one number |
+| `scaffold/harnesses/` | thirteen checks — twelve in any one run, each prints one number and writes its findings |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |

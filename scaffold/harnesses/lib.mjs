@@ -5,8 +5,9 @@
 // whichever config was found, not against this directory — otherwise a pack
 // installed under node_modules resolves every path into itself.
 import { chromium } from 'playwright';
-import { readdirSync, readFileSync, existsSync } from 'fs';
-import { resolve, dirname, join } from 'path';
+import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { resolve, dirname, join, basename } from 'path';
+import { createHash } from 'crypto';
 
 const here = new URL('.', import.meta.url).pathname;
 const found = [join(process.cwd(), 'measured-design.config.json'),
@@ -102,9 +103,65 @@ export async function open(width = cfg.widths[0]) {
   return { b, p, close: () => b.close() };
 }
 
+// A finding is identified by what it is, not by where it sat in this run's output.
+// Volatile numbers are normalised out of the identity: a contrast ratio drifting
+// from 3.12 to 3.40 is the same finding, and a fingerprint that rotated on it would
+// report one fix and one regression on a day nothing happened.
+const norm = s => String(s).toLowerCase().replace(/[\d.]+/g, '#').replace(/\s+/g, ' ').trim();
+export const fingerprint = (check, target, key) =>
+  createHash('sha256').update(`${check} ${target} ${norm(key)}`).digest('hex').slice(0, 12);
+
 // One number, one line, every time. Nothing else prints a summary.
-export function report(label, total, affected, rows = []) {
-  for (const [board, detail] of rows) console.log(`  ${board}: ${detail}`);
-  console.log(`\n${total} boards · ${affected} ${label}`);
+//
+// Findings arrive one per hit, not one per board. Three contrast failures on one
+// screen are three things a person can fix, waive or regress independently, and
+// collapsing them into "board affected" makes two of the three unaddressable.
+// The printed shape still groups by board, because that is how the number reads.
+export function report(label, total, findings = [], opts = {}) {
+  const check = opts.check || basename(process.argv[1] || 'check', '.mjs');
+  const records = findings.map(f => ({
+    check,
+    target: f.target,
+    detail: f.detail,
+    fingerprint: fingerprint(check, f.target, f.key ?? f.detail),
+  }));
+
+  const byTarget = new Map();
+  for (const r of records) {
+    if (!byTarget.has(r.target)) byTarget.set(r.target, []);
+    byTarget.get(r.target).push(r);
+  }
+  for (const [target, rs] of byTarget) {
+    const noun = opts.noun ? ` ${opts.noun}` : '';
+    console.log(rs.length === 1
+      ? `  ${target}: ${rs[0].detail}`
+      : `  ${target}: ${rs.length}${noun} — ${rs[0].detail}`);
+  }
+
+  // routes and links count the dead route or link; every other check counts the
+  // board. Both print the same way, so the unit being counted lives in the label.
+  const affected = opts.count === 'items' ? records.length : byTarget.size;
+  console.log(`\n${total} ${opts.unit || 'boards'} · ${affected} ${label}`);
+
+  // A run writes its findings down so the next run can tell new from known.
+  // Standalone there is nothing to compare against, and nothing is written.
+  writeResult({ check, label, total, affected, findings: records });
   return affected;
+}
+
+// A check that could not run has not passed. It says why, writes an empty result
+// marked skipped, and exits 0 — so a missing word list never reads as a clean run.
+export function skip(why, ...how) {
+  console.log(`  ${why}`);
+  for (const line of how) console.log(`  ${line}`);
+  writeResult({ check: basename(process.argv[1] || 'check', '.mjs'), skipped: why, findings: [] });
+  process.exit(0);
+}
+
+function writeResult(result) {
+  const dir = process.env.MD_RUN_DIR;
+  if (!dir) return;
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, `${result.check.replace(/[^a-z0-9]+/gi, '-')}.json`),
+    JSON.stringify(result, null, 2) + '\n');
 }

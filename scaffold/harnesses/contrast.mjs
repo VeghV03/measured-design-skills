@@ -4,8 +4,7 @@ import { targets, open, report } from './lib.mjs';
 const T = await targets();
 const theme = process.argv[2] || 'light';
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   await p.evaluate(t => document.documentElement.setAttribute('data-theme', t), theme);
@@ -24,11 +23,15 @@ for (const board of T) {
       const size = parseFloat(cs.fontSize), bold = parseInt(cs.fontWeight) >= 700;
       const need = (size >= 24 || (size >= 18.66 && bold)) ? 3 : 4.5;
       const r = ratio(parse(cs.color).slice(0, 3), bgOf(el));
-      if (r < need) out.push(`"${el.textContent.trim().slice(0, 24)}" ${r.toFixed(2)}:1`);
+      const text = el.textContent.trim().slice(0, 24);
+      if (r < need) out.push({ text, detail: `"${text}" ${r.toFixed(2)}:1` });
     }
     return out;
   });
-  if (hits.length) { affected++; rows.push([board.id, `${hits.length} under threshold — ${hits[0]}`]); }
+  // The theme is part of the check, not the board: the same label can fail in dark
+  // and pass in light, and one identity for both would hide whichever ran second.
+  for (const h of hits) found.push({ target: board.id, detail: h.detail, key: `under contrast threshold: ${h.text}` });
 }
 await close();
-report(`boards with a contrast failure (${theme})`, T.length, affected, rows);
+report(`boards with a contrast failure (${theme})`, T.length, found,
+  { check: `contrast-${theme}`, noun: 'under threshold' });

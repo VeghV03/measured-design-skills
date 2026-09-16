@@ -3,8 +3,7 @@
 // an overflow inside a grid cell — that is cellfit.mjs, and the reason it exists.
 import { cfg, targets, open, report } from './lib.mjs';
 const T = await targets();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const width of cfg.widths) {
   const { p, close } = await open(width);
   for (const board of T) {
@@ -18,8 +17,11 @@ for (const width of cfg.widths) {
       }
       return out;
     }, width);
-    if (hits.length) { affected++; rows.push([`${board.id} @${width}`, `${hits.length} off-frame: ${hits[0]}`]); }
+    // The width is part of the target: a card that only falls off at 768 is a
+    // different thing to fix from one that falls off everywhere.
+    for (const h of hits) found.push({ target: `${board.id} @${width}`, detail: `off-frame: ${h}` });
   }
   await close();
 }
-report('board-widths with content off the frame', T.length * cfg.widths.length, affected, rows);
+report('board-widths with content off the frame', T.length * cfg.widths.length, found,
+  { unit: 'board-widths', noun: 'off-frame' });

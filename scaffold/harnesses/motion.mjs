@@ -5,8 +5,7 @@ import { targets, open, report } from './lib.mjs';
 const T = await targets();
 const { p, close } = await open();
 await p.emulateMedia({ reducedMotion: 'reduce' });
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   const hits = await p.evaluate(() => {
@@ -18,7 +17,7 @@ for (const board of T) {
     });
     return [...tags];
   });
-  if (hits.length) { affected++; rows.push([board.id, `still animating: ${hits.join(', ')}`]); }
+  for (const tag of hits) found.push({ target: board.id, detail: `still animating: <${tag}>` });
 }
 await close();
-report('boards still animating under reduced motion', T.length, affected, rows);
+report('boards still animating under reduced motion', T.length, found, { noun: 'still animating' });

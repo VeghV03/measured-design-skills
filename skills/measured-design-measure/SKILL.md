@@ -35,19 +35,18 @@ lines. The comment at the top explains **why this check exists**, usually by nam
 prompted it. Runnable copies are in `scaffold/harnesses/`.
 
 ```js
-import { chromium } from 'playwright';
-import { readdirSync } from 'fs';
-const files = readdirSync('.').filter(f => f.endsWith('.html'));
-const b = await chromium.launch();
-const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
-let bad = [];
-for (const f of files) {
-  await p.goto('file://' + dir + f);
+import { targets, open, report } from './lib.mjs';
+const T = await targets();
+const { p, close } = await open();
+const found = [];
+for (const board of T) {
+  await p.goto(board.url);
   const hits = await p.evaluate(() => { /* one question */ });
-  if (hits.length) bad.push([f, hits]);
+  // one finding per hit, with a `key` that names what is wrong and nothing else
+  for (const h of hits) found.push({ target: board.id, detail: h.detail, key: `over budget: ${h.name}` });
 }
-console.log(`${files.length} boards · ${bad.length} affected`);
-await b.close();
+await close();
+report('boards over budget', T.length, found);
 ```
 
 ## The catalogue worth building for any product
@@ -81,6 +80,37 @@ something the moment it ran.
 When a bug escapes, ask which harness *should* have caught it and why it structurally could not. That
 answer is the next harness.
 
+## Make the number go one way
+
+A harness finds the problem every time. That is only worth something if a run can be compared to the
+last one, so `report()` writes each finding down with a fingerprint built from what it is — the check,
+the screen, and the thing that is wrong — with volatile numbers normalised out. A contrast ratio
+drifting from 3.12 to 3.40 stays one finding rather than reading as one fix and one regression.
+
+```sh
+npx measured-design baseline        # freeze today's findings
+npx measured-design check --no-new  # fail only on a finding that is not in the baseline
+```
+
+This is what makes 158 → 0 achievable rather than aspirational. Nobody stops to fix 158 things, and a
+check that fails on all 158 from the first commit gets deleted within the week. A baseline lets the
+count stop rising on day one and come down whenever someone is in the file anyway. Findings that leave
+the baseline are reported as fixed, and `baseline --update` locks the gain in.
+
+Where a finding is genuinely wrong or genuinely accepted, it is waived with a reason and a date —
+never by deleting the check, which throws away the other ninety-two boards it was watching:
+
+```sh
+npx measured-design waive <fingerprint> --why "..." --until 2027-01-01
+```
+
+That is the same standing rule as everywhere else in this pack: the disagreement is real, and it ends
+in a recorded decision rather than in whoever spoke last. An expired waiver brings its finding back.
+
+A check that could not run calls `skip()` and is recorded as skipped, not clean — and `baseline`
+refuses to record a run in which any check errored, because a baseline taken from a gap reads as a
+clean sweep forever after.
+
 ## Make the build refuse
 
 The strongest checks do not report — they stop the build. A route map that lies to QA is worse than a
@@ -110,3 +140,6 @@ Thinking, run alongside:
 Every property the audit found a problem in has a harness. Every harness prints one number and names
 the bug that prompted it. The whole set runs in under a few minutes, and is run before every publish.
 Not before.
+
+And the numbers are baselined, so the next commit cannot quietly add to them. A harness nothing
+compares against measures the same thing every week and changes nothing.

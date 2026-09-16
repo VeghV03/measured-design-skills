@@ -4,8 +4,7 @@
 import { targets, open, report } from './lib.mjs';
 const T = await targets();
 const { p, close } = await open();
-const rows = [];
-let affected = 0;
+const found = [];
 for (const board of T) {
   await p.goto(board.url);
   const hits = await p.evaluate(() => {
@@ -25,7 +24,7 @@ for (const board of T) {
     }
     return out;
   });
-  if (hits.length) { affected++; rows.push([board.id, `${hits.length} — ${hits[0]}`]); }
+  for (const detail of hits) found.push({ target: board.id, detail });
 }
 await close();
-report('boards with a structure failure', T.length, affected, rows);
+report('boards with a structure failure', T.length, found);

@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .DS_Store
 node_modules/
+# The run's own scratch: findings.json is rewritten every run and describes one
+# moment. The baseline and the waivers are the durable parts, and both are committed.
+.measured-design/
