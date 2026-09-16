@@ -1,10 +1,21 @@
 {
-  "target": { "mode": "dir", "dir": "../../boards" },
-  "model": "../../model",
-  "widths": [1440, 1024, 768],
+  "target": {
+    "mode": "dir",
+    "dir": "../../examples/demo/boards"
+  },
+  "model": "../../examples/demo/model",
+  "widths": [
+    1440,
+    1024,
+    768
+  ],
   "height": 900,
   "executablePath": null,
   "scrimSelector": ".scrim",
   "cellChildSelector": ".chip",
-  "ignoreSelectors": ["code", "pre", "[data-verbatim]"]
+  "ignoreSelectors": [
+    "code",
+    "pre",
+    "[data-verbatim]"
+  ]
 }
