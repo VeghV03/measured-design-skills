@@ -33,7 +33,8 @@ with a gap the audit caught still sitting in the sidebar in orange:
 
 Nobody hand-wrote that rationale panel or that gap warning. Both came out of the build in
 [Try it in thirty seconds](#try-it-in-thirty-seconds) below — clone the repo and you'll have this same
-file, for this same demo, in under a minute.
+file, for this same demo, in under a minute. Or skip the clone: **[open the live demo](https://veghv03.github.io/measured-design-skills/)**
+and click around it right now.
 
 ## Contents
 
