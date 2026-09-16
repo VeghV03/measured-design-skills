@@ -62,7 +62,7 @@ jobs:
         run: |
           cat > harness.config.json <<'EOF'
           {
-            "boards": "../../examples/demo/boards",
+            "target": { "mode": "dir", "dir": "../../examples/demo/boards" },
             "model": "../../examples/demo/model",
             "widths": [1440, 1024, 768],
             "height": 900,

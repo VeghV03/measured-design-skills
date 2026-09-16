@@ -1,12 +1,13 @@
 // Four questions a screen must answer for a person who cannot see it:
 // is there a heading, is every control labelled, is any status colour-only,
 // is any line of prose too long to track. 42 boards had no heading.
-import { boards, url, id, open, report } from './lib.mjs';
+import { targets, open, report } from './lib.mjs';
+const T = await targets();
 const { p, close } = await open();
 const rows = [];
 let affected = 0;
-for (const f of boards()) {
-  await p.goto(url(f));
+for (const board of T) {
+  await p.goto(board.url);
   const hits = await p.evaluate(() => {
     const out = [];
     if (!document.querySelector('h1,h2,h3,[role=heading]')) out.push('no heading element');
@@ -24,7 +25,7 @@ for (const f of boards()) {
     }
     return out;
   });
-  if (hits.length) { affected++; rows.push([id(f), `${hits.length} — ${hits[0]}`]); }
+  if (hits.length) { affected++; rows.push([board.id, `${hits.length} — ${hits[0]}`]); }
 }
 await close();
-report('boards with a structure failure', boards().length, affected, rows);
+report('boards with a structure failure', T.length, affected, rows);

@@ -1,8 +1,13 @@
 // Run every check and print one line each. Under two minutes on a set of a
 // hundred boards, and it has never once been a waste. Run before every publish.
 import { execFileSync } from 'child_process';
+import { hasModel } from './lib.mjs';
+
+// routes.mjs proves a declared route map binds; links.mjs only proves nothing
+// 404s. Run the stronger one whenever there is a model to run it against.
+const binding = hasModel('routes.json') && hasModel('screens.json') ? 'routes' : 'links';
 const checks = ['overflow', 'contrast light', 'contrast dark', 'translucency',
-  'cellfit', 'structure', 'vocab', 'routes', 'density', 'lang', 'target-size', 'motion'];
+  'cellfit', 'structure', 'vocab', binding, 'density', 'lang', 'target-size', 'motion'];
 let failed = 0;
 for (const c of checks) {
   const [file, ...args] = c.split(' ');

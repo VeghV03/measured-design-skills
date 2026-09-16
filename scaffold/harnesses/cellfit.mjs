@@ -1,12 +1,13 @@
 // Is any element wider than the grid cell containing it. A chip 137px wide in a
 // 132px cell paints over the next column and never crosses the frame edge, so
 // overflow.mjs structurally cannot see it. It did this on 14 real boards.
-import { cfg, boards, url, id, open, report } from './lib.mjs';
+import { cfg, targets, open, report } from './lib.mjs';
+const T = await targets();
 const { p, close } = await open();
 const rows = [];
 let affected = 0;
-for (const f of boards()) {
-  await p.goto(url(f));
+for (const board of T) {
+  await p.goto(board.url);
   const hits = await p.evaluate(sel => {
     const out = [];
     document.querySelectorAll(sel).forEach(c => {
@@ -16,7 +17,7 @@ for (const f of boards()) {
     });
     return out;
   }, cfg.cellChildSelector);
-  if (hits.length) { affected++; rows.push([id(f), hits.join(', ')]); }
+  if (hits.length) { affected++; rows.push([board.id, hits.join(', ')]); }
 }
 await close();
-report('boards with an element wider than its cell', boards().length, affected, rows);
+report('boards with an element wider than its cell', T.length, affected, rows);

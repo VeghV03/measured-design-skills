@@ -46,9 +46,10 @@ regex over its own source. There's more than one right answer to that.
 
 **Title:** Harness ideas — what would you add?
 
-Twelve harnesses right now, each printing one number for one property:
-`overflow, contrast (light/dark), translucency, cellfit, structure, vocab, routes, density, lang,
-target-size, motion`. Three of those (`lang`, `target-size`, `motion`) were added specifically because
+Thirteen harnesses right now, each printing one number for one property:
+`overflow, contrast (light/dark), translucency, cellfit, structure, vocab, routes, links, density,
+lang, target-size, motion`. Twelve run in any one pass — `routes` needs a declared route map,
+`links` is its weaker stand-in when there isn't one. Three of those (`lang`, `target-size`, `motion`) were added specifically because
 they were gaps in the original nine, and `lang.mjs` immediately caught a real one (see the demo's own
 README).
 

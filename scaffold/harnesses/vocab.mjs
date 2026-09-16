@@ -2,16 +2,20 @@
 // A word list alone produces false findings — a term inside a code sample or a
 // filename is not a policy breach. Zones and ignore_selectors are what make the
 // count trustworthy. 158 jargon words outside Advanced, then 0.
-import { boards, url, id, open, report, model } from './lib.mjs';
-const policy = model('policy.json');
+import { targets, open, report, loadPolicy } from './lib.mjs';
+const policy = loadPolicy();
+if (!policy) {
+  console.log('  no vocabulary policy — write vocab.policy.json to turn this on.');
+  process.exit(0);
+}
+const T = await targets();
 const { p, close } = await open();
 const rows = [];
 let affected = 0;
-for (const f of boards()) {
-  await p.goto(url(f));
-  const board = id(f);
+for (const board of T) {
+  await p.goto(board.url);
   const allowedZones = Object.entries(policy.zones || {})
-    .filter(([, z]) => (z.screens || []).includes(board)).map(([n]) => n);
+    .filter(([, z]) => (z.screens || []).includes(board.id)).map(([n]) => n);
   const hits = await p.evaluate(({ policy, allowedZones }) => {
     const ignore = (policy.scan && policy.scan.ignore_selectors) || [];
     const zoneSel = Object.entries(policy.zones || {})
@@ -32,7 +36,7 @@ for (const f of boards()) {
     }
     return out;
   }, { policy, allowedZones });
-  if (hits.length) { affected++; rows.push([board, [...new Set(hits)].join(', ')]); }
+  if (hits.length) { affected++; rows.push([board.id, [...new Set(hits)].join(', ')]); }
 }
 await close();
-report('boards using a forbidden term outside its zone', boards().length, affected, rows);
+report('boards using a forbidden term outside its zone', T.length, affected, rows);

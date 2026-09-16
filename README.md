@@ -8,7 +8,7 @@ for Claude Code, Codex, and any agent that reads `SKILL.md`.
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install)
 [![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install)
 [![Skills](https://img.shields.io/badge/skills-98-brightgreen)](#what-is-in-it)
-[![Harnesses](https://img.shields.io/badge/harnesses-12%20numbers-orange)](#what-is-in-it)
+[![Harnesses](https://img.shields.io/badge/harnesses-13%20numbers-orange)](#what-is-in-it)
 
 Design reviews go wrong in a predictable way: two people hold different opinions about a screen, the
 more senior opinion wins, and nobody learns anything. The fix is not more process. It is arranging
@@ -97,6 +97,21 @@ The gate prints one line per property and writes `model/index.json`. Break a rou
 For the harnesses: `cd scaffold/harnesses && npm install && node run-all.mjs`. They need Playwright
 and a Chromium; set `executablePath` in `harness.config.json` if yours is not on the default path.
 
+They do not require the rest of the pack. Ten of the thirteen only need a URL and a name, so
+`target` in `harness.config.json` points them at a folder of built boards, an explicit route list, or
+a crawl of a running app:
+
+```json
+{ "target": { "mode": "dir",   "dir": "../../boards" } }
+{ "target": { "mode": "urls",  "base": "http://localhost:3000", "routes": ["/", "/files"] } }
+{ "target": { "mode": "crawl", "start": "http://localhost:3000", "limit": 50 } }
+```
+
+Two checks need more than a DOM. `routes` proves a declared route map binds to real labels on real
+screens and needs `model/`; without one, `run-all` substitutes `links`, which only proves nothing
+404s — a weaker claim, named differently on purpose. `vocab` needs a word list, so it reads
+`model/policy.json` or a standalone `vocab.policy.json`, and says so when it finds neither.
+
 ## What is in it
 
 | | |
@@ -110,7 +125,7 @@ and a Chromium; set `executablePath` in `harness.config.json` if yours is not on
 | `commands/` | `/prove` and nine others, for agents with slash commands |
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
 | `scaffold/check_library.py` | refuses if a vendored skill is unreachable, or a stage names one that does not exist |
-| `scaffold/harnesses/` | twelve checks, each prints one number |
+| `scaffold/harnesses/` | thirteen checks — twelve in any one run, each prints one number |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |

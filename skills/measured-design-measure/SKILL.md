@@ -13,6 +13,21 @@ looking. That is the difference between a design that was good and a design that
 > nothing. 14 → 0 chips painting over a column. Every one was invisible until something counted it.
 > None would have come up in a review.
 
+## What a harness runs against
+
+Ten of the thirteen need only a URL and a name, so they do not require the rest of the pack. `target`
+in `harness.config.json` selects what is being checked: `dir` (a folder of built boards), `urls` (an
+explicit route list against a running server), or `crawl` (same-origin, from a start URL). A harness
+never learns which — it is handed `{ id, url }` and asks the DOM its one question.
+
+Two checks need more than a DOM, and the difference is a real one rather than a packaging detail:
+
+- `routes` proves a **declared route map binds** — every click route points at text that exists on its
+  source board. That is what stops a route map lying to QA, and it needs `model/`. Where there is no
+  model, `run-all` substitutes `links`, which only proves nothing 404s. Weaker claim, different name.
+- `vocab` needs an authored word list; a policy cannot be inferred from a DOM. It reads
+  `model/policy.json`, or a standalone `vocab.policy.json`, and stays quiet when there is neither.
+
 ## The anatomy of a harness
 
 Loads the built output in a headless browser, asks the DOM one question, prints a count. Under thirty

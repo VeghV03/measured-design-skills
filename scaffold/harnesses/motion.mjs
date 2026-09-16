@@ -1,13 +1,14 @@
 // Vestibular safety: prefers-reduced-motion is a person telling the OS that
 // motion makes them sick, not a hint. An element still transitioning or
 // animating once that preference is on did not read it.
-import { boards, url, id, open, report } from './lib.mjs';
+import { targets, open, report } from './lib.mjs';
+const T = await targets();
 const { p, close } = await open();
 await p.emulateMedia({ reducedMotion: 'reduce' });
 const rows = [];
 let affected = 0;
-for (const f of boards()) {
-  await p.goto(url(f));
+for (const board of T) {
+  await p.goto(board.url);
   const hits = await p.evaluate(() => {
     const tags = new Set();
     document.querySelectorAll('body *').forEach(el => {
@@ -17,7 +18,7 @@ for (const f of boards()) {
     });
     return [...tags];
   });
-  if (hits.length) { affected++; rows.push([id(f), `still animating: ${hits.join(', ')}`]); }
+  if (hits.length) { affected++; rows.push([board.id, `still animating: ${hits.join(', ')}`]); }
 }
 await close();
-report('boards still animating under reduced motion', boards().length, affected, rows);
+report('boards still animating under reduced motion', T.length, affected, rows);

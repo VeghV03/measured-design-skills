@@ -1,12 +1,13 @@
 // WCAG 2.5.8 Target Size (Minimum): a clickable target under cfg.targetSize CSS
 // px on a side is hard to hit precisely — for anyone with a motor or vision
 // impairment, and for anyone at all on a touchscreen with a moving vehicle.
-import { cfg, boards, url, id, open, report } from './lib.mjs';
+import { cfg, targets, open, report } from './lib.mjs';
+const T = await targets();
 const { p, close } = await open();
 const rows = [];
 let affected = 0;
-for (const f of boards()) {
-  await p.goto(url(f));
+for (const board of T) {
+  await p.goto(board.url);
   const hits = await p.evaluate(min => {
     const out = [];
     document.querySelectorAll('button,a,[role=button]').forEach(el => {
@@ -18,7 +19,7 @@ for (const f of boards()) {
     });
     return out;
   }, cfg.targetSize);
-  if (hits.length) { affected++; rows.push([id(f), `${hits.length} under ${cfg.targetSize}px — ${hits[0]}`]); }
+  if (hits.length) { affected++; rows.push([board.id, `${hits.length} under ${cfg.targetSize}px — ${hits[0]}`]); }
 }
 await close();
-report(`boards with a target under ${cfg.targetSize}px`, boards().length, affected, rows);
+report(`boards with a target under ${cfg.targetSize}px`, T.length, affected, rows);

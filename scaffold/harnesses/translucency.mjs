@@ -1,12 +1,13 @@
 // A translucent layer over text composites that text toward the layer's colour.
 // contrast.mjs reads declared colours, so a veil is exactly what it cannot see.
 // A white veil at 34% took muted text from 4.74:1 to 2.53:1.
-import { cfg, boards, url, id, open, report } from './lib.mjs';
+import { cfg, targets, open, report } from './lib.mjs';
+const T = await targets();
 const { p, close } = await open();
 const rows = [];
 let affected = 0;
-for (const f of boards()) {
-  await p.goto(url(f));
+for (const board of T) {
+  await p.goto(board.url);
   const hits = await p.evaluate(scrim => {
     const lum = c => { const g = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
       return .2126 * g(c[0]) + .7152 * g(c[1]) + .0722 * g(c[2]); };
@@ -33,7 +34,7 @@ for (const f of boards()) {
     }
     return out;
   }, cfg.scrimSelector);
-  if (hits.length) { affected++; rows.push([id(f), `${hits.length} dimmed — ${hits[0]}`]); }
+  if (hits.length) { affected++; rows.push([board.id, `${hits.length} dimmed — ${hits[0]}`]); }
 }
 await close();
-report('boards with text dimmed by a translucent layer', boards().length, affected, rows);
+report('boards with text dimmed by a translucent layer', T.length, affected, rows);
