@@ -18,7 +18,11 @@ case "$TARGET" in
   *) echo "usage: install.sh claude|codex|any [--core]"; exit 1 ;;
 esac
 mkdir -p "$DEST"
-for d in "$SRC"/measured-design*; do
+# The procedure, plus the standalone skills that do not need it. jira-backlog runs
+# against any project, so it installs with --core as well — leaving it out would
+# make the one skill you can use on day one the one you have to install by hand.
+for d in "$SRC"/measured-design* "$SRC"/jira-backlog; do
+  [ -d "$d" ] || continue
   ln -sfn "$d" "$DEST/$(basename "$d")"
 done
 if [ "$MODE" != "--core" ]; then

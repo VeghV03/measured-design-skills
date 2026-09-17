@@ -35,6 +35,19 @@ Apply that test to your own output. If you produce a sentence nobody could act o
 Stages are not gates you pass once. Audit sends work back to generate; measure sends work back to
 audit. Only the contract is fixed.
 
+## Reached from a stage, not a stage themselves
+
+| Skill | When |
+|---|---|
+| `measured-design-decide` | an open question forced into options carrying what each buys, costs and kills |
+| `measured-design-drift` | the scope document and the model have diverged |
+| `measured-design-backlog` | the design has to become planned work — journeys to epics, steps to stories, open decisions to spikes that block what they touch |
+
+`measured-design-backlog` is reachable once stage 02 has produced journeys and routes, and is worth
+running again after stage 05: the audit changes what the work is, and a backlog written before the
+audit plans the product you thought you had. For a project with no `model/`, `jira-backlog` does the
+same job from a brief, a running app or a codebase.
+
 ## Two standing rules
 
 Run the designer skills and the thinking skills together. A design skill tells you what good looks

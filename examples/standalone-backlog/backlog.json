@@ -1,0 +1,301 @@
+{
+  "version": 1,
+  "project": {
+    "key": "INV",
+    "style": "team-managed"
+  },
+  "title": "Invoicing — from a two-page brief",
+  "summary": "2 epics · 6 stories · 10 sub-tasks · 1 spike · 6 blocked · 1 with nothing serving it · 2 still need their \"so I can\"",
+  "units": [
+    {
+      "key": "epic:get-paid",
+      "kind": "epic",
+      "id": "get-paid",
+      "issue_id": "E-get-paid",
+      "name": "Get an invoice paid",
+      "rank": 1,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "643be0ea0b53",
+      "description": "Steps: Create an invoice, Send it, Chase an unpaid one, See what is owed."
+    },
+    {
+      "key": "epic:set-up",
+      "kind": "epic",
+      "id": "set-up",
+      "issue_id": "E-set-up",
+      "name": "Set up the account",
+      "rank": 2,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "a184e2080fb4",
+      "description": "Steps: Add the business details, Connect a bank account."
+    },
+    {
+      "key": "spike:tax-fields",
+      "kind": "spike",
+      "id": "tax-fields",
+      "issue_id": "K-tax-fields",
+      "name": "Decide: which business fields are legally required, and where",
+      "rank": 3,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "f9968efc3aa6",
+      "description": "Which business details are legally required on an invoice, and does that vary by the country we launch in?\n\nThe brief lists fields without saying which are mandatory. Getting this wrong makes every invoice sent from the product legally defective, and it is not fixable after the fact.\n\nOption: One superset of fields, all required\n- buys: one form, one validation rule, launch anywhere\n- costs: asks every user for things most of them do not need\n- kills: a short sign-up\n\nOption: Per-country field sets\n- buys: each user is asked only for what applies to them\n- costs: a rule set per country, maintained forever\n- kills: launching in a new country without legal review\n\nRight if: The superset wins if the first release is one country and the second is not imminent.\n\nThis is not an estimate task. Nothing it blocks should be built until it is answered, because both options are still live and they build different things."
+    },
+    {
+      "key": "story:set-up/details",
+      "kind": "story",
+      "id": "set-up/details",
+      "issue_id": "S-set-up-details",
+      "name": "Add the business details",
+      "rank": 4,
+      "blocked_by": [
+        "spike:tax-fields"
+      ],
+      "labels": [
+        "invoicing-v1",
+        "onboarding"
+      ],
+      "size": "M",
+      "hash": "6e4e9bc9a064",
+      "description": "When I have signed up and nothing is filled in yet, I want to add the business details that appear on an invoice, so I can an invoice I send looks like it came from a real business.\n\nName, address, tax number and logo. These appear on every invoice, so an invoice cannot be sent before this exists. The brief does not say which fields are legally required and that varies by country — see the spike.\n\nAcceptance criteria\n- the form states which fields appear on the invoice and which are for our records only\n- leaving it half-finished and coming back does not lose what was typed\n- every field has a label a screen reader can read  [structure]\n\nCriteria marked with a check in brackets are proved by that harness, not by opinion. Run them before closing this.\n\nSize hint: M — 2 sub-tasks, 3 criteria, 1 blocker. A count, not an estimate.\n\nWaits for: Decide: which business fields are legally required, and where (K-tax-fields)"
+    },
+    {
+      "key": "subtask:details-form",
+      "kind": "subtask",
+      "id": "details-form",
+      "issue_id": "T-details-form",
+      "name": "Business details form",
+      "rank": 5,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "b4594d4815a8",
+      "description": ""
+    },
+    {
+      "key": "subtask:details-empty",
+      "kind": "subtask",
+      "id": "details-empty",
+      "issue_id": "T-details-empty",
+      "name": "First-run state, nothing entered yet",
+      "rank": 6,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "4303c00c09a7",
+      "description": ""
+    },
+    {
+      "key": "story:set-up/bank",
+      "kind": "story",
+      "id": "set-up/bank",
+      "issue_id": "S-set-up-bank",
+      "name": "Connect a bank account",
+      "rank": 7,
+      "blocked_by": [
+        "story:set-up/details"
+      ],
+      "labels": [
+        "invoicing-v1",
+        "onboarding"
+      ],
+      "size": "M",
+      "hash": "8d4b11cbc382",
+      "description": "When my business details are saved, I want to connect the account the money should arrive in, so I can ⟨outcome — one line, from whoever knows why this step exists⟩.\n\nThe brief assumes one bank account per business and never says so. Flagged rather than designed around.\n\nAcceptance criteria\n- a failed connection says what is still true — no money has moved, nothing was saved\n- the account number is never shown in full after it is saved\n\nSize hint: M — 2 sub-tasks, 2 criteria, 1 blocker. A count, not an estimate.\n\nWaits for: Add the business details (S-set-up-details)"
+    },
+    {
+      "key": "subtask:bank-connect",
+      "kind": "subtask",
+      "id": "bank-connect",
+      "issue_id": "T-bank-connect",
+      "name": "Connect account",
+      "rank": 8,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "7b7a673c38d9",
+      "description": ""
+    },
+    {
+      "key": "subtask:bank-failed",
+      "kind": "subtask",
+      "id": "bank-failed",
+      "issue_id": "T-bank-failed",
+      "name": "Connection refused",
+      "rank": 9,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "6741b6e96626",
+      "description": ""
+    },
+    {
+      "key": "story:get-paid/create",
+      "kind": "story",
+      "id": "get-paid/create",
+      "issue_id": "S-get-paid-create",
+      "name": "Create an invoice",
+      "rank": 10,
+      "blocked_by": [
+        "story:set-up/details"
+      ],
+      "labels": [
+        "invoicing",
+        "invoicing-v1"
+      ],
+      "size": "M",
+      "hash": "e32bdf424ff0",
+      "description": "When I have done work for somebody and want the money, I want to create an invoice for it, so I can there is a document the client can pay against.\n\nLine items, a total, a due date and a client. What it must never do: send anything. Creating and sending are separate on purpose, because a half-written invoice reaching a client cannot be taken back.\n\nAcceptance criteria\n- nothing leaves the system from this screen — sending is a separate, deliberate action\n- the total is recomputed from the line items and is never typed by hand\n- an invoice with no line items cannot be saved as ready to send\n- nothing falls off the frame at any supported width  [overflow]\n\nCriteria marked with a check in brackets are proved by that harness, not by opinion. Run them before closing this.\n\nSize hint: M — 2 sub-tasks, 4 criteria, 1 blocker. A count, not an estimate.\n\nWaits for: Add the business details (S-set-up-details)"
+    },
+    {
+      "key": "subtask:invoice-new",
+      "kind": "subtask",
+      "id": "invoice-new",
+      "issue_id": "T-invoice-new",
+      "name": "New invoice",
+      "rank": 11,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "584235ceefd1",
+      "description": ""
+    },
+    {
+      "key": "subtask:invoice-empty",
+      "kind": "subtask",
+      "id": "invoice-empty",
+      "issue_id": "T-invoice-empty",
+      "name": "No invoices yet",
+      "rank": 12,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "ad1830d7c7ae",
+      "description": ""
+    },
+    {
+      "key": "story:get-paid/send",
+      "kind": "story",
+      "id": "get-paid/send",
+      "issue_id": "S-get-paid-send",
+      "name": "Send an invoice",
+      "rank": 13,
+      "blocked_by": [
+        "story:get-paid/create"
+      ],
+      "labels": [
+        "invoicing",
+        "invoicing-v1"
+      ],
+      "size": "M",
+      "hash": "6969eca01560",
+      "description": "When an invoice is finished and I have checked it, I want to send it to the client, so I can the client has it and the clock starts.\n\nSending is irreversible from the client's side. The screen exists mostly to carry that one sentence, and to show exactly what will be sent and to whom before it goes.\n\nAcceptance criteria\n- the client's email address is shown in full, next to the confirm action\n- a send that fails says whether the client received it or not — never 'something went wrong'\n- a sent invoice can be viewed but not edited\n\nSize hint: M — 2 sub-tasks, 3 criteria, 1 blocker. A count, not an estimate.\n\nWaits for: Create an invoice (S-get-paid-create)"
+    },
+    {
+      "key": "subtask:invoice-send",
+      "kind": "subtask",
+      "id": "invoice-send",
+      "issue_id": "T-invoice-send",
+      "name": "Confirm and send",
+      "rank": 14,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "12089464c72b",
+      "description": ""
+    },
+    {
+      "key": "subtask:send-failed",
+      "kind": "subtask",
+      "id": "send-failed",
+      "issue_id": "T-send-failed",
+      "name": "Send did not go out",
+      "rank": 15,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "631ce1dd45c7",
+      "description": ""
+    },
+    {
+      "key": "story:get-paid/chase",
+      "kind": "story",
+      "id": "get-paid/chase",
+      "issue_id": "S-get-paid-chase",
+      "name": "Chase an unpaid invoice",
+      "rank": 16,
+      "blocked_by": [
+        "story:get-paid/send"
+      ],
+      "labels": [
+        "invoicing",
+        "invoicing-v1"
+      ],
+      "size": "S",
+      "hash": "3c7dcdf0b1a8",
+      "description": "When an invoice has gone past its due date, I want to remind the client without writing the email myself, so I can ⟨outcome — one line, from whoever knows why this step exists⟩.\n\nThe brief asks for this in one line and describes nothing. Nothing is designed for it yet.\n\nNothing serves this yet. The scope asks for it and no screen was designed for it; the design work is part of this story.\n\nAcceptance criteria\n- something serves this step — a screen exists and is reachable\n- a reminder says which invoice, for how much, and how overdue\n\nSize hint: S — 0 sub-tasks, 2 criteria, 1 blocker. A count, not an estimate.\n\nWaits for: Send an invoice (S-get-paid-send)"
+    },
+    {
+      "key": "story:get-paid/owed",
+      "kind": "story",
+      "id": "get-paid/owed",
+      "issue_id": "S-get-paid-owed",
+      "name": "See what is owed",
+      "rank": 17,
+      "blocked_by": [
+        "story:get-paid/send"
+      ],
+      "labels": [
+        "invoicing",
+        "invoicing-v1"
+      ],
+      "size": "M",
+      "hash": "81873373d7ff",
+      "description": "When I want to know where I stand, I want to see every unpaid invoice and what it adds up to, so I can I know whether to chase anybody this week.\n\nThe one screen most people open daily. With six invoices it is a list; with six hundred it is unusable, so the density budget matters here more than anywhere else.\n\nAcceptance criteria\n- the outstanding total is visible without scrolling\n- overdue is distinguishable without relying on colour alone  [structure]\n- the list stays usable at the real number of invoices, not the demo number  [density]\n\nCriteria marked with a check in brackets are proved by that harness, not by opinion. Run them before closing this.\n\nSize hint: M — 2 sub-tasks, 3 criteria, 1 blocker. A count, not an estimate.\n\nWaits for: Send an invoice (S-get-paid-send)"
+    },
+    {
+      "key": "subtask:owed-list",
+      "kind": "subtask",
+      "id": "owed-list",
+      "issue_id": "T-owed-list",
+      "name": "Outstanding invoices",
+      "rank": 18,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "7b5464a5794a",
+      "description": ""
+    },
+    {
+      "key": "subtask:owed-empty",
+      "kind": "subtask",
+      "id": "owed-empty",
+      "issue_id": "T-owed-empty",
+      "name": "Nothing outstanding",
+      "rank": 19,
+      "blocked_by": [],
+      "labels": [
+        "invoicing-v1"
+      ],
+      "hash": "6d1c4220d17c",
+      "description": ""
+    }
+  ]
+}

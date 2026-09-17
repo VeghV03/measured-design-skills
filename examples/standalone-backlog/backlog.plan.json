@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "title": "Invoicing — from a two-page brief",
+  "epics": [
+    { "id": "get-paid", "name": "Get an invoice paid",
+      "intent": "Steps: Create an invoice, Send it, Chase an unpaid one, See what is owed." },
+    { "id": "set-up", "name": "Set up the account",
+      "intent": "Steps: Add the business details, Connect a bank account." }
+  ],
+  "stories": [
+    { "id": "set-up/details",
+      "epic": "set-up",
+      "name": "Add the business details",
+      "job": { "when": "I have signed up and nothing is filled in yet",
+               "want": "add the business details that appear on an invoice",
+               "so": "an invoice I send looks like it came from a real business" },
+      "body": "Name, address, tax number and logo. These appear on every invoice, so an invoice cannot be sent before this exists. The brief does not say which fields are legally required and that varies by country — see the spike.",
+      "criteria": [
+        { "text": "the form states which fields appear on the invoice and which are for our records only" },
+        { "text": "leaving it half-finished and coming back does not lose what was typed" },
+        { "text": "every field has a label a screen reader can read", "check": "structure" }
+      ],
+      "subtasks": [
+        { "id": "details-form", "name": "Business details form" },
+        { "id": "details-empty", "name": "First-run state, nothing entered yet" }
+      ],
+      "blocked_by": ["spike:tax-fields"],
+      "labels": ["onboarding"]
+    },
+    { "id": "set-up/bank",
+      "epic": "set-up",
+      "name": "Connect a bank account",
+      "job": { "when": "my business details are saved",
+               "want": "connect the account the money should arrive in",
+               "so": "" },
+      "body": "The brief assumes one bank account per business and never says so. Flagged rather than designed around.",
+      "criteria": [
+        { "text": "a failed connection says what is still true — no money has moved, nothing was saved" },
+        { "text": "the account number is never shown in full after it is saved" }
+      ],
+      "subtasks": [
+        { "id": "bank-connect", "name": "Connect account" },
+        { "id": "bank-failed", "name": "Connection refused" }
+      ],
+      "blocked_by": ["set-up/details"],
+      "labels": ["onboarding"]
+    },
+    { "id": "get-paid/create",
+      "epic": "get-paid",
+      "name": "Create an invoice",
+      "job": { "when": "I have done work for somebody and want the money",
+               "want": "create an invoice for it",
+               "so": "there is a document the client can pay against" },
+      "body": "Line items, a total, a due date and a client. What it must never do: send anything. Creating and sending are separate on purpose, because a half-written invoice reaching a client cannot be taken back.",
+      "criteria": [
+        { "text": "nothing leaves the system from this screen — sending is a separate, deliberate action" },
+        { "text": "the total is recomputed from the line items and is never typed by hand" },
+        { "text": "an invoice with no line items cannot be saved as ready to send" },
+        { "text": "nothing falls off the frame at any supported width", "check": "overflow" }
+      ],
+      "subtasks": [
+        { "id": "invoice-new", "name": "New invoice" },
+        { "id": "invoice-empty", "name": "No invoices yet" }
+      ],
+      "blocked_by": ["set-up/details"],
+      "labels": ["invoicing"]
+    },
+    { "id": "get-paid/send",
+      "epic": "get-paid",
+      "name": "Send an invoice",
+      "job": { "when": "an invoice is finished and I have checked it",
+               "want": "send it to the client",
+               "so": "the client has it and the clock starts" },
+      "body": "Sending is irreversible from the client's side. The screen exists mostly to carry that one sentence, and to show exactly what will be sent and to whom before it goes.",
+      "criteria": [
+        { "text": "the client's email address is shown in full, next to the confirm action" },
+        { "text": "a send that fails says whether the client received it or not — never 'something went wrong'" },
+        { "text": "a sent invoice can be viewed but not edited" }
+      ],
+      "subtasks": [
+        { "id": "invoice-send", "name": "Confirm and send" },
+        { "id": "send-failed", "name": "Send did not go out" }
+      ],
+      "blocked_by": ["get-paid/create"],
+      "labels": ["invoicing"]
+    },
+    { "id": "get-paid/chase",
+      "epic": "get-paid",
+      "name": "Chase an unpaid invoice",
+      "job": { "when": "an invoice has gone past its due date",
+               "want": "remind the client without writing the email myself",
+               "so": "" },
+      "body": "The brief asks for this in one line and describes nothing. Nothing is designed for it yet.",
+      "criteria": [
+        { "text": "something serves this step — a screen exists and is reachable" },
+        { "text": "a reminder says which invoice, for how much, and how overdue" }
+      ],
+      "subtasks": [],
+      "blocked_by": ["get-paid/send"],
+      "nothing_serves": true,
+      "labels": ["invoicing"]
+    },
+    { "id": "get-paid/owed",
+      "epic": "get-paid",
+      "name": "See what is owed",
+      "job": { "when": "I want to know where I stand",
+               "want": "see every unpaid invoice and what it adds up to",
+               "so": "I know whether to chase anybody this week" },
+      "body": "The one screen most people open daily. With six invoices it is a list; with six hundred it is unusable, so the density budget matters here more than anywhere else.",
+      "criteria": [
+        { "text": "the outstanding total is visible without scrolling" },
+        { "text": "overdue is distinguishable without relying on colour alone", "check": "structure" },
+        { "text": "the list stays usable at the real number of invoices, not the demo number", "check": "density" }
+      ],
+      "subtasks": [
+        { "id": "owed-list", "name": "Outstanding invoices" },
+        { "id": "owed-empty", "name": "Nothing outstanding" }
+      ],
+      "blocked_by": ["get-paid/send"],
+      "labels": ["invoicing"]
+    }
+  ],
+  "spikes": [
+    { "id": "tax-fields",
+      "epic": "set-up",
+      "name": "Decide: which business fields are legally required, and where",
+      "question": "Which business details are legally required on an invoice, and does that vary by the country we launch in?",
+      "context": "The brief lists fields without saying which are mandatory. Getting this wrong makes every invoice sent from the product legally defective, and it is not fixable after the fact.",
+      "options": [
+        { "label": "One superset of fields, all required",
+          "buys": "one form, one validation rule, launch anywhere",
+          "costs": "asks every user for things most of them do not need",
+          "kills": "a short sign-up" },
+        { "label": "Per-country field sets",
+          "buys": "each user is asked only for what applies to them",
+          "costs": "a rule set per country, maintained forever",
+          "kills": "launching in a new country without legal review" }
+      ],
+      "right_if": "The superset wins if the first release is one country and the second is not imminent.",
+      "blocks": ["set-up/details"]
+    }
+  ]
+}

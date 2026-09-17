@@ -1,0 +1,7 @@
+{
+  "project":    { "key": "INV", "style": "team-managed" },
+  "issueTypes": { "epic": "Epic", "story": "Story", "subtask": "Subtask", "spike": "Task" },
+  "linkTypes":  { "blocks": "Blocks" },
+  "labels":     ["invoicing-v1"],
+  "fields":     {}
+}
