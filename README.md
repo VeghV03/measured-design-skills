@@ -1,19 +1,20 @@
 # measured-design
 
-**Designing a product you can prove.** A measured UX/UI procedure, as an installable skill pack
-for Claude Code, Codex, and any agent that reads `SKILL.md`.
+**Design a product you can prove.** Checks that print a number about screens you already have, a
+build that refuses when the route map lies, and a backlog generated from the design rather than from
+a meeting — as an installable skill pack for Claude Code, Codex, and any agent that reads `SKILL.md`.
 
 [![CI](https://github.com/VeghV03/measured-design-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/VeghV03/measured-design-skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install)
-[![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install-the-skills)
+[![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install-the-skills)
 [![Skills](https://img.shields.io/badge/skills-100-brightgreen)](#what-is-in-it)
 [![Harnesses](https://img.shields.io/badge/harnesses-13%20numbers-orange)](#what-is-in-it)
 
 Design reviews go wrong in a predictable way: two people hold different opinions about a screen, the
-more senior opinion wins, and nobody learns anything. The fix is not more process. It is arranging
-the work so that most questions have an answer that can be counted, and spending the meeting only on
-the ones that genuinely cannot.
+more senior opinion wins, and nobody learns anything. The fix is not more process. It is arranging the
+work so that most questions have an answer that can be counted, and spending the meeting only on the
+ones that genuinely cannot.
 
 ```
 158 → 0   jargon words outside Advanced
@@ -24,80 +25,68 @@ the ones that genuinely cannot.
 
 Every one of those was invisible until something counted it. None would have come up in a review.
 
-## See it, don't just read about it
-
-This is the actual output of `examples/demo` — a handover viewer built from a scope document, a
-failure state with an undeclared claim flagged in orange, and the gate refusing a broken build before
-it ever reaches a prototype:
-
-![Walkthrough: clicking through the generated demo viewer — a gap flagged in the sidebar, a failure state carrying an unagreed-scope warning, a storage screen — then a terminal breaking a route on purpose and watching the gate refuse to build, before reverting and passing clean again](docs/walkthrough.gif)
-
-Nobody hand-wrote that rationale panel, that gap warning, or that refusal. All three came out of the
-build in [Try it in thirty seconds](#try-it-in-thirty-seconds) below — clone the repo and you'll have
-this same file, for this same demo, in under a minute. Or skip the clone:
-**[open the live demo](https://veghv03.github.io/measured-design-skills/)** and click around it right now.
-
 ## Contents
 
+- [See it working](#see-it-working)
+- [What it actually is](#what-it-actually-is)
+- [Three ways in](#three-ways-in)
+- [Why it works the way it does](#why-it-works-the-way-it-does)
 - [How it fits together](#how-it-fits-together)
-- [Install](#install)
-- [Make the number go one way](#make-the-number-go-one-way)
-- [Turn it into a backlog](#turn-it-into-a-backlog)
-- [Try it in thirty seconds](#try-it-in-thirty-seconds)
+- [Install the skills](#install-the-skills)
 - [What is in it](#what-is-in-it)
-- [What makes this different from a process document](#the-three-things-that-make-this-different-from-a-process-document)
 - [Two standing rules](#two-standing-rules)
 - [Contributing](#contributing)
 - [Provenance and licences](#provenance-and-licences)
 
-## How it fits together
+## See it working
 
-Six stages, one contract, one refusing gate:
+This is `examples/demo`, built from a scope document — a handover viewer, a failure state carrying an
+undeclared claim in orange, and the gate refusing a broken build before it reaches a prototype:
 
-```mermaid
-flowchart LR
-    F1["01 Frame<br/>scope → job stories"] --> F2["02 Structure<br/>IA, routes, gaps"]
-    F2 --> F3["03 Generate<br/>screens compiled, not drawn"]
-    F3 --> F4["04 Audit<br/>findings → harnesses"]
-    F4 --> F5["05 Measure<br/>counts, not opinions"]
-    F5 --> F6["06 Ship<br/>handover viewer"]
-```
+![Walkthrough: clicking through the generated demo viewer — a gap flagged in the sidebar, a failure state carrying an unagreed-scope warning, a storage screen — then a terminal breaking a route on purpose and watching the gate refuse to build, before reverting and passing clean again](docs/walkthrough.gif)
 
-A route the contract declares but nothing binds stops the build at stage 3. Everything else — jargon,
-missing headings, empty states, contrast — prints a number at stage 5 and lets a person decide what to
-do with it.
+Nobody hand-wrote that rationale panel, that gap warning, or that refusal. All three fall out of the
+build. **[Open the live demo](https://veghv03.github.io/measured-design-skills/)** and click around it
+now, or clone the repo and have the same file in under a minute.
 
-## Start on a project you already have
+## What it actually is
+
+Two things that share a data model, and you do not need both.
+
+The first is **a set of checks that run against any web app** — contrast against the real composited
+background, content off the frame at each supported width, targets under the minimum, animation that
+ignores reduced motion, screens with no heading. Thirteen of them. They need a URL and nothing else.
+No adoption, no scope document, no buy-in from anyone.
+
+The second is **a procedure for designing a product so that those numbers stay fixed** — six stages,
+one build contract, and a gate that refuses. Screens are generated from a data model rather than drawn,
+so the thing you measure and the thing you ship are the same object. From that model it also writes
+the backlog: epics, stories, and the decisions nobody has made yet, as tickets that block the work
+waiting on them.
+
+It is built for agents but none of it requires one. The skills tell an agent how to run the procedure;
+the CLI, the gate, the harnesses and the backlog generator are ordinary programs you can run yourself.
+
+## Three ways in
+
+### Measure an app you already have — about a minute
 
 ```sh
-npx measured-design init
-```
-
-It reads your `package.json`, finds the dev server if one is running (or the build output if not),
-writes `measured-design.config.json`, and runs the checks. No scope document, no data model, no
-adoption — a number about screens you have already built, in about a minute. Afterwards:
-
-```sh
+npx measured-design init      # detects the project, writes a config, runs the checks
 npx measured-design check
 ```
 
-Two of the thirteen checks need more than a DOM and will say so rather than guessing: route binding
-wants a declared route map, the vocabulary check wants a word list. The other eleven just run.
+It reads your `package.json`, finds the dev server if one is running or the build output if not, and
+prints one number per check. Eleven of the thirteen need only a DOM; route binding wants a declared
+route map and the vocabulary check wants a word list, and both say so rather than guessing.
 
-## Make the number go one way
-
-A number you saw once is a fact about a Tuesday. The arrow at the top of this page is the part that
-matters, and it only exists if something remembers yesterday.
+Then make the number go one way — the arrow at the top of this page is the part that matters, and it
+only exists if something remembers yesterday:
 
 ```sh
 npx measured-design baseline        # freeze today's findings
 npx measured-design check --no-new  # fail only on a finding that is not in the baseline
 ```
-
-Nobody fixes 158 things. Everybody can stop the 159th. `baseline` writes
-`measured-design.baseline.json` — every finding fingerprinted by what it is, not by where it sat in
-that run's output — and `--no-new` exits non-zero only on a fingerprint that was not already there.
-That is the line to put in CI on day one of a codebase that already exists.
 
 ```
   new since the baseline
@@ -106,57 +95,41 @@ That is the line to put in CI on day one of a codebase that already exists.
 155 baselined · 1 new · 3 fixed · 1 waived
 ```
 
-Findings that leave the baseline are reported too. A fix nothing notices is a fix nobody gets credit
-for, and `baseline --update` locks the gain in so it cannot come back.
+**Nobody fixes 158 things. Everybody can stop the 159th.** Every finding is fingerprinted by what it
+is — the check, the screen, the thing that is wrong, with volatile numbers normalised out, so a
+contrast ratio drifting from 3.12 to 3.40 stays one finding instead of reporting a fix and a
+regression on a day nothing happened. That is the line to put in CI on day one of a codebase that
+already exists. Findings that leave the baseline are reported too, and `baseline --update` locks the
+gain in.
 
-Disagree with a finding? That is allowed, and it is the point — but the decision gets written down
-instead of winning an argument:
+Disagree with a finding? That is allowed, and it is rather the point — the decision just gets written
+down instead of winning an argument:
 
 ```sh
 npx measured-design waive 73f98ce938a4 --why "Marketing shell, lang set by the CMS" --until 2027-01-01
 ```
 
-`--why` is required, because a waiver without a reason is an opinion that won. `--until` is not, but a
-waiver without one is reported on every run so it cannot quietly become permanent — and an expired
-waiver brings its finding straight back. A waiver matching nothing is reported too, so the file does
-not rot.
+`--why` is required, because a waiver without a reason is an opinion that won. `--until` is optional,
+but a waiver without one is reported every run so it cannot quietly become permanent, and an expired
+waiver brings its finding straight back.
 
-Every run also writes `.measured-design/findings.json`: the whole run, one record per finding, with
-the fingerprint. That is the file to build a report or a PR comment out of.
+### Turn a design into a backlog
 
-That is the shallow end. The rest of this README is the part that makes the numbers stay fixed.
-
-## Turn it into a backlog
-
-A design that cannot become planned work stays a picture. `jira-backlog` turns a brief, a running app
-or a codebase into epics, stories, sub-tasks and decision spikes — and on a measured-design project,
-`measured-design-backlog` reads `model/` and has far more to work with:
+A design that cannot become planned work stays a picture.
 
 ```sh
-python3 scaffold/backlog/build_backlog.py --model model      # journeys, routes, decisions, gaps
-python3 scaffold/backlog/build_backlog.py --plan plan.json   # anything else
+python3 scaffold/backlog/build_backlog.py --model model      # a measured-design project
+python3 scaffold/backlog/build_backlog.py --plan plan.json   # a brief, a crawled app, a codebase
 ```
 
-Journeys become epics, steps become stories, screens become sub-tasks. An **open decision becomes a
-spike that blocks every story touching its screens** — so the board shows the cost of not deciding
-instead of hiding it. A gap becomes a story flagged as having nothing serving it. Acceptance criteria
-name the harness that proves them:
+Journeys become epics, steps become stories, screens become sub-tasks. **An open decision becomes a
+spike that blocks every story touching it**, ranked ahead of what it holds up — so the board shows the
+cost of not deciding instead of hiding it in a description. A gap in the scope becomes a story flagged
+as having nothing serving it. Acceptance criteria name the harness that proves them, so "done" mostly
+has an answer that can be counted.
 
-```
-- Files, Sync did not finish render at every supported width with nothing off the frame, a heading,
-  labelled controls, targets at or over the minimum, and no text under its contrast threshold in
-  either theme  [overflow, structure, target-size, contrast]
-- every route declared from these screens binds to a label that is on the board  [routes]
-- Sync did not finish says what is still true, not only what failed
-```
-
-Three of those four have an answer that can be counted, which is the whole argument of this repo
-applied to the plan rather than the screen.
-
-Blockers are **preconditions only** — a state waits for the place it hangs off, a journey waits for the
-way into the product, anything touching an open decision waits for that decision. `files-list` leads
-to eight screens and blocking all eight on it would be true to the graph and useless as a plan, so the
-rest becomes build order.
+Blockers are preconditions only. `files-list` leads to eight screens, and blocking all eight on it
+would be faithful to the route graph and useless as a plan, so the rest becomes build order.
 
 The one thing it will not do is invent the reason:
 
@@ -165,30 +138,84 @@ When I am in Files and choose Move to folder…, I want to move a file into a fo
 so I can ⟨outcome — one line, from whoever knows why this step exists⟩.
 ```
 
-A design rationale says why a screen is shaped the way it is. It is not what a person walks away with,
-and filling that slot with the nearest available sentence puts a claim nobody made into a ticket
-somebody builds. The blanks are counted in the summary instead.
+A rationale explains why a screen is shaped as it is. It is not what a person walks away with, and
+filling that slot with the nearest available sentence puts a claim nobody made into a ticket somebody
+builds. The blanks are counted in the summary instead.
 
-Output is `backlog.md` to read, `jira.csv` to import, `backlog.json` to diff, and `backlog.keys.json`
-so the second run reports added, changed and gone rather than creating a second copy of the first.
+Output is `backlog.md` to read, `jira.csv` to import, and `backlog.keys.json` so the second run reports
+added, changed and gone rather than making a second copy of everything. Creating the tickets is a
+separate `--push` that creates and never edits, checks the whole project before sending anything, and
+asks first. Details in [`scaffold/backlog/README.md`](scaffold/backlog/README.md); worked examples in
+[`examples/demo`](examples/demo) and [`examples/standalone-backlog`](examples/standalone-backlog).
 
-Creating the tickets is a separate flag, because generating is reversible right up until it becomes
-sixty real tickets somebody has started working in:
+### Run the whole procedure
 
 ```sh
-export JIRA_BASE_URL=... JIRA_EMAIL=... JIRA_API_TOKEN=...
-python3 scaffold/backlog/build_backlog.py --model model --push --dry-run   # show it, send nothing
-python3 scaffold/backlog/build_backlog.py --model model --push             # ask, then create
+cd examples/demo
+python3 ../../scaffold/adapters/python/build.py  --boards boards --model model
+python3 ../../scaffold/gate.py                   --model model --boards boards
+python3 ../../scaffold/viewer/build_viewer.py    --model model --boards boards --out prototype.html \
+                                                 --title "Demo · File manager"
+python3 ../../scaffold/drift.py scope.md         --model model
+open prototype.html
 ```
 
-It **creates and never edits** — a ticket that exists has comments, an assignee and edits somebody
-made on purpose, so a story whose text has changed is reported and left alone. It checks the project
-and every issue type *before* sending anything, writes each key to `backlog.keys.json` as it goes so a
-failed run retries without duplicating, and prints the whole plan and asks first. With no terminal to
-ask at, `--yes` is required — nothing in CI creates tickets by accident. Credentials are read from the
-environment only, never from a file in the repo.
-Worked examples: [`examples/demo`](examples/demo) from a model, and
-[`examples/standalone-backlog`](examples/standalone-backlog) from a two-page brief.
+Ten screens across four journeys, built, gated and shipped. The gate prints one line per property and
+writes `model/index.json`. Break a route label in `routes.json` and it refuses instead, which is the
+point.
+
+For the harnesses: `cd scaffold/harnesses && npm install && node run-all.mjs`. They need Playwright and
+a Chromium. They do not require the rest of the pack — `target` points them at built files, an explicit
+route list, or a crawl:
+
+```json
+{ "target": { "mode": "dir",   "dir": "./dist" } }
+{ "target": { "mode": "urls",  "base": "http://localhost:3000", "routes": ["/", "/files"] } }
+{ "target": { "mode": "crawl", "start": "http://localhost:3000", "limit": 50 } }
+```
+
+## Why it works the way it does
+
+**Screens are compiled, not drawn.** A design tool gives you 93 files that drift; a generator gives you
+93 files that cannot. Any stack satisfies the contract — Python is the reference adapter, not the
+requirement. There are three, sharing no code, and CI proves they emit byte-identical rationale for the
+same model. The React one also emits `.tsx`, so the boards stay measurable and the components are what
+you keep.
+
+**The rationale lives in the generator.** Put the reasoning in the docstring and extract it at build
+time, and it physically cannot drift from the screen, because they are the same object. No separate
+rationale document going stale in a fortnight.
+
+**Exactly one check refuses.** A route map that lies to QA is worse than a missing one, so the gate
+will not produce a prototype if a declared route fails to bind. Everything else prints a number and
+lets a person decide. Adding a second refusing check is a decision with a cost — every future
+contributor has to satisfy it before they can look at anything — and the pack says so out loud.
+
+**A finding is identified by what it is.** Not by where it sat in a run's output. That one choice is
+what makes a baseline possible, what lets a waiver name a single thing, and what lets a renamed story
+keep its Jira ticket while a restructured epic correctly becomes new work.
+
+**Where they disagree, the audited prototype wins.** The scope document is brought level with it, not
+the other way round. Otherwise every audit finding is optional.
+
+## How it fits together
+
+```mermaid
+flowchart LR
+    F1["01 Frame<br/>problem, audience, policy"] --> F2["02 Structure<br/>journeys, routes, gaps"]
+    F2 --> F3["03 Generate<br/>screens compiled, not drawn"]
+    F3 --> F4["04 Audit<br/>findings that name a file"]
+    F4 --> F5["05 Measure<br/>counts, not opinions"]
+    F5 --> F6["06 Ship<br/>handover viewer"]
+    F3 -. "a route that does not bind" .-> G(["the build refuses"])
+    F2 --> B["Backlog<br/>epics · stories · spikes"]
+    F5 --> B
+```
+
+Stages are not gates you pass once. Audit sends work back to generate; measure sends work back to
+audit. Only the contract is fixed. The backlog is reachable as soon as there are journeys and routes,
+and is worth rebuilding after the audit — the audit changes what the work is, and a backlog written
+before it plans the product you thought you had.
 
 ## Install the skills
 
@@ -198,44 +225,12 @@ sh scripts/install.sh codex           # ~/.agents/skills
 sh scripts/install.sh any ./skills    # anywhere else
 ```
 
-Add `--core` to install the eleven measured-design skills, plus standalone `jira-backlog`, without the
+`--core` installs the eleven measured-design skills plus standalone `jira-backlog`, without the
 88-skill library. Codex caps its pre-loaded skill list at about 8,000 characters and truncates silently
-past that; 100 skills would not fit. The library skills are marked `disable-model-invocation` for the same reason — they are reached
-deliberately from a stage, not picked up opportunistically.
+past that; 100 skills would not fit. The library skills are marked `disable-model-invocation` for the
+same reason — they are reached deliberately from a stage, not picked up opportunistically.
 
 Claude Code can also add the directory as a marketplace (`.claude-plugin/marketplace.json`).
-
-## Try it in thirty seconds
-
-```sh
-cd examples/demo
-python3 ../../scaffold/adapters/python/build.py  --boards boards --model model
-python3 ../../scaffold/gate.py                   --model model --boards boards
-python3 ../../scaffold/viewer/build_viewer.py    --model model --boards boards --out prototype.html
-python3 ../../scaffold/drift.py scope.md         --model model
-open prototype.html
-```
-
-The gate prints one line per property and writes `model/index.json`. Break a route label in
-`routes.json` and it refuses instead, which is the point.
-
-For the harnesses: `cd scaffold/harnesses && npm install && node run-all.mjs`. They need Playwright
-and a Chromium; set `executablePath` in `harness.config.json` if yours is not on the default path.
-
-They do not require the rest of the pack. Ten of the thirteen only need a URL and a name, so
-`target` in `harness.config.json` points them at a folder of built boards, an explicit route list, or
-a crawl of a running app:
-
-```json
-{ "target": { "mode": "dir",   "dir": "../../boards" } }
-{ "target": { "mode": "urls",  "base": "http://localhost:3000", "routes": ["/", "/files"] } }
-{ "target": { "mode": "crawl", "start": "http://localhost:3000", "limit": 50 } }
-```
-
-Two checks need more than a DOM. `routes` proves a declared route map binds to real labels on real
-screens and needs `model/`; without one, `run-all` substitutes `links`, which only proves nothing
-404s — a weaker claim, named differently on purpose. `vocab` needs a word list, so it reads
-`model/policy.json` or a standalone `vocab.policy.json`, and says so when it finds neither.
 
 ## What is in it
 
@@ -244,75 +239,57 @@ screens and needs `model/`; without one, `run-all` substitutes `links`, which on
 | `skills/measured-design` | the entry point; routes to the six stages |
 | `skills/measured-design-contract` | the build contract — read before generating anything |
 | `skills/measured-design-{frame,structure,generate,audit,measure,ship}` | stages 01–06 |
-| `skills/measured-design-decide` | an open question forced into multiple choice with trade-offs |
+| `skills/measured-design-decide` | an open question forced into options carrying what each buys, costs and kills |
+| `skills/measured-design-drift` | scope document versus prototype |
 | `skills/measured-design-backlog` | the design as planned work — epics, stories, spikes that block |
 | `skills/jira-backlog` | the same, standalone: a brief, a running app or a codebase → Jira |
-| `skills/measured-design-drift` | scope document versus prototype |
 | `skills/library/` | 88 vendored designer and thinking skills |
-| `cli/` | `npx measured-design init`, `check`, `baseline` and `waive` — the no-adoption entry point |
-| `cli/ratchet.mjs` | the baseline, the waivers, and the comparison that makes a number go one way |
-| `commands/` | `/prove` and nine others, for agents with slash commands |
+| `cli/` | `npx measured-design init`, `check`, `baseline`, `waive` — the no-adoption entry point |
+| `commands/` | `/prove`, `/backlog` and nine others, for agents with slash commands |
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
 | `scaffold/check_library.py` | refuses if a vendored skill is unreachable, or a stage names one that does not exist |
 | `scaffold/harnesses/` | thirteen checks — twelve in any one run, each prints one number and writes its findings |
-| `scaffold/backlog/` | the plan, and one emitter — `backlog.json`, `jira.csv`, `backlog.md` |
+| `scaffold/backlog/` | one plan, one emitter — `backlog.json`, `jira.csv`, `backlog.md`, and `--push` |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
-| `scaffold/adapters/python/` | the reference generator |
-| `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |
-| `scaffold/adapters/react/` | a third generator that also emits `.tsx` components from the same tree — the boards stay measurable, the components are what you keep |
+| `scaffold/adapters/{python,node,react}` | three generators, no shared code, proving the contract is stack-agnostic |
 | `examples/demo/` | ten screens across four journeys that build, gate and ship end to end |
-| `.github/workflows/ci.yml` | checks library reachability, builds the demo with all three adapters, gates it, typechecks the emitted components, runs all twelve harnesses, on every push |
-
-## The three things that make this different from a process document
-
-**Screens are compiled, not drawn.** A design tool gives you 93 files that drift; a generator gives
-you 93 files that cannot. Any stack satisfies the contract — Python is the reference adapter, not the
-requirement, and `scaffold/adapters/node/` is a second one built to prove it: same ten demo screens,
-same rationale text, same gate and harness results, zero shared code.
-
-**The rationale lives in the generator.** Put it in the docstring and extract it at build time, and
-the reasoning physically cannot drift from the screen, because they are the same object. There is no
-separate rationale document going stale in a fortnight.
-
-**One check refuses.** A route map that lies to QA is worse than a missing one, so the gate will not
-produce a prototype if a declared route fails to bind. Everything else prints a number and lets a
-person decide. Adding a second refusing check is a decision with a cost, and the pack says so.
+| `examples/standalone-backlog/` | an invoicing product planned from a two-page brief, with no `model/` at all |
+| `.github/workflows/ci.yml` | library reachability, all three adapters, the gate, the harnesses, the ratchet and the backlog — on every push |
 
 ## Two standing rules
 
-Run the designer skills and the thinking skills together. A design skill tells you what good looks
+**Run the designer skills and the thinking skills together.** A design skill tells you what good looks
 like in its own lane; a thinking skill catches what that lane's answer breaks two screens away. The
-per-stage pairing is a **proposal** and is written up separately in `PAIRING.md` — it is the one part
-of this pack that is not in the source procedure.
+per-stage pairing is a **proposal**, written up separately in `PAIRING.md` — it is the one part of this
+pack that is not in the source procedure.
 
-Where a prototype and a scope document both exist, the audited prototype dictates. The scope document
-is brought level with it, not the other way round, otherwise every audit finding is optional.
+**Something that prints a number beats something that adds a meeting.** That is the test for anything
+added here.
 
 ## Contributing
 
-The pack is deliberately small at its core — eleven skills, one contract, one gate. Most of the value in
-growing it is in:
+The core is deliberately small — eleven skills, one contract, one gate. Most of the value in growing it
+is in:
 
-- **New harnesses.** Each one prints a single number for a single property. If you have a check that
-  would have caught a real regression, `scaffold/harnesses/` is the place for it — see the existing
-  ones for the shape.
-- **New adapters.** `scaffold/adapters/python/` is the reference, not the requirement. A generator for
-  another stack that satisfies the same build contract is welcome.
-- **Sharper pairings.** `PAIRING.md` is a proposal, argued from one project. If a stage's thinking-skill
-  pairing does not hold up on yours, open an issue with the counter-example.
-- **Bug reports with the counter-example attached.** "This refused when it should not have" is far more
-  useful with the `routes.json` that triggered it than without.
+- **New harnesses.** Each prints a single number for a single property. If you have a check that would
+  have caught a real regression, `scaffold/harnesses/` is where it goes.
+- **New adapters and new backlog front ends.** Both are contracts, not implementations. A generator for
+  another stack, or something that reads Figma or a Linear export into a plan, plugs into the same
+  emitter.
+- **Sharper pairings.** `PAIRING.md` is argued from one project. If a stage's pairing does not hold on
+  yours, open an issue with the counter-example.
+- **Bug reports with the input attached.** "This refused when it should not have" is far more useful
+  with the `routes.json` that triggered it.
 
-Open an issue or a pull request — `CONTRIBUTING.md` has the shape a harness or adapter needs to take,
-and the issue templates ask for the input that reproduces a bug. Keep additions consistent with the
-rest of the pack: something that prints a number beats something that adds a meeting.
+`CONTRIBUTING.md` has the shape a harness or an adapter needs to take, and the issue templates ask for
+the input that reproduces a bug.
 
-If this saved you a design review, a star on the repo is how other people find it.
+If this saved you a design review, a star is how other people find it.
 
 ## Provenance and licences
 
-The procedure is derived from a file manager redesign carried out in September 2026.
-The worked examples throughout are from that project.
+The procedure is derived from a file manager redesign carried out in September 2026. The worked
+examples throughout are from that project.
 
 `skills/library/` vendors 88 skills from two MIT-licensed repositories, unmodified except for the
 frontmatter `name` and a provenance comment:
@@ -321,8 +298,8 @@ frontmatter `name` and a provenance comment:
 - **cc-thinking-skills** — MIT, TJ Boudreaux. `licenses/cc-thinking-skills-MIT.txt`
 
 Every vendored skill is renamed to a collection-qualified form — `ux-strategy-frame-problem`, not
-`frame-problem`. Codex does not merge skills sharing a `name`; it shows both in the selector. If you
-have the upstream packs installed as well, nothing collides. `skills/library/INDEX.md` maps every
+`frame-problem`. Codex does not merge skills sharing a `name`; it shows both in the selector, so
+nothing collides if you have the upstream packs installed too. `skills/library/INDEX.md` maps every
 qualified name back to its upstream id.
 
 This pack is MIT. See `LICENSE`.
