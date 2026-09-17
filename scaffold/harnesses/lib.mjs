@@ -111,6 +111,19 @@ const norm = s => String(s).toLowerCase().replace(/[\d.]+/g, '#').replace(/\s+/g
 export const fingerprint = (check, target, key) =>
   createHash('sha256').update(`${check} ${target} ${norm(key)}`).digest('hex').slice(0, 12);
 
+// Every label is written plural, because that is the usual case. Exactly one
+// finding is common enough that "1 boards with a structure failure" would be on
+// screen most days, and a tool that cannot count to one is not persuasive about
+// counting to 158.
+//
+// The unit is the first plural word, not the first word — "declared routes that do
+// not bind" carries it second. The verb only needs fixing in the labels that have
+// one, and a non-global replace only ever touches the first.
+function one(n, label) {
+  if (n !== 1) return label;
+  return label.replace(/\b(\w+)s\b/, '$1').replace(/ do not /, ' does not ');
+}
+
 // One number, one line, every time. Nothing else prints a summary.
 //
 // Findings arrive one per hit, not one per board. Three contrast failures on one
@@ -141,7 +154,7 @@ export function report(label, total, findings = [], opts = {}) {
   // routes and links count the dead route or link; every other check counts the
   // board. Both print the same way, so the unit being counted lives in the label.
   const affected = opts.count === 'items' ? records.length : byTarget.size;
-  console.log(`\n${total} ${opts.unit || 'boards'} · ${affected} ${label}`);
+  console.log(`\n${total} ${one(total, opts.unit || 'boards')} · ${affected} ${one(affected, label)}`);
 
   // A run writes its findings down so the next run can tell new from known.
   // Standalone there is nothing to compare against, and nothing is written.
