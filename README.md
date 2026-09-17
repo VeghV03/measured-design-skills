@@ -112,6 +112,25 @@ substitutes when it does not — a weaker claim, given a different name on purpo
 404s" and "the route map is not lying to QA" should never be reported as the same result. `offline`
 is aimed at the built artifact rather than the screens.
 
+### Why four checks and not one
+
+The overlapping-looking ones are not redundant. Each sees exactly what the one beside it structurally
+cannot, and every split below was paid for by something reaching a real screen:
+
+```mermaid
+flowchart TB
+    S(["one rendered screen"]) --> G["geometry"]
+    S --> C["colour"]
+    G --> O["<b>overflow</b><br/>content past the frame edge"]
+    G --> F["<b>cellfit</b><br/>content past its cell edge, never past the frame<br/>a 137px chip in a 132px cell, on 14 boards"]
+    C --> K["<b>contrast</b><br/>the colour the CSS declares"]
+    C --> T["<b>translucency</b><br/>the colour a veil composites to<br/>4.74:1 down to 2.53:1 under 34% white"]
+```
+
+A chip overflowing its cell never crosses the frame, so `overflow` cannot see it. A veil changes what
+the eye receives without changing a declared value, so `contrast` cannot see it. One "layout check"
+and one "colour check" would miss both, and would report a clean run while doing it.
+
 ## Three ways in
 
 ### Measure an app you already have — about a minute
@@ -147,6 +166,25 @@ decision just gets written down, with a reason and a date, instead of winning an
 ```sh
 npx measured-design waive 73f98ce938a4 --why "Marketing shell, lang set by the CMS" --until 2027-01-01
 ```
+
+Every finding is in one of four states, and **only one of them fails CI**:
+
+```mermaid
+flowchart LR
+    C(["a check finds it"]) --> N["<b>new</b><br/>exits non-zero"]
+    N -->|"baseline"| B["baselined<br/>quiet, still counted"]
+    N -->|"waive --why --until"| W["waived<br/>quiet until the date"]
+    N -->|"somebody fixes it"| F["fixed"]
+    B --> F
+    W -.->|"the date passes"| N
+    F -->|"baseline --update"| L(["locked in"])
+    classDef hot stroke-width:3px
+    class N hot
+```
+
+That is the whole mechanism. A legacy codebase starts with 158 in **baselined** and a green build; the
+count can then only come down, because anything arriving in **new** stops the pipeline until somebody
+either fixes it or signs their name to a date.
 
 ### Turn a design into a backlog
 
@@ -232,20 +270,22 @@ the other way round. Otherwise every audit finding is optional.
 
 ```mermaid
 flowchart LR
-    F1["01 Frame<br/>problem, audience, policy"] --> F2["02 Structure<br/>journeys, routes, gaps"]
-    F2 --> F3["03 Generate<br/>screens compiled, not drawn"]
-    F3 --> F4["04 Audit<br/>findings that name a file"]
-    F4 --> F5["05 Measure<br/>counts, not opinions"]
-    F5 --> F6["06 Ship<br/>handover viewer"]
-    F3 -. "a route that does not bind" .-> G(["the build refuses"])
-    F2 --> B["Backlog<br/>epics · stories · spikes"]
-    F5 --> B
+    F1["<b>01 Frame</b><br/>problem, audience, policy"] --> F2["<b>02 Structure</b><br/>journeys, routes, gaps"]
+    F2 --> F3["<b>03 Generate</b><br/>screens compiled, not drawn"]
+    F3 --> F4["<b>04 Audit</b><br/>findings that name a file"]
+    F4 --> F5["<b>05 Measure</b><br/>counts, not opinions"]
+    F5 --> F6["<b>06 Ship</b><br/>handover viewer"]
+    F5 --> B["<b>Backlog</b><br/>epics · stories · spikes that block"]
+    F3 -.-> G(["<b>the build refuses</b><br/>a declared route that does not bind"])
+    F4 -. "findings send work back" .-> F3
+    classDef stop stroke-width:3px
+    class G stop
 ```
 
-Stages are not gates you pass once. Audit sends work back to generate; measure sends work back to
-audit. Only the contract is fixed. The backlog is reachable as soon as there are journeys and routes,
-and is worth rebuilding after the audit — the audit changes what the work is, and a backlog written
-before it plans the product you thought you had.
+Stages are not gates you pass once — audit sends work back to generate, measure sends work back to
+audit, and only the contract is fixed. The backlog is drawn from Measure because that is when it is
+most worth rebuilding, but it is reachable as soon as Structure has produced journeys and routes: the
+audit changes what the work is, and a backlog written before it plans the product you thought you had.
 
 ## Install the skills
 
