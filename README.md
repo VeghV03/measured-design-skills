@@ -80,8 +80,8 @@ It reads your `package.json`, finds the dev server if one is running or the buil
 prints one number per check. Eleven of the thirteen need only a DOM; route binding wants a declared
 route map and the vocabulary check wants a word list, and both say so rather than guessing.
 
-Then make the number go one way — the arrow at the top of this page is the part that matters, and it
-only exists if something remembers yesterday:
+Then make the number go one way — the arrow at the top of this page only exists if something
+remembers yesterday:
 
 ```sh
 npx measured-design baseline        # freeze today's findings
@@ -95,23 +95,13 @@ npx measured-design check --no-new  # fail only on a finding that is not in the 
 155 baselined · 1 new · 3 fixed · 1 waived
 ```
 
-**Nobody fixes 158 things. Everybody can stop the 159th.** Every finding is fingerprinted by what it
-is — the check, the screen, the thing that is wrong, with volatile numbers normalised out, so a
-contrast ratio drifting from 3.12 to 3.40 stays one finding instead of reporting a fix and a
-regression on a day nothing happened. That is the line to put in CI on day one of a codebase that
-already exists. Findings that leave the baseline are reported too, and `baseline --update` locks the
-gain in.
-
-Disagree with a finding? That is allowed, and it is rather the point — the decision just gets written
-down instead of winning an argument:
+**Nobody fixes 158 things. Everybody can stop the 159th.** That is the line to put in CI on day one of
+a codebase that already exists. Disagreeing with a finding is allowed and rather the point — the
+decision just gets written down, with a reason and a date, instead of winning an argument:
 
 ```sh
 npx measured-design waive 73f98ce938a4 --why "Marketing shell, lang set by the CMS" --until 2027-01-01
 ```
-
-`--why` is required, because a waiver without a reason is an opinion that won. `--until` is optional,
-but a waiver without one is reported every run so it cannot quietly become permanent, and an expired
-waiver brings its finding straight back.
 
 ### Turn a design into a backlog
 
@@ -123,13 +113,9 @@ python3 scaffold/backlog/build_backlog.py --plan plan.json   # a brief, a crawle
 ```
 
 Journeys become epics, steps become stories, screens become sub-tasks. **An open decision becomes a
-spike that blocks every story touching it**, ranked ahead of what it holds up — so the board shows the
+spike that blocks every story touching it**, ranked ahead of what it holds up, so the board shows the
 cost of not deciding instead of hiding it in a description. A gap in the scope becomes a story flagged
-as having nothing serving it. Acceptance criteria name the harness that proves them, so "done" mostly
-has an answer that can be counted.
-
-Blockers are preconditions only. `files-list` leads to eight screens, and blocking all eight on it
-would be faithful to the route graph and useless as a plan, so the rest becomes build order.
+as having nothing serving it. Acceptance criteria name the harness that proves them.
 
 The one thing it will not do is invent the reason:
 
@@ -138,15 +124,14 @@ When I am in Files and choose Move to folder…, I want to move a file into a fo
 so I can ⟨outcome — one line, from whoever knows why this step exists⟩.
 ```
 
-A rationale explains why a screen is shaped as it is. It is not what a person walks away with, and
-filling that slot with the nearest available sentence puts a claim nobody made into a ticket somebody
-builds. The blanks are counted in the summary instead.
+A rationale explains why a screen is shaped as it is. It is not what a person walks away with, and the
+nearest available sentence would put a claim nobody made into a ticket somebody builds. The blanks are
+counted instead.
 
-Output is `backlog.md` to read, `jira.csv` to import, and `backlog.keys.json` so the second run reports
-added, changed and gone rather than making a second copy of everything. Creating the tickets is a
-separate `--push` that creates and never edits, checks the whole project before sending anything, and
-asks first. Details in [`scaffold/backlog/README.md`](scaffold/backlog/README.md); worked examples in
-[`examples/demo`](examples/demo) and [`examples/standalone-backlog`](examples/standalone-backlog).
+Out comes `backlog.md` to read and `jira.csv` to import; `--push` creates the issues directly, and
+creates rather than edits. Details in [`scaffold/backlog/README.md`](scaffold/backlog/README.md),
+worked examples in [`examples/demo`](examples/demo) and
+[`examples/standalone-backlog`](examples/standalone-backlog).
 
 ### Run the whole procedure
 
