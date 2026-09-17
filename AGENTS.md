@@ -10,7 +10,8 @@ adding any field to the data model.
 ## Layout
 
 ```
-skills/measured-design*          ten skills — the procedure itself
+skills/measured-design*          eleven skills — the procedure itself
+skills/jira-backlog/             standalone: any project → a Jira structure
 skills/library/                  88 vendored designer and thinking skills, collection-qualified
 cli/                             npx measured-design init|check|baseline|waive — the no-adoption entry
 cli/ratchet.mjs                  baseline, waivers, and new-versus-known
@@ -20,6 +21,7 @@ scaffold/drift.py                scope document versus model
 scaffold/check_library.py        every vendored skill must be reachable from a stage
 scaffold/harnesses/              thirteen checks, twelve in any one run, each prints one number
                                  and writes one record per finding, fingerprinted
+scaffold/backlog/                the plan, and one emitter: backlog.json, jira.csv, backlog.md
 scaffold/viewer/                 the handover artifact, no dependencies
 scaffold/adapters/python/        the reference generator; one adapter, not the requirement
 scaffold/adapters/node/          a second generator, no dependencies, proving the contract holds

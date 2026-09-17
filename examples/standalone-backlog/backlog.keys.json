@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "mappedAt": "2026-09-17",
+  "units": {
+    "epic:get-paid": {
+      "issue_id": "E-get-paid",
+      "summary": "Get an invoice paid",
+      "hash": "643be0ea0b53",
+      "jira": null
+    },
+    "epic:set-up": {
+      "issue_id": "E-set-up",
+      "summary": "Set up the account",
+      "hash": "a184e2080fb4",
+      "jira": null
+    },
+    "spike:tax-fields": {
+      "issue_id": "K-tax-fields",
+      "summary": "Decide: which business fields are legally required, and where",
+      "hash": "f9968efc3aa6",
+      "jira": null
+    },
+    "story:set-up/details": {
+      "issue_id": "S-set-up-details",
+      "summary": "Add the business details",
+      "hash": "6e4e9bc9a064",
+      "jira": null
+    },
+    "subtask:details-form": {
+      "issue_id": "T-details-form",
+      "summary": "Business details form",
+      "hash": "b4594d4815a8",
+      "jira": null
+    },
+    "subtask:details-empty": {
+      "issue_id": "T-details-empty",
+      "summary": "First-run state, nothing entered yet",
+      "hash": "4303c00c09a7",
+      "jira": null
+    },
+    "story:set-up/bank": {
+      "issue_id": "S-set-up-bank",
+      "summary": "Connect a bank account",
+      "hash": "8d4b11cbc382",
+      "jira": null
+    },
+    "subtask:bank-connect": {
+      "issue_id": "T-bank-connect",
+      "summary": "Connect account",
+      "hash": "7b7a673c38d9",
+      "jira": null
+    },
+    "subtask:bank-failed": {
+      "issue_id": "T-bank-failed",
+      "summary": "Connection refused",
+      "hash": "6741b6e96626",
+      "jira": null
+    },
+    "story:get-paid/create": {
+      "issue_id": "S-get-paid-create",
+      "summary": "Create an invoice",
+      "hash": "e32bdf424ff0",
+      "jira": null
+    },
+    "subtask:invoice-new": {
+      "issue_id": "T-invoice-new",
+      "summary": "New invoice",
+      "hash": "584235ceefd1",
+      "jira": null
+    },
+    "subtask:invoice-empty": {
+      "issue_id": "T-invoice-empty",
+      "summary": "No invoices yet",
+      "hash": "ad1830d7c7ae",
+      "jira": null
+    },
+    "story:get-paid/send": {
+      "issue_id": "S-get-paid-send",
+      "summary": "Send an invoice",
+      "hash": "6969eca01560",
+      "jira": null
+    },
+    "subtask:invoice-send": {
+      "issue_id": "T-invoice-send",
+      "summary": "Confirm and send",
+      "hash": "12089464c72b",
+      "jira": null
+    },
+    "subtask:send-failed": {
+      "issue_id": "T-send-failed",
+      "summary": "Send did not go out",
+      "hash": "631ce1dd45c7",
+      "jira": null
+    },
+    "story:get-paid/chase": {
+      "issue_id": "S-get-paid-chase",
+      "summary": "Chase an unpaid invoice",
+      "hash": "3c7dcdf0b1a8",
+      "jira": null
+    },
+    "story:get-paid/owed": {
+      "issue_id": "S-get-paid-owed",
+      "summary": "See what is owed",
+      "hash": "81873373d7ff",
+      "jira": null
+    },
+    "subtask:owed-list": {
+      "issue_id": "T-owed-list",
+      "summary": "Outstanding invoices",
+      "hash": "7b5464a5794a",
+      "jira": null
+    },
+    "subtask:owed-empty": {
+      "issue_id": "T-owed-empty",
+      "summary": "Nothing outstanding",
+      "hash": "6d1c4220d17c",
+      "jira": null
+    }
+  }
+}

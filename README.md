@@ -7,7 +7,7 @@ for Claude Code, Codex, and any agent that reads `SKILL.md`.
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-5A45FF)](#install)
 [![Codex](https://img.shields.io/badge/Codex-skills-2b2b2b)](#install)
-[![Skills](https://img.shields.io/badge/skills-98-brightgreen)](#what-is-in-it)
+[![Skills](https://img.shields.io/badge/skills-100-brightgreen)](#what-is-in-it)
 [![Harnesses](https://img.shields.io/badge/harnesses-13%20numbers-orange)](#what-is-in-it)
 
 Design reviews go wrong in a predictable way: two people hold different opinions about a screen, the
@@ -42,6 +42,7 @@ this same file, for this same demo, in under a minute. Or skip the clone:
 - [How it fits together](#how-it-fits-together)
 - [Install](#install)
 - [Make the number go one way](#make-the-number-go-one-way)
+- [Turn it into a backlog](#turn-it-into-a-backlog)
 - [Try it in thirty seconds](#try-it-in-thirty-seconds)
 - [What is in it](#what-is-in-it)
 - [What makes this different from a process document](#the-three-things-that-make-this-different-from-a-process-document)
@@ -125,6 +126,70 @@ the fingerprint. That is the file to build a report or a PR comment out of.
 
 That is the shallow end. The rest of this README is the part that makes the numbers stay fixed.
 
+## Turn it into a backlog
+
+A design that cannot become planned work stays a picture. `jira-backlog` turns a brief, a running app
+or a codebase into epics, stories, sub-tasks and decision spikes — and on a measured-design project,
+`measured-design-backlog` reads `model/` and has far more to work with:
+
+```sh
+python3 scaffold/backlog/build_backlog.py --model model      # journeys, routes, decisions, gaps
+python3 scaffold/backlog/build_backlog.py --plan plan.json   # anything else
+```
+
+Journeys become epics, steps become stories, screens become sub-tasks. An **open decision becomes a
+spike that blocks every story touching its screens** — so the board shows the cost of not deciding
+instead of hiding it. A gap becomes a story flagged as having nothing serving it. Acceptance criteria
+name the harness that proves them:
+
+```
+- Files, Sync did not finish render at every supported width with nothing off the frame, a heading,
+  labelled controls, targets at or over the minimum, and no text under its contrast threshold in
+  either theme  [overflow, structure, target-size, contrast]
+- every route declared from these screens binds to a label that is on the board  [routes]
+- Sync did not finish says what is still true, not only what failed
+```
+
+Three of those four have an answer that can be counted, which is the whole argument of this repo
+applied to the plan rather than the screen.
+
+Blockers are **preconditions only** — a state waits for the place it hangs off, a journey waits for the
+way into the product, anything touching an open decision waits for that decision. `files-list` leads
+to eight screens and blocking all eight on it would be true to the graph and useless as a plan, so the
+rest becomes build order.
+
+The one thing it will not do is invent the reason:
+
+```
+When I am in Files and choose Move to folder…, I want to move a file into a folder,
+so I can ⟨outcome — one line, from whoever knows why this step exists⟩.
+```
+
+A design rationale says why a screen is shaped the way it is. It is not what a person walks away with,
+and filling that slot with the nearest available sentence puts a claim nobody made into a ticket
+somebody builds. The blanks are counted in the summary instead.
+
+Output is `backlog.md` to read, `jira.csv` to import, `backlog.json` to diff, and `backlog.keys.json`
+so the second run reports added, changed and gone rather than creating a second copy of the first.
+
+Creating the tickets is a separate flag, because generating is reversible right up until it becomes
+sixty real tickets somebody has started working in:
+
+```sh
+export JIRA_BASE_URL=... JIRA_EMAIL=... JIRA_API_TOKEN=...
+python3 scaffold/backlog/build_backlog.py --model model --push --dry-run   # show it, send nothing
+python3 scaffold/backlog/build_backlog.py --model model --push             # ask, then create
+```
+
+It **creates and never edits** — a ticket that exists has comments, an assignee and edits somebody
+made on purpose, so a story whose text has changed is reported and left alone. It checks the project
+and every issue type *before* sending anything, writes each key to `backlog.keys.json` as it goes so a
+failed run retries without duplicating, and prints the whole plan and asks first. With no terminal to
+ask at, `--yes` is required — nothing in CI creates tickets by accident. Credentials are read from the
+environment only, never from a file in the repo.
+Worked examples: [`examples/demo`](examples/demo) from a model, and
+[`examples/standalone-backlog`](examples/standalone-backlog) from a two-page brief.
+
 ## Install the skills
 
 ```sh
@@ -133,9 +198,9 @@ sh scripts/install.sh codex           # ~/.agents/skills
 sh scripts/install.sh any ./skills    # anywhere else
 ```
 
-Add `--core` to install the ten measured-design skills without the 88-skill library. Codex caps its
-pre-loaded skill list at about 8,000 characters and truncates silently past that; 98 skills would not
-fit. The library skills are marked `disable-model-invocation` for the same reason — they are reached
+Add `--core` to install the eleven measured-design skills, plus standalone `jira-backlog`, without the
+88-skill library. Codex caps its pre-loaded skill list at about 8,000 characters and truncates silently
+past that; 100 skills would not fit. The library skills are marked `disable-model-invocation` for the same reason — they are reached
 deliberately from a stage, not picked up opportunistically.
 
 Claude Code can also add the directory as a marketplace (`.claude-plugin/marketplace.json`).
@@ -180,6 +245,8 @@ screens and needs `model/`; without one, `run-all` substitutes `links`, which on
 | `skills/measured-design-contract` | the build contract — read before generating anything |
 | `skills/measured-design-{frame,structure,generate,audit,measure,ship}` | stages 01–06 |
 | `skills/measured-design-decide` | an open question forced into multiple choice with trade-offs |
+| `skills/measured-design-backlog` | the design as planned work — epics, stories, spikes that block |
+| `skills/jira-backlog` | the same, standalone: a brief, a running app or a codebase → Jira |
 | `skills/measured-design-drift` | scope document versus prototype |
 | `skills/library/` | 88 vendored designer and thinking skills |
 | `cli/` | `npx measured-design init`, `check`, `baseline` and `waive` — the no-adoption entry point |
@@ -188,6 +255,7 @@ screens and needs `model/`; without one, `run-all` substitutes `links`, which on
 | `scaffold/gate.py` | refuses the build on a route that does not bind |
 | `scaffold/check_library.py` | refuses if a vendored skill is unreachable, or a stage names one that does not exist |
 | `scaffold/harnesses/` | thirteen checks — twelve in any one run, each prints one number and writes its findings |
+| `scaffold/backlog/` | the plan, and one emitter — `backlog.json`, `jira.csv`, `backlog.md` |
 | `scaffold/viewer/` | the handover artifact — one file, no dependencies |
 | `scaffold/adapters/python/` | the reference generator |
 | `scaffold/adapters/node/` | a second generator, no dependencies — same screens, same rationale, proving the contract is stack-agnostic |
@@ -222,7 +290,7 @@ is brought level with it, not the other way round, otherwise every audit finding
 
 ## Contributing
 
-The pack is deliberately small at its core — ten skills, one contract, one gate. Most of the value in
+The pack is deliberately small at its core — eleven skills, one contract, one gate. Most of the value in
 growing it is in:
 
 - **New harnesses.** Each one prints a single number for a single property. If you have a check that

@@ -1,0 +1,7 @@
+{
+  "project":    { "key": "FILES", "style": "company-managed" },
+  "issueTypes": { "epic": "Epic", "story": "Story", "subtask": "Sub-task", "spike": "Spike" },
+  "linkTypes":  { "blocks": "Blocks" },
+  "labels":     ["ux"],
+  "fields":     {}
+}

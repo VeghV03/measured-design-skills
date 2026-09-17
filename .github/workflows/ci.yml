@@ -144,6 +144,106 @@ jobs:
             echo "expected exactly one unresolved link"; grep -A3 "links" /tmp/crawl.txt; exit 1; }
           echo "  crawl mode ok"
 
+      - name: Backlog — the plan resolves, emits, and does not duplicate itself
+        run: |
+          set -e
+          B="python3 scaffold/backlog/build_backlog.py"
+
+          # Standalone first: a plan written from a brief, with no model/ anywhere.
+          $B --plan examples/standalone-backlog/backlog.plan.json \
+             --config examples/standalone-backlog/backlog.config.json --out /tmp/sa > /tmp/sa.txt
+          cat /tmp/sa.txt
+          grep -q "2 epics · 6 stories · 10 sub-tasks · 1 spike" /tmp/sa.txt
+          grep -q "1 with nothing serving it" /tmp/sa.txt
+          test -f /tmp/sa/jira.csv && test -f /tmp/sa/backlog.md
+          echo "  standalone plan ok"
+
+          # The spike must be ranked before the story it blocks, because row order is
+          # the only build sequence a Jira CSV can carry.
+          python3 - <<'PY'
+          import json
+          u = {x["key"]: x for x in json.load(open("/tmp/sa/backlog.json"))["units"]}
+          assert u["spike:tax-fields"]["rank"] < u["story:set-up/details"]["rank"], "spike must outrank what it blocks"
+          assert "spike:tax-fields" in u["story:set-up/details"]["blocked_by"]
+          assert u["story:get-paid/chase"]["rank"] > u["story:get-paid/send"]["rank"]
+          print("  build order ok")
+          PY
+
+          # Same emitter, the richer front end.
+          $B --model examples/demo/model --config examples/demo/backlog.config.json \
+             --out /tmp/md1 --title "File manager" > /tmp/m1.txt
+          grep -q "4 epics · 9 stories · 10 sub-tasks · 2 spikes" /tmp/m1.txt
+          echo "  model front end ok"
+
+          # Deterministic: same input, byte-identical output.
+          $B --model examples/demo/model --config examples/demo/backlog.config.json \
+             --out /tmp/md2 --title "File manager" > /dev/null
+          for f in backlog.json jira.csv backlog.md; do cmp /tmp/md1/$f /tmp/md2/$f; done
+          echo "  deterministic"
+
+          # Re-run into the same directory must report nothing and duplicate nothing.
+          $B --model examples/demo/model --config examples/demo/backlog.config.json \
+             --out /tmp/md1 --title "File manager" > /tmp/m2.txt
+          if grep -qE "^  (added|changed|gone) " /tmp/m2.txt; then
+            echo "an unchanged re-run must report nothing"; cat /tmp/m2.txt; exit 1; fi
+          echo "  re-run is quiet"
+
+          # A reworded story keeps its ticket; only a restructure makes new work.
+          python3 - <<'PY'
+          import json, pathlib
+          p = pathlib.Path("/tmp/j.json")
+          d = json.load(open("examples/demo/model/journeys.json"))
+          for j in d:
+              if j["id"] == "manage":
+                  for s in j["steps"]:
+                      if s["id"] == "move":
+                          s["name"] = "Move a file into a folder without sharing it"
+          p.write_text(json.dumps(d))
+          PY
+          cp examples/demo/model/journeys.json /tmp/j-orig.json
+          cp /tmp/j.json examples/demo/model/journeys.json
+          $B --model examples/demo/model --config examples/demo/backlog.config.json \
+             --out /tmp/md1 --title "File manager" > /tmp/m3.txt
+          cp /tmp/j-orig.json examples/demo/model/journeys.json
+          grep -q "changed  S-manage-move" /tmp/m3.txt
+          if grep -q "added    S-manage" /tmp/m3.txt; then
+            echo "a rename must not create a new ticket"; cat /tmp/m3.txt; exit 1; fi
+          echo "  rename keeps identity"
+
+          # A plan that does not resolve is refused by name, not emitted with a hole.
+          cat > /tmp/bad.json <<'JSON'
+          {"version":1,"epics":[{"id":"a","name":"A"}],
+           "stories":[{"id":"a/one","epic":"a","name":"One","blocked_by":["a/nope"]}]}
+          JSON
+          set +e; $B --plan /tmp/bad.json --out /tmp/bad > /tmp/bad.txt 2>&1; code=$?; set -e
+          test "$code" = "1" || { echo "a dangling reference must stop the build"; cat /tmp/bad.txt; exit 1; }
+          grep -q "is blocked by story:a/nope, which is not declared" /tmp/bad.txt
+          echo "  dangling reference refused"
+
+          cat > /tmp/cyc.json <<'JSON'
+          {"version":1,"epics":[{"id":"a","name":"A"}],
+           "stories":[{"id":"a/one","epic":"a","name":"One","blocked_by":["a/two"]},
+                      {"id":"a/two","epic":"a","name":"Two","blocked_by":["a/one"]}]}
+          JSON
+          set +e; $B --plan /tmp/cyc.json --out /tmp/cyc > /tmp/cyc.txt 2>&1; code=$?; set -e
+          test "$code" = "1" || { echo "a cycle must stop the build"; exit 1; }
+          grep -q "blocked-by cycle" /tmp/cyc.txt
+          echo "  blocked-by cycle refused"
+
+          # push is the only part that reaches outside. Its guards are tested against
+          # a stubbed Jira rather than trusted: no network, no tickets, every rule real.
+          python3 scaffold/backlog/push_test.py
+
+          # and it must refuse to create anything with no terminal to confirm at
+          set +e
+          python3 scaffold/backlog/build_backlog.py --model examples/demo/model \
+            --config examples/demo/backlog.config.json --out /tmp/np --push < /dev/null > /tmp/np.txt 2>&1
+          code=$?
+          set -e
+          test "$code" = "1" || { echo "push must fail without credentials or a terminal"; cat /tmp/np.txt; exit 1; }
+          grep -q "STOP" /tmp/np.txt
+          echo "  push refuses in a non-interactive shell"
+
       - name: Ratchet — a baselined finding is quiet, a new one refuses
         run: |
           set -e

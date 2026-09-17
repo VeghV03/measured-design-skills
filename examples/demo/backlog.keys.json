@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "mappedAt": "2026-09-17",
+  "units": {
+    "epic:first-run": {
+      "issue_id": "E-first-run",
+      "summary": "First run",
+      "hash": "4df0359fa14c",
+      "jira": null
+    },
+    "epic:manage": {
+      "issue_id": "E-manage",
+      "summary": "Manage files",
+      "hash": "c9d74d4d1ec7",
+      "jira": null
+    },
+    "epic:find": {
+      "issue_id": "E-find",
+      "summary": "Find things",
+      "hash": "3a1fbba74f6d",
+      "jira": null
+    },
+    "epic:account": {
+      "issue_id": "E-account",
+      "summary": "Manage account",
+      "hash": "8ae12150d488",
+      "jira": null
+    },
+    "story:first-run/arrive": {
+      "issue_id": "S-first-run-arrive",
+      "summary": "Arrive with no account",
+      "hash": "ce5d91faeb8f",
+      "jira": null
+    },
+    "subtask:first-run-welcome": {
+      "issue_id": "T-first-run-welcome",
+      "summary": "Welcome",
+      "hash": "0300c04fc763",
+      "jira": null
+    },
+    "spike:d-001": {
+      "issue_id": "K-d-001",
+      "summary": "Decide: does the cost estimate appear before saving, or after?",
+      "hash": "ab18b2372c76",
+      "jira": null
+    },
+    "story:manage/see": {
+      "issue_id": "S-manage-see",
+      "summary": "See what is here",
+      "hash": "878a82142c4d",
+      "jira": null
+    },
+    "story:first-run/first-file": {
+      "issue_id": "S-first-run-first-file",
+      "summary": "Add the first file",
+      "hash": "84ae56bae35f",
+      "jira": null
+    },
+    "subtask:files-empty": {
+      "issue_id": "T-files-empty",
+      "summary": "Files, empty",
+      "hash": "bd936c3663b2",
+      "jira": null
+    },
+    "subtask:files-list": {
+      "issue_id": "T-files-list",
+      "summary": "Files",
+      "hash": "f2de3fb6f981",
+      "jira": null
+    },
+    "subtask:sync-failed": {
+      "issue_id": "T-sync-failed",
+      "summary": "Sync did not finish",
+      "hash": "42a04fd69126",
+      "jira": null
+    },
+    "story:manage/move": {
+      "issue_id": "S-manage-move",
+      "summary": "Move a file into a folder",
+      "hash": "419cd9c09843",
+      "jira": null
+    },
+    "subtask:files-move": {
+      "issue_id": "T-files-move",
+      "summary": "Move to folder",
+      "hash": "45598d52105d",
+      "jira": null
+    },
+    "story:manage/remove": {
+      "issue_id": "S-manage-remove",
+      "summary": "Remove a file",
+      "hash": "5766e199fed6",
+      "jira": null
+    },
+    "subtask:files-removed": {
+      "issue_id": "T-files-removed",
+      "summary": "Removed",
+      "hash": "acfce5bf31f6",
+      "jira": null
+    },
+    "story:manage/share": {
+      "issue_id": "S-manage-share",
+      "summary": "Share a file",
+      "hash": "30ecc93a73ea",
+      "jira": null
+    },
+    "subtask:share-failed": {
+      "issue_id": "T-share-failed",
+      "summary": "Share did not go out",
+      "hash": "f62af8936392",
+      "jira": null
+    },
+    "story:manage/estimate": {
+      "issue_id": "S-manage-estimate",
+      "summary": "See the cost before saving",
+      "hash": "3aa89b6e30b9",
+      "jira": null
+    },
+    "spike:d-002": {
+      "issue_id": "K-d-002",
+      "summary": "Decide: does search include removed files?",
+      "hash": "9aa16a882bd7",
+      "jira": null
+    },
+    "story:find/search": {
+      "issue_id": "S-find-search",
+      "summary": "Search for a file",
+      "hash": "9906edb6dab2",
+      "jira": null
+    },
+    "subtask:search-results": {
+      "issue_id": "T-search-results",
+      "summary": "Search results",
+      "hash": "190f3a07ca8f",
+      "jira": null
+    },
+    "subtask:search-empty": {
+      "issue_id": "T-search-empty",
+      "summary": "No matches",
+      "hash": "df8c2b6fd8d2",
+      "jira": null
+    },
+    "story:account/storage": {
+      "issue_id": "S-account-storage",
+      "summary": "Check storage used",
+      "hash": "4bbd638dc849",
+      "jira": null
+    },
+    "subtask:settings-storage": {
+      "issue_id": "T-settings-storage",
+      "summary": "Storage",
+      "hash": "0f7a0cf30ada",
+      "jira": null
+    }
+  }
+}
