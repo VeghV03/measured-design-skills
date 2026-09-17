@@ -29,6 +29,7 @@ Every one of those was invisible until something counted it. None would have com
 
 - [See it working](#see-it-working)
 - [What it actually is](#what-it-actually-is)
+- [What it catches](#what-it-catches)
 - [Three ways in](#three-ways-in)
 - [Why it works the way it does](#why-it-works-the-way-it-does)
 - [How it fits together](#how-it-fits-together)
@@ -53,10 +54,9 @@ now, or clone the repo and have the same file in under a minute.
 
 Two things that share a data model, and you do not need both.
 
-The first is **a set of checks that run against any web app** — contrast against the real composited
-background, content off the frame at each supported width, targets under the minimum, animation that
-ignores reduced motion, screens with no heading. Thirteen of them. They need a URL and nothing else.
-No adoption, no scope document, no buy-in from anyone.
+The first is **thirteen checks that run against any web app**, listed below. They need a URL and
+nothing else — no scope document, no data model, no buy-in from anyone. Point them at a dev server, a
+folder of built HTML, or a list of routes, and each one prints a number.
 
 The second is **a procedure for designing a product so that those numbers stay fixed** — six stages,
 one build contract, and a gate that refuses. Screens are generated from a data model rather than drawn,
@@ -66,6 +66,51 @@ waiting on them.
 
 It is built for agents but none of it requires one. The skills tell an agent how to run the procedure;
 the CLI, the gate, the harnesses and the backlog generator are ordinary programs you can run yourself.
+
+**Who ends up using it:** design engineers who have to defend a screen with something other than
+taste; frontend teams who want accessibility regressions caught in CI without a 400-finding audit
+landing on them; and anyone running an agent on a design problem who wants its output checkable
+rather than merely confident.
+
+## What it catches
+
+Each check asks one question and prints one number. Most were written after something got through —
+the third column is the bug that prompted it, not a hypothetical.
+
+| Check | The question it asks | Why it exists |
+|---|---|---|
+| `overflow` | does any content fall off the frame, at each supported width | the first one written and still the one that catches most |
+| `contrast` | every text node against its **actual composited** background, in both themes | declared colours are not what the eye receives |
+| `translucency` | does a semi-transparent layer dim the text under it below 4.5:1 | a white veil at 34% took muted text from 4.74:1 to 2.53:1 — `contrast` reads declared colours and structurally cannot see this |
+| `cellfit` | is any element wider than the grid cell containing it | a 137px chip in a 132px cell paints over the next column without ever crossing the frame edge. 14 real boards |
+| `structure` | heading, labelled controls, status not carried by colour alone, readable line length | 42 boards had no heading element at all |
+| `target-size` | is any target under the minimum on a side (WCAG 2.5.8) | hard to hit precisely with a motor or vision impairment, and for anyone on a moving train |
+| `motion` | is anything still animating under `prefers-reduced-motion` | that preference is a person telling the OS that motion makes them sick, not a hint |
+| `lang` | is `<html lang>` set | without it assistive tech guesses pronunciation for the whole page |
+| `density` | element count at the real data scale, not the demo scale | a list is calm at six rows and unusable at six hundred |
+| `links` | does every same-origin link resolve | the weak version of `routes`, for when there is no declared route map |
+| `routes` | does every declared route bind to a label that is actually on the screen | 22 of 162 routes pointed at buttons deleted months earlier. The build gate refuses on this same property |
+| `vocab` | forbidden terms outside the zone that permits them | 158 jargon words outside Advanced, then 0. Zones are what make the count trustworthy |
+| `offline` | does the artifact open with the network refused | a CDN dependency is useless on a plane and in five years |
+
+Real output, reproducible from `examples/demo`:
+
+```
+── overflow
+
+30 board-widths · 0 board-widths with content off the frame
+
+── structure
+  files-move: 2 — line measure over 40em: "Moving does not share. N"
+
+10 boards · 1 board with a structure failure
+```
+
+Twelve run in any one pass. `contrast` goes twice, once per theme. `routes` and `links` are
+alternatives rather than both: the stronger one runs when a declared route map exists, and `links`
+substitutes when it does not — a weaker claim, given a different name on purpose, because "nothing
+404s" and "the route map is not lying to QA" should never be reported as the same result. `offline`
+is aimed at the built artifact rather than the screens.
 
 ## Three ways in
 
